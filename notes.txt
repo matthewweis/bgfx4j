@@ -1,0 +1,45 @@
+GOAL:
+
+The ONLY goal of BGFX4j is to create a java-friendly api to bgfx. No abstraction of the bgfx library is to be created (past what is required to create a java-like experience). Abstraction will be provided by reactorfx, the reactor-core game engine built on top of this library.
+
+PERSONAL USAGE:
+
+This library is necessary boilerplate designed to empower upcoming projects:
+
+ rxfx (with reactor-virtual + this library) to create a virtual-time event-driven reactive-stream game engine that uses bgfx (via bgfx4j) for its backend
+
+ libgdx bgfx backend - an implementation of bgfx backend using bgfx. May require libgdx fork since some parts of Application/Graphics interfaces include opengl-specific methods.
+
+
+1. Render thread is thread where bgfx::init is called.
+
+Bgfx assumes ALL calls occur on this thread with exceptions of: Resource, View, and Encoder API.
+
+2. Resource api:
+  Any API call starting with:
+    bgfx::create*,
+    bgfx::destroy*,
+    bgfx::update*,
+    bgfx::alloc*
+
+  Internally guarded by mutex, so any number of threads can call
+
+  Relatively cheap since work is later done in render call
+
+3. View api:
+  Any API call starting with:
+    bgfx::setView*
+
+  Each created view is not thread-safe, however this is fine:
+    threadA --calls--> viewA
+    threadB --calls--> viewB
+
+  bgfx::setViewMode must be called any draw calls are issued
+
+
+4. Encoder api:
+  obtained by calling bgfx::begin
+
+  bgfx by default allows 8 simultaneous threads to use encoders
+    (can be changed https://bkaradzic.github.io/bgfx/internals.html)
+

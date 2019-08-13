@@ -1,0 +1,9 @@
+[submodule "bgfx"]
+	path = bgfx
+	url = ./tools/bgfx
+[submodule "bx"]
+	path = bx
+	url = ./tools/bx
+[submodule "bimg"]
+	path = bimg
+	url = ./tools/bimg
