@@ -1,9 +1,9 @@
 [submodule "bgfx"]
 	path = bgfx
-	url = ./tools/bgfx
+	url = https://github.com/bkaradzic/bgfx
 [submodule "bx"]
 	path = bx
-	url = ./tools/bx
+	url = https://github.com/bkaradzic/bx
 [submodule "bimg"]
 	path = bimg
-	url = ./tools/bimg
+	url = https://github.com/bkaradzic/bimg

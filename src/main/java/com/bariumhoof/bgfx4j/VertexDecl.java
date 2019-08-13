@@ -61,8 +61,8 @@ public final class VertexDecl implements Disposable {
             return new BuilderSurplusStage(decl);
         }
 
-        public BuilderSurplusStage beginWith(@NotNull BGFX_ATTRIB attrib, int num, @NotNull BGFX_ATTRIB_TYPE type, boolean normalized, boolean asInt) {
-            bgfx_vertex_decl_add(decl, attrib.VALUE, num, type.VALUE, normalized, asInt);
+        public BuilderSurplusStage beginWith(@NotNull BGFX_ATTRIB attrib, @NotNull BGFX_ATTRIB_TYPE type, boolean normalized, boolean asInt) {
+            bgfx_vertex_decl_add(decl, attrib.VALUE, getNumFromAttrib(attrib), type.VALUE, normalized, asInt);
             return new BuilderSurplusStage(decl);
         }
     }
@@ -96,8 +96,8 @@ public final class VertexDecl implements Disposable {
         }
 
         // todo see old code save for nums associated with each
-        public BuilderSurplusStage thenUse(@NotNull BGFX_ATTRIB attrib, int num, @NotNull BGFX_ATTRIB_TYPE type, boolean normalized, boolean asInt) {
-            bgfx_vertex_decl_add(decl, attrib.VALUE, num, type.VALUE, normalized, asInt);
+        public BuilderSurplusStage thenUse(@NotNull BGFX_ATTRIB attrib, @NotNull BGFX_ATTRIB_TYPE type, boolean normalized, boolean asInt) {
+            bgfx_vertex_decl_add(decl, attrib.VALUE, getNumFromAttrib(attrib), type.VALUE, normalized, asInt);
             return new BuilderSurplusStage(decl);
         }
 
@@ -107,45 +107,46 @@ public final class VertexDecl implements Disposable {
         }
     }
 
-    private static int getNumFrommAttrib(BGFX_ATTRIB attrib) {
+    private static int getNumFromAttrib(BGFX_ATTRIB attrib) {
         switch (attrib) {
             case POSITION:
                 return 3;
-                break;
             case NORMAL:
                 return 4;
-            break;
             case TANGENT:
                 return 4;
-                break;
             case BITANGENT:
                 return 4;
-                break;
             case COLOR0:
                 return 4;
-                break;
             case COLOR1:
                 return 4;
-                break;
             case COLOR2:
                 return 4;
-                break;
             case COLOR3:
                 return 4;
-                break;
             case INDICES:
                 return 4;
-                break;
             case WEIGHT:
                 return -1; // todo: determine weight value(s)
-                break;
             case TEXCOORD0:
                 return 2;
-                break;
             case TEXCOORD1:
                 return 2;
-                break;
-                case
+            case TEXCOORD2:
+                return 2;
+            case TEXCOORD3:
+                return 2;
+            case TEXCOORD4:
+                return 2;
+            case TEXCOORD5:
+                return 2;
+            case TEXCOORD6:
+                return 2;
+            case TEXCOORD7:
+                return 2;
+            default:
+                throw new IllegalStateException("Unhandled enum.");
         }
     }
 }

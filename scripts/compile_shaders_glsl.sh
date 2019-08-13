@@ -10,16 +10,16 @@ OUTDIR="../src/main/resources/shaders/"
 echo "determining os..."
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
         PLATFORM="linux"
-        SC="../tools/bgfx/tools/bin/linux/shaderc"
+        SC="../bgfx/tools/bin/linux/shaderc"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
         PLATFORM="osx"
-        SC="../tools/bgfx/tools/bin/darwin/shaderc"
+        SC="../bgfx/tools/bin/darwin/shaderc"
 elif [[ "$OSTYPE" == "msys" ]]; then
         PLATFORM="windows"
-        SC="../tools/bgfx/tools/bin/windows/shaderc"
+        SC="../bgfx/tools/bin/windows/shaderc"
 elif [[ "$OSTYPE" == "win32" ]]; then
         PLATFORM="windows" # I'm not sure this can happen.
-        SC="../tools/bgfx/tools/bin/windows/shaderc" # I'm not sure this can happen.
+        SC="../bgfx/tools/bin/windows/shaderc" # I'm not sure this can happen.
 else
         echo "ERROR: invalid OS"
         exit 1
@@ -31,8 +31,8 @@ PROFILE="120"  #profile (see comment code below for possibilities)
 ###
 
 
-SRC="../tools/bgfx/src/"
-COMMON="../tools/bgfx/examples/common/"
+SRC="../bgfx/src/"
+COMMON="../bgfx/examples/common/"
 
 # FROM shader.mk, PROFILE TO TARGET MATCHING GUIDE
 
@@ -88,7 +88,7 @@ COMMON="../tools/bgfx/examples/common/"
 ### compile tool if needed
 if [[ ! -f ${SC} ]]; then
     echo "no shaderc binary detected! compiling..."
-    cd ../tools/bgfx/
+    cd ../bgfx/
     Make tools
     cd ${dir}
 fi
