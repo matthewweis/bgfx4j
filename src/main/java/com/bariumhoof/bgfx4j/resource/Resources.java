@@ -1,34 +1,28 @@
 package com.bariumhoof.bgfx4j.resource;
 
 import com.bariumhoof.assertions.Assertions;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.bgfx.BGFX;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXReleaseFunctionCallback;
+import org.slf4j.Logger;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.Objects;
 
-import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.system.APIUtil.apiLog;
+import static org.lwjgl.bgfx.BGFX.bgfx_create_shader;
+import static org.lwjgl.bgfx.BGFX.bgfx_make_ref_release;
 import static org.lwjgl.system.MemoryUtil.*;
 
-@Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Resources {
 
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(Resources.class);
     private static BGFXReleaseFunctionCallback RELEASE_MEMORY_CALLBACK =
             BGFXReleaseFunctionCallback.create((_ptr, _userData) -> nmemFree(_ptr));
+
+    private Resources() {
+    }
 
 
     // todo rm: no need to handle OS type, this is done by lib using bgfx4j

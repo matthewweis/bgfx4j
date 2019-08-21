@@ -2,7 +2,6 @@ package com.bariumhoof.assertions;
 
 import org.jetbrains.annotations.Contract;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 /**

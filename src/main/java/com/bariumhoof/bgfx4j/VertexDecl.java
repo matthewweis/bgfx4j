@@ -4,20 +4,21 @@ package com.bariumhoof.bgfx4j;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXVertexDecl;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class VertexDecl implements Disposable {
 
     private final static boolean AS_INT_DEFAULT = false;
     private final static boolean NORMALIZED_DEFAULT = false;
 
     private final BGFXVertexDecl decl;
+
+    private VertexDecl(BGFXVertexDecl decl) {
+        this.decl = decl;
+    }
 
     public static BuilderInitialStage builder(BGFX_RENDERER_TYPE rendererType) {
         return new BuilderInitialStage(rendererType);

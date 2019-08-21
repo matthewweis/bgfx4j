@@ -2,8 +2,6 @@ package com.bariumhoof.bgfx4j;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.enums.BGFX_BUFFER;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.system.MemoryUtil;
@@ -12,11 +10,15 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Indices implements Disposable, Handle {
 
     private final @NotNull ByteBuffer indicesBuf;
     private final short handle;
+
+    private Indices(@NotNull ByteBuffer indicesBuf, short handle) {
+        this.indicesBuf = indicesBuf;
+        this.handle = handle;
+    }
 
     public static Indices create(@NotNull int[] indices) {
         Assertions.requirePositive(indices.length);

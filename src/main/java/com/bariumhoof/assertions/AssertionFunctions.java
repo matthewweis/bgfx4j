@@ -1,11 +1,7 @@
 package com.bariumhoof.assertions;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 // todo make seperate lib

@@ -1,6 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
-import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.BGFX_RESOLVE_AUTO_GEN_MIPS;
+import static org.lwjgl.bgfx.BGFX.BGFX_RESOLVE_NONE;
 
 public enum BGFX_RESOLVE {
     NONE(BGFX_RESOLVE_NONE),

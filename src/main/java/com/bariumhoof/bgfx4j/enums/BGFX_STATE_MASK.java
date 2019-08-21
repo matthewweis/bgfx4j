@@ -1,5 +1,6 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import static org.lwjgl.bgfx.BGFX.BGFX_STATE_MASK;
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_STATE_MASK {

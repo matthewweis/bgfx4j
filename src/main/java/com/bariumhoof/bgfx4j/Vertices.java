@@ -1,8 +1,6 @@
 package com.bariumhoof.bgfx4j;
 
 import com.bariumhoof.assertions.Assertions;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXVertexDecl;
@@ -12,11 +10,15 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Vertices implements Disposable, Handle {
 
     private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
+
+    private Vertices(@NotNull ByteBuffer verticesBuf, short handle) {
+        this.verticesBuf = verticesBuf;
+        this.handle = handle;
+    }
 
     public static Vertices create(@NotNull VertexDecl decl, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);

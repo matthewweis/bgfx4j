@@ -59,6 +59,18 @@
         </profile>
     </profiles>
 
+    <repositories>
+        <!-- added for jlit -->
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>central</id>
+            <name>bintray</name>
+            <url>http://jcenter.bintray.com</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- slf4j logging (GLOBAL) -->
         <dependency>
@@ -132,6 +144,29 @@
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
             <version>17.0.0</version>
+        </dependency>
+
+        <!-- immutables -->
+<!--        <dependency>-->
+<!--            <groupId>org.immutables</groupId>-->
+<!--            <artifactId>value</artifactId>-->
+<!--            <version>2.7.4</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
+
+        <!-- jilt -->
+        <dependency>
+            <groupId>org.jilt</groupId>
+            <artifactId>jilt</artifactId>
+            <version>1.1</version>
+            <scope>provided</scope> <!-- Jilt is not needed at runtime -->
+        </dependency>
+
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+            <scope>compile</scope>
         </dependency>
 
 

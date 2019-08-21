@@ -3,6 +3,8 @@ package com.bariumhoof.bgfx4j;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
+import com.bariumhoof.bgfx4j.init.Resolution;
+import com.bariumhoof.bgfx4j.init.ResolutionBuilder;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -21,7 +23,7 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.bgfx.BGFX.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class TestLauncher {
 
@@ -62,6 +64,14 @@ public class TestLauncher {
                     break;
             }
         });
+
+//        ImmutableInitTest
+//                .builder()
+//                .resolution();
+
+//        ImmutableInitTest.builder().resolution(ImmutableResolutionTest.builder().)
+//        ImmutableResolutionTest.
+//        ImmutableResolutionTest.builder().
 
         try (MemoryStack stack = stackPush()) {
             BGFXInit init = BGFXInit.mallocStack(stack);

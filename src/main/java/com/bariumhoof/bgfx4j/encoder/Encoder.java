@@ -1,6 +1,5 @@
 package com.bariumhoof.bgfx4j.encoder;
 
-import org.lwjgl.bgfx.BGFX;
 import org.lwjgl.bgfx.BGFXVertexDecl;
 
 import static org.lwjgl.bgfx.BGFX.*;

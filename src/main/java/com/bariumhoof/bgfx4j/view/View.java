@@ -1,12 +1,6 @@
 package com.bariumhoof.bgfx4j.view;
 
 
-import org.lwjgl.bgfx.BGFX;
-
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static org.lwjgl.bgfx.BGFX.*;
-
 /**
  *
  * BEGIN QUOTE (https://bkaradzic.github.io/bgfx/bgfx.html#views)

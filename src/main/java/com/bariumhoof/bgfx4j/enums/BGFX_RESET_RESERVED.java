@@ -1,6 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
-import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.BGFX_RESET_RESERVED_MASK;
+import static org.lwjgl.bgfx.BGFX.BGFX_RESET_RESERVED_SHIFT;
 
 public enum BGFX_RESET_RESERVED {
     SHIFT(BGFX_RESET_RESERVED_SHIFT),
