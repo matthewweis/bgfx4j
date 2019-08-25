@@ -1,6 +1,8 @@
-package com.bariumhoof.bgfx4j;
+package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.assertions.Assertions;
+import com.bariumhoof.bgfx4j.Disposable;
+import com.bariumhoof.bgfx4j.Handle;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXVertexDecl;
@@ -10,30 +12,29 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-public final class Vertices implements Disposable, Handle {
+public final class VertexBuffer implements Disposable, Handle {
 
     private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
 
-    private Vertices(@NotNull ByteBuffer verticesBuf, short handle) {
+    private VertexBuffer(@NotNull ByteBuffer verticesBuf, short handle) {
         this.verticesBuf = verticesBuf;
         this.handle = handle;
     }
 
-    public static Vertices create(@NotNull VertexDecl decl, @NotNull Number[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
         final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
 
-        return new Vertices(vbuf, handle);
+        return new VertexBuffer(vbuf, handle);
     }
 
     private static int getByteCount(@NotNull Number[][] vertices) {
         final int stride = vertices[0].length;
         final int count = vertices.length;
-
 
         final int strideSum = computeTotalBytes(stride, vertices);
         final int strideSum2 = computeTotalBytesAssumingSquare(stride, count, vertices);
@@ -43,7 +44,6 @@ public final class Vertices implements Disposable, Handle {
             throw new IllegalArgumentException(); // todo: remove this temp check!
         }
 
-
         return strideSum;
     }
 
@@ -51,7 +51,6 @@ public final class Vertices implements Disposable, Handle {
      * From lwjgl bgfx tutorial - Cubes
      */
     private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl, Number[][] vertices) {
-
         for (Object[] vtx : vertices) {
             for (Object attr : vtx) {
                 if (attr instanceof Float) {
@@ -67,9 +66,7 @@ public final class Vertices implements Disposable, Handle {
         if (buffer.remaining() != 0) {
             throw new RuntimeException("ByteBuffer size and number of arguments do not match");
         }
-
         buffer.flip();
-
         return createVertexBuffer(buffer, decl);
     }
 

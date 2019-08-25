@@ -1,6 +1,7 @@
-package com.bariumhoof.bgfx4j;
+package com.bariumhoof.bgfx4j.wip;
 
 
+import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
@@ -9,6 +10,7 @@ import org.lwjgl.bgfx.BGFXVertexDecl;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
+// todo make this use builder lib
 public final class VertexDecl implements Disposable {
 
     private final static boolean AS_INT_DEFAULT = false;

@@ -36,7 +36,7 @@ public final class Init {
 //    @Opt final boolean profile;
     @Opt final @Nullable Short vendorId;
     @Opt final @Nullable Short deviceId;
-    @Opt final @Nullable Boolean debug; // todo potentially change
+    @Opt final @Nullable Boolean debug;
     @Opt final @Nullable Boolean profile;
     @Opt final @Nullable BGFXInitLimits limits; // todo
     @Opt final @Nullable BGFXCallbackInterface callback; // todo

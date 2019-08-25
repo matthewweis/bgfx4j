@@ -4,7 +4,6 @@ import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.TestLauncher;
 import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
 import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
-import com.bariumhoof.bgfx4j.examples.common.TestApplication;
 import org.joml.Matrix4f;
 import org.lwjgl.bgfx.BGFXInit;
 import org.lwjgl.bgfx.BGFXVertexDecl;

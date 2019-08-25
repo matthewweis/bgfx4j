@@ -45,6 +45,7 @@
                 <os><family>mac</family></os>
             </activation>
             <properties>
+                <jvm.options>-XstartOnFirstThread</jvm.options>
                 <lwjgl.natives>natives-macos</lwjgl.natives>
             </properties>
         </profile>
@@ -168,9 +169,44 @@
             <version>1.3.2</version>
             <scope>compile</scope>
         </dependency>
-
-
     </dependencies>
 
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>exec-maven-plugin</artifactId>-->
+<!--                <version>1.2.1</version>-->
+<!--                <configuration>-->
+<!--                    <mainClass>com.bariumhoof.sample.SimpleLogo</mainClass>-->
+<!--                    <commandlineArgs>${jvm.options}</commandlineArgs>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+
+<!--            &lt;!&ndash; Maven Shade Plugin &ndash;&gt;-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-shade-plugin</artifactId>-->
+<!--                <version>3.2.1</version>-->
+<!--                <executions>-->
+<!--                    &lt;!&ndash; Run shade goal on package phase &ndash;&gt;-->
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <transformers>-->
+<!--                                &lt;!&ndash; add Main-Class to manifest file &ndash;&gt;-->
+<!--                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">-->
+<!--                                    <mainClass>com.bariumhoof.sample.SimpleLogo</mainClass>-->
+<!--                                </transformer>-->
+<!--                            </transformers>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
 
 </project>

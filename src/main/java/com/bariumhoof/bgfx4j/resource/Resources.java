@@ -18,11 +18,11 @@ import static org.lwjgl.system.MemoryUtil.*;
 public final class Resources {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(Resources.class);
+
     private static BGFXReleaseFunctionCallback RELEASE_MEMORY_CALLBACK =
             BGFXReleaseFunctionCallback.create((_ptr, _userData) -> nmemFree(_ptr));
 
-    private Resources() {
-    }
+    private Resources() { }
 
 
     // todo rm: no need to handle OS type, this is done by lib using bgfx4j

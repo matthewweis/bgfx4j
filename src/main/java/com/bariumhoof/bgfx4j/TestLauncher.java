@@ -3,8 +3,10 @@ package com.bariumhoof.bgfx4j;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.init.Resolution;
-import com.bariumhoof.bgfx4j.init.ResolutionBuilder;
+import com.bariumhoof.bgfx4j.wip.IndexBuffer;
+import com.bariumhoof.bgfx4j.wip.Program;
+import com.bariumhoof.bgfx4j.wip.VertexBuffer;
+import com.bariumhoof.bgfx4j.wip.VertexDecl;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -148,13 +150,12 @@ public class TestLauncher {
         };
 
         // these make up the model matrix:
-        final Vertices vertices = Vertices.create(decl, cubeVertices);
-        final Indices indices = Indices.create(cubeIndices);
+        final VertexBuffer vertexBuffer = VertexBuffer.create(decl, cubeVertices);
+        final IndexBuffer indexBuffer = IndexBuffer.create(cubeIndices);
 
         final Program program = Program.load(
                 TestLauncher.class.getResource("/shaders/metal/cubes.vert"), // vertex shader
-                TestLauncher.class.getResource("/shaders/metal/cubes.frag"), // fragment shader
-                true // set destroyShaders to true
+                TestLauncher.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
         );
 
 
@@ -223,8 +224,8 @@ public class TestLauncher {
                     model.get(modelBuf);
 
                     bgfx_encoder_set_transform(encoder, modelBuf);
-                    bgfx_encoder_set_vertex_buffer(encoder, 0, vertices.handle(), 0, 8, BGFX_INVALID_HANDLE);
-                    bgfx_encoder_set_index_buffer(encoder, indices.handle(), 0, 36);
+                    bgfx_encoder_set_vertex_buffer(encoder, 0, vertexBuffer.handle(), 0, 8, BGFX_INVALID_HANDLE);
+                    bgfx_encoder_set_index_buffer(encoder, indexBuffer.handle(), 0, 36);
                     bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
                     bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
                 }
