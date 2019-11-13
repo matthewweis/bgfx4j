@@ -31,9 +31,23 @@ public final class IndexBuffer implements Disposable, Handle {
         return new IndexBuffer(ibuf, handle);
     }
 
+    public static IndexBuffer create(@NotNull short[] indices) {
+        Assertions.requirePositive(indices.length);
+
+        final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
+        final short handle = createIndexBuffer(ibuf, indices);
+
+        return new IndexBuffer(ibuf, handle);
+    }
+
     private static int getByteCount(@NotNull int[] indices) {
 //        return indices.length * Integer.BYTES;
-        return indices.length * 2; // see Cubes example, they multiply by only 2
+        return indices.length * 2; // see Cubes example, they multiply by only 2 (since it must become a short?)
+    }
+
+    private static int getByteCount(@NotNull short[] indices) {
+        return indices.length * Short.BYTES;
+//        return indices.length * 2; // see Cubes example, they multiply by only 2 (for int)s
     }
 
     /*
@@ -42,6 +56,25 @@ public final class IndexBuffer implements Disposable, Handle {
     private static short createIndexBuffer(ByteBuffer buffer, int[] indices) {
         for (int idx : indices) {
             buffer.putShort((short) idx);
+        }
+
+        if (buffer.remaining() != 0) {
+            throw new RuntimeException("ByteBuffer size and number of arguments do not match");
+        }
+
+        buffer.flip();
+
+        BGFXMemory ibhMem = bgfx_make_ref(buffer);
+
+        return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER.NONE.VALUE);
+    }
+
+    /*
+     * From lwjgl bgfx tutorial - Cubes
+     */
+    private static short createIndexBuffer(ByteBuffer buffer, short[] indices) {
+        for (short idx : indices) {
+            buffer.putShort(idx);
         }
 
         if (buffer.remaining() != 0) {

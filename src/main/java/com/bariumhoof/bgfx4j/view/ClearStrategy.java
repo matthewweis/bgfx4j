@@ -4,28 +4,9 @@ import com.bariumhoof.bgfx4j.enums.BGFX_CLEAR;
 
 public final class ClearStrategy {
 
-    private final int value;
+    public final int VALUE;
 
-//    @Override
-//    public int intValue() {
-//        return value;
-//    }
-//
-//    @Override
-//    public long longValue() {
-//        return value;
-//    }
-//
-//    @Override
-//    public float floatValue() {
-//        return value;
-//    }
-//
-//    @Override
-//    public double doubleValue() {
-//        return value;
-//    }
-
+    // todo replace with EnumSet!
     public static ClearStrategy just(BGFX_CLEAR flag) {
         return new ClearStrategy(flag);
     }
@@ -39,7 +20,7 @@ public final class ClearStrategy {
         for (BGFX_CLEAR flag : flags) {
             value |= flag.VALUE;
         }
-        this.value = value;
+        this.VALUE = value;
     }
 
 }

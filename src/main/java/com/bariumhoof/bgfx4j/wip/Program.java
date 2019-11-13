@@ -3,7 +3,9 @@ package com.bariumhoof.bgfx4j.wip;
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.resource.Resources;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,7 +18,7 @@ public class Program implements Disposable, Handle {
     private final short vs_handle;
     private final short fs_handle;
 
-    Program(short vs_handle, short fs_handle, boolean destroyShaders) {
+    private Program(short vs_handle, short fs_handle, boolean destroyShaders) {
         this.vs_handle = vs_handle;
         this.fs_handle = fs_handle;
         this.p_handle = bgfx_create_program(vs_handle, fs_handle, destroyShaders);
@@ -66,7 +68,7 @@ public class Program implements Disposable, Handle {
      * @param fs The fragment shader that corresponds to the passed vertex shader.
      * @return A program created from the two shaders.
      */
-    public static Program create(@NotNull Shader vs, @NotNull Shader fs) {
+    public static @NotNull Program create(@NotNull Shader vs, @NotNull Shader fs) {
         return create(vs, fs, false);
     }
 
@@ -81,7 +83,7 @@ public class Program implements Disposable, Handle {
      * @param destroyShaders Whether or not to destroy the shaders after creating the program (will not affect program).
      * @return A program created from the vs and fs shaders.
      */
-    public static Program create(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
+    public static @NotNull Program create(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
         return new Program(vs.handle, fs.handle, destroyShaders);
     }
 
@@ -92,8 +94,22 @@ public class Program implements Disposable, Handle {
      * @return A program created from the loaded vs and fs shaders.
      * @throws IOException thrown if either {@link URL} is invalid.
      */
-    public static Program load(@NotNull URL vs, @NotNull URL fs) throws IOException {
+    public static @NotNull Program load(@NotNull URL vs, @NotNull URL fs) throws IOException {
         return new Program(Resources.loadShader(vs), Resources.loadShader(fs), true);
+    }
+
+    /**
+     * Creates a program from two {@link URL}s that point to corresponding vertex and fragment shaders.
+     * @param vs The {@link URL} of a vertex shader to load.
+     * @param fs The {@link URL} of the corresponding fragment shader to load.
+     * @return A program created from the loaded vs and fs shaders.
+     */
+    public static @Nullable Program loadOrNull(@NotNull URL vs, @NotNull URL fs) {
+        try {
+            return new Program(Resources.loadShader(vs), Resources.loadShader(fs), true);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     @Override

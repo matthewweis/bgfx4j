@@ -56,6 +56,7 @@ public abstract class Application {
     public Application() { }
 
     private @NotNull Init createDefaultInit() {
+        // todo: JK, use EnumSet class instead!
         // todo: change from taking BGFX_RESET a class representing the union of potentially many BGFX_RESET bit operations
         final var resolution = Resolution.of(width, height).reset(BGFX_RESET.VSYNC).build();
         final var platformData = createDefaultPlatformDataFromOS();
@@ -128,11 +129,12 @@ public abstract class Application {
                 bgfx_frame(false);
             }
 
-            shutdown();
+//            shutdown();
         } catch (Exception e) {
             throw e;
         } finally {
             dispose();
+            shutdown();
         }
     }
 

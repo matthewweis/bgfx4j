@@ -23,6 +23,7 @@
 
         <!-- lwjgl -->
         <lwjgl.version>3.2.2</lwjgl.version>
+<!--        <lwjgl.version>3.2.3</lwjgl.version>--> <!-- this has minor breaking api changes (decl -> layout) -->
         <joml.version>1.9.15</joml.version>
 
         <!-- lombok -->

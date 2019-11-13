@@ -6,7 +6,6 @@ import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
 import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
 import org.joml.Matrix4f;
 import org.lwjgl.bgfx.BGFXInit;
-import org.lwjgl.bgfx.BGFXVertexDecl;
 import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.glfw.GLFWNativeX11;

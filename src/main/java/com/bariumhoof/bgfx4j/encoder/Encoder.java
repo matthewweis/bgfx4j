@@ -26,6 +26,10 @@ public class Encoder {
         bgfx_vertex_decl_begin(d, BGFX_RENDERER_TYPE_METAL);
     }
 
+//    public void setCondition(Occlusio) {
+//
+//    }
+
 
 
 }

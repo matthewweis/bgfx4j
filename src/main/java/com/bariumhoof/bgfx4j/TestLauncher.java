@@ -123,7 +123,7 @@ public class TestLauncher {
                 .thenUseNormalized(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8)
                 .build();
 
-        final Number[][] cubeVertices = {
+        final float[][] cubeVertices = {
                 { -1.0f, 1.0f, 1.0f, 0xff000000 },
                 { 1.0f, 1.0f, 1.0f, 0xff0000ff },
                 { -1.0f, -1.0f, 1.0f, 0xff00ff00 },
