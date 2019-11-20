@@ -69,6 +69,8 @@ public class SanityCheck extends Application {
     private Matrix4f model = new Matrix4f();
     private FloatBuffer modelBuf;
 
+    double time = 0;
+
 
     @Override
     public void init() {
@@ -111,6 +113,7 @@ public class SanityCheck extends Application {
 
     @Override
     public void render(double dt) {
+        time += dt*50000;
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 
@@ -121,7 +124,7 @@ public class SanityCheck extends Application {
 
         bgfx_set_view_transform(0, view.get(viewBuf), proj.get(projBuf));
 
-                long encoder = bgfx_encoder_begin(false);
+        long encoder = bgfx_encoder_begin(false);
         for (int yy = 0; yy < 11; ++yy) {
             for (int xx = 0; xx < 11; ++xx) {
                 bgfx_set_transform(
@@ -130,8 +133,8 @@ public class SanityCheck extends Application {
                                 -15.0f + yy * 3.0f,
                                 0.0f)
                                 .rotateAffineXYZ(
-                                        ((float) dt) + xx * 0.21f,
-                                        ((float) dt) + yy * 0.37f,
+                                        ((float) time) + xx * 0.21f,
+                                        ((float) time) + yy * 0.37f,
                                         0.0f)
                                 .get(modelBuf));
 
