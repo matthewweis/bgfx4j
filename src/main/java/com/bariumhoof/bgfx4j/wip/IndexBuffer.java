@@ -16,10 +16,12 @@ public final class IndexBuffer implements Disposable, Handle {
 
     private final @NotNull ByteBuffer indicesBuf;
     private final short handle;
+    private final int size;
 
-    private IndexBuffer(@NotNull ByteBuffer indicesBuf, short handle) {
+    private IndexBuffer(@NotNull ByteBuffer indicesBuf, short handle, int size) {
         this.indicesBuf = indicesBuf;
         this.handle = handle;
+        this.size = size;
     }
 
     public static IndexBuffer create(@NotNull int[] indices) {
@@ -28,7 +30,7 @@ public final class IndexBuffer implements Disposable, Handle {
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(ibuf, handle);
+        return new IndexBuffer(ibuf, handle, indices.length);
     }
 
     public static IndexBuffer create(@NotNull short[] indices) {
@@ -37,7 +39,7 @@ public final class IndexBuffer implements Disposable, Handle {
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(ibuf, handle);
+        return new IndexBuffer(ibuf, handle, indices.length);
     }
 
     private static int getByteCount(@NotNull int[] indices) {
@@ -97,6 +99,10 @@ public final class IndexBuffer implements Disposable, Handle {
     @Override
     public short handle() {
         return handle;
+    }
+
+    public int size() {
+        return size;
     }
 
 

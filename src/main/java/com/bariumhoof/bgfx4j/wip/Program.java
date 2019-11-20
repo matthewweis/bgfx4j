@@ -116,6 +116,22 @@ public class Program implements Disposable, Handle {
     public short handle() {
         return p_handle;
     }
+
+    public short vs_handle() {
+        return vs_handle;
+    }
+
+    public short fs_handle() {
+        return fs_handle;
+    }
+
+    public short getVertexShaderHandle() {
+        return vs_handle;
+    }
+
+    public short getFragmentShaderHandle() {
+        return fs_handle;
+    }
 }
 
 

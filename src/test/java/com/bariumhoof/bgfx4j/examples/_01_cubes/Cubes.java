@@ -163,7 +163,6 @@ public class Cubes extends Application {
     final ClearStrategy clearStrategy = ClearStrategy.just(BGFX_CLEAR.COLOR);
     final BGFX_VIEW_MODE viewMode = BGFX_VIEW_MODE.DEFAULT;
 //    final BGFX_VIEW_MODE viewMode = null;
-    int x = 5;
     View view = null;
 
     VertexBuffer m_vbh;
@@ -187,7 +186,8 @@ public class Cubes extends Application {
                 Cubes.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
         );
 
-        bgfx_set_view_clear(0, BGFX_CLEAR.COLOR.VALUE | BGFX_CLEAR.DEPTH.VALUE, 0x303030ff, 1.0f, 0);
+
+//        bgfx_set_view_clear(0, BGFX_CLEAR.COLOR.VALUE | BGFX_CLEAR.DEPTH.VALUE, 0x303030ff, 1.0f, 0);
 
     }
 
@@ -199,20 +199,7 @@ public class Cubes extends Application {
         bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
 
         bgfx_dbg_text_printf(0, 1, 0x1f, "bgfx/examples/01-cubes");
-        bgfx_dbg_text_printf(0, 2, 0x3f, "Description: Rendering simple static mesh.");
-
-        // todo figure out why this causes us to lose sight of anything!
-//        setViewTransform();
-
-//        final var stats = bgfx_get_stats();
-//        System.out.println("blit -> " + stats.numBlit());
-//        System.out.println("compute -> " + stats.numCompute());
-//        System.out.println("draw -> " + stats.numDraw());
-//        System.out.println("dynamic ib -> " + stats.numDynamicIndexBuffers());
-//        System.out.println("dynamic vb -> " + stats.numDynamicVertexBuffers());
-//        System.out.println("programs -> " + stats.numPrograms());
-//        System.out.println("textures -> " + stats.numTextures());
-
+        bgfx_dbg_text_printf(0, 2, 0x3f, "Description: Rendering simple static mesh");
 
         // This dummy draw call is here to make sure that view 0 is cleared
         // if no other draw calls are submitted to view 0.
@@ -235,18 +222,24 @@ public class Cubes extends Application {
 
         long _state = state.stream().reduce(0L, (n, s) -> n | s.VALUE, (n1, n2) -> n1 | n2);
 
-//        bgfx_set_state(_state, (int)BGFX_STATE_BLEND.NORMAL.VALUE);
-        bgfx_set_state(BGFX_STATE.DEFAULT.VALUE, (int)BGFX_STATE_BLEND.NORMAL.VALUE);
+        bgfx_set_state(_state, (int)BGFX_STATE_BLEND.NORMAL.VALUE);
+//        bgfx_set_state(BGFX_STATE.DEFAULT.VALUE, (int)BGFX_STATE_BLEND.NORMAL.VALUE);
+
+        // todo figure out why this causes us to lose sight of anything!
+        setViewTransform();
 
         for (int yy = 0; yy < 11; ++yy) {
             for (int xx = 0; xx < 11; ++xx) {
                 float[] _mtx = new float[16];
+
+
                 var mtx = new Matrix4f();
                 mtx.rotateXYZ(time + xx*0.21f, time + yy*0.37f, 0.0f);
-                mtx.get(_mtx);
-                _mtx[12] = -15.0f + ((float) xx)*3.0f;
-                _mtx[13] = -15.0f + ((float) yy)*3.0f;
-                _mtx[14] = 0.0f;
+                mtx.scale(0.3f);
+                _mtx = mtx.get(_mtx);
+//                _mtx[12] = -15.0f + ((float) xx)*3.0f;
+//                _mtx[13] = -15.0f + ((float) yy)*3.0f;
+//                _mtx[14] = 0.0f;
 
                 // Set model matrix for rendering.
                 bgfx_set_transform(_mtx);
@@ -258,8 +251,7 @@ public class Cubes extends Application {
 //                bgfx::setVertexBuffer(0, m_vbh);
                 bgfx_set_vertex_buffer(0, m_vbh.handle(), 0, m_vbh.size());
 //                bgfx::setIndexBuffer(ibh);
-                bgfx_set_index_buffer(ibh.handle(), 0, m_ibh.length);
-
+                bgfx_set_index_buffer(ibh.handle(), 0, ibh.size());
 
                 // Submit primitive for rendering to view 0.
 //                bgfx::submit(0, m_program);
@@ -270,7 +262,6 @@ public class Cubes extends Application {
 
     @Override
     public void dispose() {
-
         for (IndexBuffer indexBuffer : m_ibh) {
             if (indexBuffer != null) {
                 indexBuffer.dispose();
@@ -290,14 +281,16 @@ public class Cubes extends Application {
         Matrix4f viewMat = new Matrix4f();
         Matrix4f projMat = new Matrix4f();
 
-        final var eye = new Vector3f(0.0f, 0.0f, -35.0f);
-        final var at = new Vector3f(0.0f, 0.0f, 0.0f);
-        final var up = new Vector3f(0.0f, 1.0f, 0.0f);
-        viewMat.setLookAtLH(eye, at, up);
+        final var eye = new Vector3f(0.0f, 0.0f, -35.0f); // cam pos
+        final var at = new Vector3f(0.0f, 0.0f, 0.0f); // point in space to look at
+//        final var up = new Vector3f(0.0f, 1.0f, 0.0f); // direction of up
+//        viewMat.setLookAt(eye, at, up);
+        lookAt(at, eye, viewMat);
 
         // see: https://github.com/bkaradzic/bx/blob/master/include/bx/math.h#L481
-        final float aspect = ((float)getWidth()) / ((float)getHeight());
-        projMat.setPerspectiveLH(60.0f, aspect, 0.1f, 100.0f, bgfx_get_caps().homogeneousDepth());
+//        final float aspect = ((float)getWidth()) / ((float)getHeight());
+//        projMat.setPerspective(60.0f, aspect, 0.1f, 100.0f, Application.isZZeroToOne());
+        perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, projMat);
 
         float[] _view = new float[16];
         float[] _proj = new float[16];
@@ -307,6 +300,28 @@ public class Cubes extends Application {
 
         view.setTransform(_view, _proj);
     }
+
+//    private void setViewTransform() {
+//        Matrix4f viewMat = new Matrix4f();
+//        Matrix4f projMat = new Matrix4f();
+//
+//        final var eye = new Vector3f(0.0f, 0.0f, -35.0f);
+//        final var at = new Vector3f(0.0f, 0.0f, 0.0f);
+//        final var up = new Vector3f(0.0f, 1.0f, 0.0f);
+//        viewMat.setLookAtLH(eye, at, up);
+//
+//        // see: https://github.com/bkaradzic/bx/blob/master/include/bx/math.h#L481
+//        final float aspect = ((float)getWidth()) / ((float)getHeight());
+//        projMat.setPerspectiveLH(60.0f, aspect, 0.1f, 100.0f, bgfx_get_caps().homogeneousDepth());
+//
+//        float[] _view = new float[16];
+//        float[] _proj = new float[16];
+//
+//        _view = viewMat.get(_view);
+//        _proj = viewMat.get(_proj);
+//
+//        view.setTransform(_view, _proj);
+//    }
 
     public static void main(String[] args) throws IOException {
         new Cubes().start();
