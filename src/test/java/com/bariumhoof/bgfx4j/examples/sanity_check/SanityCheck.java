@@ -3,7 +3,6 @@ package com.bariumhoof.bgfx4j.examples.sanity_check;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.*;
-import com.bariumhoof.bgfx4j.view.ClearStrategy;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
 import com.bariumhoof.bgfx4j.wip.Program;
@@ -11,15 +10,10 @@ import com.bariumhoof.bgfx4j.wip.VertexBuffer;
 import com.bariumhoof.bgfx4j.wip.VertexDecl;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.bgfx.BGFXMemory;
-import org.lwjgl.bgfx.BGFXVertexDecl;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
@@ -53,10 +47,11 @@ public class SanityCheck extends Application {
 
     private VertexDecl layout;
     private VertexBuffer vertices;
-
     private IndexBuffer indices;
     private Program program;
+
     private Matrix4f view = new Matrix4f();
+    private View bgfxView;
     private FloatBuffer viewBuf;
     private Matrix4f proj = new Matrix4f();
     private FloatBuffer projBuf;
@@ -64,7 +59,6 @@ public class SanityCheck extends Application {
     private FloatBuffer modelBuf;
 
     float time = 0;
-
 
     @Override
     public void init() {
@@ -82,6 +76,8 @@ public class SanityCheck extends Application {
                 SanityCheck.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
         );
 
+        bgfxView = View.create("my view");
+
         viewBuf = MemoryUtil.memAllocFloat(16);
         projBuf = MemoryUtil.memAllocFloat(16);
         modelBuf = MemoryUtil.memAllocFloat(16);
@@ -96,78 +92,31 @@ public class SanityCheck extends Application {
         lookAt(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, -35.0f), view);
         perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, proj);
 
-        bgfx_set_view_transform(0, view.get(viewBuf), proj.get(projBuf));
-
-//        long encoder = bgfx_encoder_begin(false);
-//        for (int yy = 0; yy < 11; ++yy) {
-//            for (int xx = 0; xx < 11; ++xx) {
-//                bgfx_encoder_set_transform(encoder,
-//                        model.translation(
-//                                -15.0f + xx * 3.0f,
-//                                -15.0f + yy * 3.0f,
-//                                0.0f)
-//                                .rotateAffineXYZ(
-//                                        ((float) time) + xx * 0.21f,
-//                                        ((float) time) + yy * 0.37f,
-//                                        0.0f)
-//                                .get(modelBuf));
-//
-//                bgfx_encoder_set_vertex_buffer(encoder,0, vertices.handle(), 0, 8, BGFX_INVALID_HANDLE);
-//                bgfx_encoder_set_index_buffer(encoder,indices.handle(), 0, 36);
-//                bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
-//                bgfx_encoder_submit(encoder,0, program.handle(), 0, false);
-//            }
-//        }
-//        bgfx_encoder_end(encoder);
+        bgfxView.setTransform(view.get(viewBuf), proj.get(projBuf)); // todo make view work more like a camera...
 
         Encoder encoder = Encoder.begin(false);
         for (int yy = 0; yy < 11; ++yy) {
             for (int xx = 0; xx < 11; ++xx) {
-//                bgfx_encoder_set_transform(encoder,
-//                        model.translation(
-//                                -15.0f + xx * 3.0f,
-//                                -15.0f + yy * 3.0f,
-//                                0.0f)
-//                                .rotateAffineXYZ(
-//                                        ((float) time) + xx * 0.21f,
-//                                        ((float) time) + yy * 0.37f,
-//                                        0.0f)
-//                                .get(modelBuf));
                 encoder.setTransform(model.translation(-15.0f + xx * 3.0f, -15.0f + yy * 3.0f, 0.0f)
                                 .rotateAffineXYZ(time + xx * 0.21f, time + yy * 0.37f, 0.0f)
                                 .get(modelBuf));
                 encoder.setVertexBuffer(vertices);
                 encoder.setIndexBuffer(indices);
-                encoder.submit(null, program);
-//
-//                bgfx_encoder_set_vertex_buffer(encoder,0, vertices.handle(), 0, 8, BGFX_INVALID_HANDLE);
-//                bgfx_encoder_set_index_buffer(encoder,indices.handle(), 0, 36);
-//                bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
-//                bgfx_encoder_submit(encoder,0, program.handle(), 0, false);
+                encoder.submit(bgfxView, program);
             }
         }
-//        bgfx_encoder_end(encoder);
         encoder.end();
     }
 
     @Override
     public void dispose() {
-
         MemoryUtil.memFree(viewBuf);
         MemoryUtil.memFree(projBuf);
         MemoryUtil.memFree(modelBuf);
 
-        if (vertices != null) {
-            vertices.dispose();
-        }
-
-        if (indices != null) {
-            indices.dispose();
-        }
-
-        if (program != null) {
-            program.dispose();
-        }
+        if (vertices != null) { vertices.dispose(); }
+        if (indices != null) { indices.dispose(); }
+        if (program != null) { program.dispose(); }
     }
 
     public static void main(String[] args) throws IOException {

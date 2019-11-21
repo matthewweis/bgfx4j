@@ -113,9 +113,7 @@ public class Encoder {
     }
 
     public void submit(View view, Program program, int depth, boolean preserveState) {
-        System.out.println("todo fix submit to use view id!");
-        //view.id()
-        bgfx_encoder_submit(id, 0, program.handle(), depth, preserveState);
+        bgfx_encoder_submit(id, view.id(), program.handle(), depth, preserveState);
     }
 
     public long id() {

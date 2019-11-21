@@ -36,6 +36,7 @@ import static org.lwjgl.bgfx.BGFX.*;
  */
 public final class View {
 
+    // todo change this so that every instance of view isn't (a) atomically sync'd on construct and (b) can reuse 0
     private static final AtomicInteger NEXT_ID = new AtomicInteger(0);
 
     private final int id;
