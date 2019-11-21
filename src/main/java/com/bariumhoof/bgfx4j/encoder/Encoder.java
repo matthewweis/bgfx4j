@@ -74,6 +74,21 @@ public class Encoder {
     /**
      *
      * @param state one or more states to use
+     */
+    public void setState(@NotNull BGFX_STATE state) {
+        setState(state, 0);
+    }
+
+    /*
+     * todo: the rgba arg is ONLY needed when in one of two enum states. Possible to make typesafe?
+     */
+    public void setState(@NotNull EnumSet<BGFX_STATE> states) {
+        setState(states, 0);
+    }
+
+    /**
+     *
+     * @param state one or more states to use
      * @param rgba blend factor if state is BGFX_STATE_BLEND_FACTOR or BGFX_STATE_BLEND_INV_FACTOR
      */
     public void setState(@NotNull BGFX_STATE state, int rgba) {

@@ -102,6 +102,7 @@ public class SanityCheck extends Application {
                                 .get(modelBuf));
                 encoder.setVertexBuffer(vertices);
                 encoder.setIndexBuffer(indices);
+                encoder.setState(BGFX_STATE.DEFAULT);
                 encoder.submit(bgfxView, program);
             }
         }
