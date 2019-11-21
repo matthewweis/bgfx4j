@@ -3,7 +3,6 @@ package com.bariumhoof.bgfx4j.view;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
-import com.bariumhoof.bgfx4j.Id;
 import com.bariumhoof.bgfx4j.enums.BGFX_CLEAR;
 import com.bariumhoof.bgfx4j.enums.BGFX_VIEW_MODE;
 import lombok.NonNull;
@@ -35,7 +34,7 @@ import static org.lwjgl.bgfx.BGFX.*;
  *   View state is preserved between multiple frames.
  * END QUOTE
  */
-public final class View implements Id {
+public final class View {
 
     private static final AtomicInteger NEXT_ID = new AtomicInteger(0);
 
@@ -142,7 +141,6 @@ public final class View implements Id {
         bgfx_set_view_transform(id, view, proj);
     }
 
-    @Override
     public int id() {
         return id;
     }

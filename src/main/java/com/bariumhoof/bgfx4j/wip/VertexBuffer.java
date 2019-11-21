@@ -18,7 +18,7 @@ public final class VertexBuffer implements Disposable, Handle {
     private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
 
-    private final int size;
+    private final int size; // size only of 1st array since second doesn't matter to bgfx
 
     private VertexBuffer(@NotNull ByteBuffer verticesBuf, short handle, int size) {
         this.verticesBuf = verticesBuf;
@@ -33,7 +33,7 @@ public final class VertexBuffer implements Disposable, Handle {
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
         final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
 
-        final int size = vertices.length * vertices[0].length;
+        final int size = vertices.length;
 
         return new VertexBuffer(vbuf, handle, size);
     }
@@ -108,7 +108,7 @@ public final class VertexBuffer implements Disposable, Handle {
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
         final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
 
-        final int size = vertices.length * vertices[0].length;
+        final int size = vertices.length;
 
         return new VertexBuffer(vbuf, handle, size);
     }
@@ -175,7 +175,7 @@ public final class VertexBuffer implements Disposable, Handle {
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
         final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
 
-        final int size = vertices.length * vertices[0].length;
+        final int size = vertices.length;
 
         return new VertexBuffer(vbuf, handle, size);
     }

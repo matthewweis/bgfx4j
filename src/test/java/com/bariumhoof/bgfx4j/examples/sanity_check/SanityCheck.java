@@ -1,6 +1,7 @@
 package com.bariumhoof.bgfx4j.examples.sanity_check;
 
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.view.ClearStrategy;
 import com.bariumhoof.bgfx4j.view.View;
@@ -62,7 +63,7 @@ public class SanityCheck extends Application {
     private Matrix4f model = new Matrix4f();
     private FloatBuffer modelBuf;
 
-    double time = 0;
+    float time = 0;
 
 
     @Override
@@ -88,7 +89,7 @@ public class SanityCheck extends Application {
 
     @Override
     public void render(double dt) {
-        time += dt*50000;
+        time += dt*50000f;
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 
@@ -97,27 +98,56 @@ public class SanityCheck extends Application {
 
         bgfx_set_view_transform(0, view.get(viewBuf), proj.get(projBuf));
 
-        long encoder = bgfx_encoder_begin(false);
+//        long encoder = bgfx_encoder_begin(false);
+//        for (int yy = 0; yy < 11; ++yy) {
+//            for (int xx = 0; xx < 11; ++xx) {
+//                bgfx_encoder_set_transform(encoder,
+//                        model.translation(
+//                                -15.0f + xx * 3.0f,
+//                                -15.0f + yy * 3.0f,
+//                                0.0f)
+//                                .rotateAffineXYZ(
+//                                        ((float) time) + xx * 0.21f,
+//                                        ((float) time) + yy * 0.37f,
+//                                        0.0f)
+//                                .get(modelBuf));
+//
+//                bgfx_encoder_set_vertex_buffer(encoder,0, vertices.handle(), 0, 8, BGFX_INVALID_HANDLE);
+//                bgfx_encoder_set_index_buffer(encoder,indices.handle(), 0, 36);
+//                bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
+//                bgfx_encoder_submit(encoder,0, program.handle(), 0, false);
+//            }
+//        }
+//        bgfx_encoder_end(encoder);
+
+        Encoder encoder = Encoder.begin(false);
         for (int yy = 0; yy < 11; ++yy) {
             for (int xx = 0; xx < 11; ++xx) {
-                bgfx_set_transform(
-                        model.translation(
-                                -15.0f + xx * 3.0f,
-                                -15.0f + yy * 3.0f,
-                                0.0f)
-                                .rotateAffineXYZ(
-                                        ((float) time) + xx * 0.21f,
-                                        ((float) time) + yy * 0.37f,
-                                        0.0f)
+//                bgfx_encoder_set_transform(encoder,
+//                        model.translation(
+//                                -15.0f + xx * 3.0f,
+//                                -15.0f + yy * 3.0f,
+//                                0.0f)
+//                                .rotateAffineXYZ(
+//                                        ((float) time) + xx * 0.21f,
+//                                        ((float) time) + yy * 0.37f,
+//                                        0.0f)
+//                                .get(modelBuf));
+                encoder.setTransform(model.translation(-15.0f + xx * 3.0f, -15.0f + yy * 3.0f, 0.0f)
+                                .rotateAffineXYZ(time + xx * 0.21f, time + yy * 0.37f, 0.0f)
                                 .get(modelBuf));
-
-                bgfx_set_vertex_buffer(0, vertices.handle(), 0, 8);
-                bgfx_set_index_buffer(indices.handle(), 0, 36);
-                bgfx_set_state( BGFX_STATE_DEFAULT, 0);
-                bgfx_submit(0, program.handle(), 0, false);
+                encoder.setVertexBuffer(vertices);
+                encoder.setIndexBuffer(indices);
+                encoder.submit(null, program);
+//
+//                bgfx_encoder_set_vertex_buffer(encoder,0, vertices.handle(), 0, 8, BGFX_INVALID_HANDLE);
+//                bgfx_encoder_set_index_buffer(encoder,indices.handle(), 0, 36);
+//                bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
+//                bgfx_encoder_submit(encoder,0, program.handle(), 0, false);
             }
         }
-        bgfx_encoder_end(encoder);
+//        bgfx_encoder_end(encoder);
+        encoder.end();
     }
 
     @Override
