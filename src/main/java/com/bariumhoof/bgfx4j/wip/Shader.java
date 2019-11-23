@@ -3,6 +3,8 @@ package com.bariumhoof.bgfx4j.wip;
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.resource.Resources;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.bgfx.BGFX;
@@ -13,12 +15,14 @@ import java.util.Objects;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
+@ToString
+@EqualsAndHashCode
 public class Shader implements Disposable, Handle {
 
     final short handle;
     final @Nullable String name;
 
-    public Shader(@NotNull URL url) throws IOException {
+    private Shader(@NotNull URL url) throws IOException {
         this(null, url);
     }
 
@@ -44,25 +48,4 @@ public class Shader implements Disposable, Handle {
         return name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Shader shader = (Shader) o;
-        return handle == shader.handle &&
-                Objects.equals(name, shader.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(handle, name);
-    }
-
-    @Override
-    public String toString() {
-        return "Shader{" +
-                "handle=" + handle +
-                ", name='" + name + '\'' +
-                '}';
-    }
 }

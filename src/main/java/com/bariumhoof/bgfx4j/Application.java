@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
+import org.lwjgl.bgfx.BGFXCaps;
 import org.lwjgl.bgfx.BGFXInit;
 import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.lwjgl.glfw.GLFWNativeWin32;
@@ -21,6 +22,7 @@ import org.lwjgl.system.Platform;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 import static org.lwjgl.bgfx.BGFX.*;
@@ -31,6 +33,32 @@ import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public abstract class Application {
+
+    private static AtomicReference<Application> atomicInstance = new AtomicReference<>();
+
+    @Getter
+    private static volatile Application instance;
+
+    public static Application getInstance() {
+        if (instance == null) {
+            synchronized (Application.class) {
+                if (instance == null) {
+                    // instance should have been set by "registerAsSingletonInstance"
+                    instance = Objects.requireNonNull(atomicInstance.get());
+                }
+            }
+        }
+        return instance;
+    }
+
+    private static void registerAsSingletonInstance(@NotNull Application instance) {
+        if (atomicInstance.getAndSet(instance) != null) {
+            throw new IllegalStateException("Only one instance of Application can exist at any time!");
+        }
+    }
+
+    @Getter
+    private static boolean isInitialized = false;
 
     protected final int width = 1280;
     protected final int height = 720;
@@ -44,18 +72,24 @@ public abstract class Application {
     private static boolean zZeroToOne;
 
     public Application(@NotNull BGFX_DEBUG debug, @NotNull Init init) {
+        this();
         this.debug = debug;
         this.init = init;
     }
 
     public Application(@NotNull Init init) {
+        this();
         this.init = init;
     }
 
     public Application(@NotNull BGFX_DEBUG debug) {
+        this();
         this.debug = debug;
     }
-    public Application() { }
+
+    public Application() {
+        registerAsSingletonInstance(this);
+    }
 
     private @NotNull Init createDefaultInit() {
         // todo: JK, use EnumSet class instead!
@@ -175,6 +209,8 @@ public abstract class Application {
                     break;
             }
         });
+
+        isInitialized = true;
     }
 
     private boolean exists(byte value) {

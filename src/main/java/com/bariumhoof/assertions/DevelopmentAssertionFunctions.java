@@ -1,5 +1,6 @@
 package com.bariumhoof.assertions;
 
+import com.bariumhoof.bgfx4j.Application;
 import org.jetbrains.annotations.Contract;
 
 import java.util.Objects;
@@ -23,6 +24,20 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNull(Object object, Supplier<String> message) {
         Objects.requireNonNull(object, message);
+    }
+
+    @Override
+    public void requireBgfxInitialized(String reason) {
+        if (!Application.isInitialized()) {
+            throw new IllegalStateException();
+        }
+    }
+
+    @Override
+    public void require(boolean b) {
+        if (!b) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Override

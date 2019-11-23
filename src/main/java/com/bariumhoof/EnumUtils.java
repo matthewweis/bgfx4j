@@ -20,6 +20,18 @@ public class EnumUtils {
         return bits;
     }
 
+//    public static long flags(EnumSet<BGFX_STATE> states) {
+//        long bits = 0L;
+//
+//        final var iterator = states.iterator();
+//        while (iterator.hasNext()) {
+//            final BGFX_STATE next = iterator.next();
+//            bits |= next.VALUE;
+//        }
+//
+//        return bits;
+//    }
+
 //    public static <E extends Enum<E>> long enumSetToBitFlags(EnumSet<E> states) {
 //
 //        if (states.size() > 64) {

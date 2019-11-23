@@ -13,6 +13,8 @@ interface AssertionFunctions {
     void requireNonNull(Object object, String message);
     @Contract("null, _ -> fail")
     void requireNonNull(Object object, Supplier<String> message);
+    void requireBgfxInitialized(String reason);
+    void require(boolean b);
     void requireNonNegative(byte n);
     void requireNonNegative(short n);
     void requireNonNegative(int n);

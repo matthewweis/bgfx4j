@@ -23,6 +23,14 @@ public final class Assertions {
         DELEGATE.requireNonNull(object, message);
     }
 
+    public static void requireBgfxInitialized(String reason) {
+        DELEGATE.requireBgfxInitialized(reason);
+    }
+
+    public static void require(boolean b) {
+        DELEGATE.require(b);
+    }
+
     public static void requireNonNegative(byte n) {
         DELEGATE.requireNonNegative(n);
     }
@@ -166,4 +174,5 @@ public final class Assertions {
     public static void requirePositive(double n, Supplier<String> message) {
         DELEGATE.requirePositive(n, message);
     }
+
 }

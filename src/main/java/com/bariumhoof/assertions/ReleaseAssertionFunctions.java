@@ -25,7 +25,17 @@ final class ReleaseAssertionFunctions implements AssertionFunctions {
     @Contract("null, _ -> fail")
     @Override
     public void requireNonNull(Object object, Supplier<String> message) {
-        // NO OP
+        // NO OP.
+    }
+
+    @Override
+    public void requireBgfxInitialized(String reason) {
+        // NO OP.
+    }
+
+    @Override
+    public void require(boolean b) {
+        // NO OP.
     }
 
     @Override

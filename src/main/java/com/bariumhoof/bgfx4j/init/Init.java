@@ -24,8 +24,8 @@ import java.util.stream.Stream;
 import static org.lwjgl.bgfx.BGFX.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 
-@Builder(style = BuilderStyle.TYPE_SAFE)
 @Value
+@Builder(style = BuilderStyle.TYPE_SAFE)
 public final class Init {
     final @NotNull PlatformData platformData; // required
     final @NotNull Resolution resolution; // required
