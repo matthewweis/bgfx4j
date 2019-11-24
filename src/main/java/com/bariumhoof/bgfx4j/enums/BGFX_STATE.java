@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_STATE {
@@ -54,5 +56,13 @@ public enum BGFX_STATE {
 
     BGFX_STATE(long value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_STATE> states) {
+        long bits = 0L;
+        for (BGFX_STATE next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

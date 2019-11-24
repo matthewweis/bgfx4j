@@ -1,7 +1,10 @@
 package com.bariumhoof.assertions;
 
+import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 public final class Assertions {
@@ -29,6 +32,22 @@ public final class Assertions {
 
     public static void require(boolean b) {
         DELEGATE.require(b);
+    }
+
+    public static void requireIfCapEnabled(boolean b, @NotNull BGFX_CAPS cap) { DELEGATE.requireIfCapEnabled(b, cap); }
+
+    public static void requireIfCapsEnabled(boolean b, @NotNull BGFX_CAPS ... caps) { DELEGATE.requireIfCapsEnabled(b, caps); }
+
+    public static void requireIfCapDisabled(boolean b, @NotNull BGFX_CAPS cap) { DELEGATE.requireIfCapDisabled(b, cap); }
+
+    public static void requireIfCapsDisabled(boolean b, @NotNull BGFX_CAPS ... caps) { DELEGATE.requireIfCapsDisabled(b, caps); }
+
+    public static void requireEmpty(Collection<?> c) {
+        DELEGATE.requireEmpty(c);
+    }
+
+    public static void requireNonEmpty(Collection<?> c) {
+        DELEGATE.requireNonEmpty(c);
     }
 
     public static void requireNonNegative(byte n) {

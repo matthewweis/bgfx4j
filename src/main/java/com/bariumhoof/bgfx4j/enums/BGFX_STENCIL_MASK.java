@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.BGFX_STENCIL_MASK;
 import static org.lwjgl.bgfx.BGFX.*;
 
@@ -16,5 +18,13 @@ public enum BGFX_STENCIL_MASK {
 
     BGFX_STENCIL_MASK(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_STENCIL_MASK> states) {
+        long bits = 0L;
+        for (BGFX_STENCIL_MASK next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

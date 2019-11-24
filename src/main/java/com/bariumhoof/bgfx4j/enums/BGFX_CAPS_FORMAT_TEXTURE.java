@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_CAPS_FORMAT_TEXTURE {
@@ -24,5 +26,13 @@ public enum BGFX_CAPS_FORMAT_TEXTURE {
 
     BGFX_CAPS_FORMAT_TEXTURE(short value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_CAPS_FORMAT_TEXTURE> states) {
+        long bits = 0L;
+        for (BGFX_CAPS_FORMAT_TEXTURE next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

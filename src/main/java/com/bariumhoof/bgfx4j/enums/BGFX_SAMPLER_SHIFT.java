@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_SAMPLER_SHIFT {
@@ -17,5 +19,13 @@ public enum BGFX_SAMPLER_SHIFT {
 
     BGFX_SAMPLER_SHIFT(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_SAMPLER_SHIFT> states) {
+        long bits = 0L;
+        for (BGFX_SAMPLER_SHIFT next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

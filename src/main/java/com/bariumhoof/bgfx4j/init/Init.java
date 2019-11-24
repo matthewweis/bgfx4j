@@ -1,28 +1,15 @@
 package com.bariumhoof.bgfx4j.init;
 
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
-import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
-import com.bariumhoof.bgfx4j.resource.Resources;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jilt.Builder;
 import org.jilt.BuilderStyle;
 import org.jilt.Opt;
-import org.lwjgl.bgfx.*;
-import org.lwjgl.glfw.GLFWNativeCocoa;
-import org.lwjgl.glfw.GLFWNativeWin32;
-import org.lwjgl.glfw.GLFWNativeX11;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.Platform;
-
-import java.util.Arrays;
-import java.util.stream.Stream;
-
-import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.system.MemoryStack.stackPush;
+import org.lwjgl.bgfx.BGFXAllocatorInterface;
+import org.lwjgl.bgfx.BGFXCallbackInterface;
+import org.lwjgl.bgfx.BGFXInitLimits;
 
 @Value
 @Builder(style = BuilderStyle.TYPE_SAFE)

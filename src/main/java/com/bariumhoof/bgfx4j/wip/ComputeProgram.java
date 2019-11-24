@@ -2,13 +2,6 @@ package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
-import com.bariumhoof.bgfx4j.resource.Resources;
-import org.jetbrains.annotations.NotNull;
-
-import java.io.IOException;
-import java.net.URL;
-
-import static org.lwjgl.bgfx.BGFX.*;
 
 // todo low priority
 public class ComputeProgram implements Disposable, Handle {

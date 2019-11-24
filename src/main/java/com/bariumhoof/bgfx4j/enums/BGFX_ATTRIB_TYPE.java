@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_ATTRIB_TYPE {
@@ -14,5 +16,13 @@ public enum BGFX_ATTRIB_TYPE {
 
     BGFX_ATTRIB_TYPE(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_ATTRIB_TYPE> states) {
+        long bits = 0L;
+        for (BGFX_ATTRIB_TYPE next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

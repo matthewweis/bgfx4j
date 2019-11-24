@@ -1,24 +1,16 @@
 package com.bariumhoof.bgfx4j.encoder;
 
 import com.bariumhoof.EnumUtils;
-import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
-import com.bariumhoof.bgfx4j.enums.BGFX_STATE_BLEND;
-import com.bariumhoof.bgfx4j.extras.ModelMatrix;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
 import com.bariumhoof.bgfx4j.wip.Program;
 import com.bariumhoof.bgfx4j.wip.VertexBuffer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4dStack;
-import org.joml.Matrix4f;
-import org.lwjgl.bgfx.BGFXVertexDecl;
-import org.lwjgl.system.ThreadLocalUtil;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.util.Collection;
 import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;

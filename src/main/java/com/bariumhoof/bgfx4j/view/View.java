@@ -1,16 +1,10 @@
 package com.bariumhoof.bgfx4j.view;
 
 
-import com.bariumhoof.bgfx4j.Disposable;
-import com.bariumhoof.bgfx4j.Handle;
-import com.bariumhoof.bgfx4j.enums.BGFX_CLEAR;
 import com.bariumhoof.bgfx4j.enums.BGFX_VIEW_MODE;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
-import org.joml.Vector3f;
-import org.lwjgl.bgfx.BGFX;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;

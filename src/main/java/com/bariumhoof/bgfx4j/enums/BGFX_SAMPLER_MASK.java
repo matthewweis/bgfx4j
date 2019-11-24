@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_SAMPLER_MASK {
@@ -18,5 +20,13 @@ public enum BGFX_SAMPLER_MASK {
 
     BGFX_SAMPLER_MASK(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_SAMPLER_MASK> states) {
+        long bits = 0L;
+        for (BGFX_SAMPLER_MASK next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

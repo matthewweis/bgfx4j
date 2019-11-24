@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_STATE_SHIFT {
@@ -16,5 +18,13 @@ public enum BGFX_STATE_SHIFT {
 
     BGFX_STATE_SHIFT(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_STATE_SHIFT> states) {
+        long bits = 0L;
+        for (BGFX_STATE_SHIFT next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

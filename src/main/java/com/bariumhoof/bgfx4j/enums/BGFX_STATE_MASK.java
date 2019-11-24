@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.BGFX_STATE_MASK;
 import static org.lwjgl.bgfx.BGFX.*;
 
@@ -18,5 +20,13 @@ public enum BGFX_STATE_MASK {
 
     BGFX_STATE_MASK(long value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_STATE_MASK> states) {
+        long bits = 0L;
+        for (BGFX_STATE_MASK next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

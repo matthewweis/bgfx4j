@@ -2,12 +2,9 @@ package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
-import com.bariumhoof.bgfx4j.encoder.Encoder;
-import com.bariumhoof.bgfx4j.view.View;
-import org.lwjgl.bgfx.BGFX;
 
-import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.bgfx.BGFX.bgfx_create_occlusion_query;
+import static org.lwjgl.bgfx.BGFX.bgfx_destroy_occlusion_query;
 
 public class OcclusionQuery implements Handle, Disposable {
 

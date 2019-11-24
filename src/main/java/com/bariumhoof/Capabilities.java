@@ -1,7 +1,10 @@
 package com.bariumhoof;
 
 import com.bariumhoof.assertions.Assertions;
-import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
+import com.bariumhoof.bgfx4j.enums.BGFX_PCI_ID;
+import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
+import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXCaps;
@@ -10,7 +13,7 @@ import org.lwjgl.bgfx.BGFXCapsLimits;
 
 import java.util.*;
 
-import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.bgfx_get_caps;
 
 // todo check whole project, make sure I didnt use EnumSet somewhere where COUNT is a valid part of the enum!
 // todo COUNT IN ENUM SHOULD INSTEAD BE PUBLIC STATIC VARIABLE OR USE JAVA BUILT IN!!!
@@ -62,6 +65,33 @@ public class Capabilities {
 
     public static boolean isSupported(@NotNull BGFX_CAPS capability) {
         return Flags.containsFlag(supported, capability.VALUE);
+    }
+
+    public static boolean allSupported(@NotNull BGFX_CAPS ... capabilities) {
+        for (BGFX_CAPS cap : capabilities) {
+            if (!isSupported(cap)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean anySupported(@NotNull BGFX_CAPS ... capabilities) {
+        for (BGFX_CAPS cap : capabilities) {
+            if (isSupported(cap)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean noneSupported(@NotNull BGFX_CAPS ... capabilities) {
+        for (BGFX_CAPS cap : capabilities) {
+            if (isSupported(cap)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isSupported(@NotNull BGFX_TEXTURE_FORMAT format) {

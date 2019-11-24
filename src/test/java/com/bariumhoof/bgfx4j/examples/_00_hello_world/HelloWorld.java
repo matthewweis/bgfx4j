@@ -1,27 +1,11 @@
 package com.bariumhoof.bgfx4j.examples._00_hello_world;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.TestLauncher;
-import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
-import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
-import org.joml.Matrix4f;
-import org.lwjgl.bgfx.BGFXInit;
-import org.lwjgl.glfw.GLFWNativeCocoa;
-import org.lwjgl.glfw.GLFWNativeWin32;
-import org.lwjgl.glfw.GLFWNativeX11;
-import org.lwjgl.system.MemoryStack;
-import org.lwjgl.system.MemoryUtil;
-import org.lwjgl.system.Platform;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
-import static org.lwjgl.system.MemoryStack.stackPush;
-import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
  * Bgfx4j port of bgfx example:

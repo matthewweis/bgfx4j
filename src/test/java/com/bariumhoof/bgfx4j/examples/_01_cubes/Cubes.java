@@ -1,7 +1,6 @@
 package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.TestLauncher;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.view.ClearStrategy;
 import com.bariumhoof.bgfx4j.view.View;
@@ -11,8 +10,6 @@ import com.bariumhoof.bgfx4j.wip.VertexBuffer;
 import com.bariumhoof.bgfx4j.wip.VertexDecl;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.bgfx.BGFX;
-import org.lwjgl.bgfx.BGFXStats;
 
 import java.io.IOException;
 import java.util.EnumSet;

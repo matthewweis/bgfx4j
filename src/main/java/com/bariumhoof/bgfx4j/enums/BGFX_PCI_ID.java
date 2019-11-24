@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_PCI_ID {
@@ -13,5 +15,13 @@ public enum BGFX_PCI_ID {
 
     BGFX_PCI_ID(short value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_PCI_ID> states) {
+        long bits = 0L;
+        for (BGFX_PCI_ID next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

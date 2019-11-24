@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_OCCLUSION_QUERY_RESULT {
@@ -12,5 +14,13 @@ public enum BGFX_OCCLUSION_QUERY_RESULT {
 
     BGFX_OCCLUSION_QUERY_RESULT(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_OCCLUSION_QUERY_RESULT> states) {
+        long bits = 0L;
+        for (BGFX_OCCLUSION_QUERY_RESULT next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

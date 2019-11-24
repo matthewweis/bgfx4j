@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_RENDERER_TYPE {
@@ -19,5 +21,13 @@ public enum BGFX_RENDERER_TYPE {
 
     BGFX_RENDERER_TYPE(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_RENDERER_TYPE> states) {
+        long bits = 0L;
+        for (BGFX_RENDERER_TYPE next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

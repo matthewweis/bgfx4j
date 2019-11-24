@@ -3,7 +3,6 @@ package com.bariumhoof.bgfx4j.wip;
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXVertexDecl;

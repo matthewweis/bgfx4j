@@ -2,7 +2,10 @@ package com.bariumhoof.bgfx4j.examples.sanity_check;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.encoder.Encoder;
-import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
+import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
+import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
+import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
 import com.bariumhoof.bgfx4j.wip.Program;
@@ -15,7 +18,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.IOException;
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.bgfx_dbg_text_printf;
 
 public class SanityCheck extends Application {
 

@@ -1,8 +1,12 @@
 package com.bariumhoof.assertions;
 
+import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -37,6 +41,56 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     public void require(boolean b) {
         if (!b) {
             throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void requireIfCapEnabled(boolean b, @NotNull BGFX_CAPS cap) {
+        if (Capabilities.isSupported(cap)) {
+            if (!b) {
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+
+    @Override
+    public void requireIfCapsEnabled(boolean b, @NotNull BGFX_CAPS ... caps) {
+        if (Capabilities.allSupported(caps)) {
+            if (!b) {
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+
+    @Override
+    public void requireIfCapDisabled(boolean b, @NotNull BGFX_CAPS cap) {
+        if (!Capabilities.isSupported(cap)) {
+            if (!b) {
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+
+    @Override
+    public void requireIfCapsDisabled(boolean b, @NotNull BGFX_CAPS ... caps) {
+        if (Capabilities.noneSupported(caps)) {
+            if (!b) {
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
+
+    @Override
+    public void requireEmpty(Collection<?> c) {
+        if (!c.isEmpty()) {
+            throw new IllegalArgumentException("Collection must be empty.");
+        }
+    }
+
+    @Override
+    public void requireNonEmpty(Collection<?> c) {
+        if (!c.isEmpty()) {
+            throw new IllegalArgumentException("Collection must be empty.");
         }
     }
 

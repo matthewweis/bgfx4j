@@ -11,7 +11,6 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.bgfx.BGFX.bgfx_create_dynamic_index_buffer;
 
 public class DynamicIndexBuffer implements Disposable, Handle {
 

@@ -2,7 +2,6 @@ package com.bariumhoof.bgfx4j;
 
 import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
 import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
-import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import com.bariumhoof.bgfx4j.init.Init;
 import com.bariumhoof.bgfx4j.init.PlatformData;
 import com.bariumhoof.bgfx4j.init.Resolution;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.bgfx.BGFXCaps;
 import org.lwjgl.bgfx.BGFXInit;
 import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.lwjgl.glfw.GLFWNativeWin32;
@@ -20,13 +18,10 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Platform;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Stream;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.bgfx.BGFX.bgfx_shutdown;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.stackPush;

@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.BGFX_TEXTURE_RT;
 import static org.lwjgl.bgfx.BGFX.*;
 
@@ -21,5 +23,13 @@ public enum BGFX_TEXTURE {
 
     BGFX_TEXTURE(long value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_TEXTURE> states) {
+        long bits = 0L;
+        for (BGFX_TEXTURE next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

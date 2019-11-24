@@ -1,7 +1,10 @@
 package com.bariumhoof.assertions;
 
+import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 /**
@@ -35,6 +38,36 @@ final class ReleaseAssertionFunctions implements AssertionFunctions {
 
     @Override
     public void require(boolean b) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireIfCapEnabled(boolean b, @NotNull BGFX_CAPS cap) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireIfCapsEnabled(boolean b, @NotNull BGFX_CAPS... caps) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireIfCapDisabled(boolean b, @NotNull BGFX_CAPS cap) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireIfCapsDisabled(boolean b, @NotNull BGFX_CAPS... caps) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(Collection<?> c) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(Collection<?> c) {
         // NO OP.
     }
 

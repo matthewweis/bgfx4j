@@ -5,32 +5,65 @@ import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.resource.Resources;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.bgfx.BGFX;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
 
-import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.bgfx_destroy_shader;
+import static org.lwjgl.bgfx.BGFX.bgfx_set_shader_name;
 
 @ToString
 @EqualsAndHashCode
 public class Shader implements Disposable, Handle {
 
     final short handle;
-    final @Nullable String name;
+    @NotNull private String name;
 
-    private Shader(@NotNull URL url) throws IOException {
-        this(null, url);
+    private Shader(@NotNull String name, short handle) {
+        this.handle = handle;
+        this.name = name;
+        setName(name);
     }
 
-    private Shader(@Nullable String name, @NotNull URL url) throws IOException {
-        this.handle = Resources.loadShader(url);
+    public void setName(@NotNull String name) {
+        bgfx_set_shader_name(handle, name);
         this.name = name;
-        if (Objects.nonNull(name)) {
-            bgfx_set_shader_name(handle, name);
+    }
+
+    @NotNull
+    public String getName() {
+        return name;
+    }
+
+    @NotNull
+    public static Shader load(@NotNull URL url) throws IOException {
+        final String defaultName = FilenameUtils.getBaseName(url.toString());
+        return new Shader(defaultName, Resources.loadShader(url));
+    }
+
+    @NotNull
+    public static Shader load(@NotNull String name, @NotNull URL url) throws IOException {
+        return new Shader(name, Resources.loadShader(url));
+    }
+
+    @Nullable
+    public static Shader loadOrNull(@NotNull URL url) {
+        try {
+            return load(url);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static Shader loadOrNull(@NotNull String name, @NotNull URL url) {
+        try {
+            return load(name, url);
+        } catch (IOException e) {
+            return null;
         }
     }
 

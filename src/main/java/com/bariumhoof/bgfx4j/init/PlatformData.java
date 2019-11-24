@@ -1,15 +1,9 @@
 package com.bariumhoof.bgfx4j.init;
 
-import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
-import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Value;
-import org.jetbrains.annotations.NotNull;
 import org.jilt.Builder;
-import org.jilt.BuilderStyle;
-import org.jilt.Opt;
-import org.lwjgl.bgfx.BGFXPlatformData;
 
 @Builder
 @Value

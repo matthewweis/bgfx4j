@@ -2,8 +2,7 @@ package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
-import com.bariumhoof.bgfx4j.resource.Resources;
-import lombok.extern.slf4j.Slf4j;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,44 +14,38 @@ import static org.lwjgl.bgfx.BGFX.*;
 public class Program implements Disposable, Handle {
 
     private final short p_handle;
-    private final short vs_handle;
-    private final short fs_handle;
 
-    private Program(short vs_handle, short fs_handle, boolean destroyShaders) {
-        this.vs_handle = vs_handle;
-        this.fs_handle = fs_handle;
-        this.p_handle = bgfx_create_program(vs_handle, fs_handle, destroyShaders);
+    @Getter
+    @NotNull
+    private final Shader vs, fs;
+
+    private Program(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
+        this.vs = vs;
+        this.fs = fs;
+        this.p_handle = bgfx_create_program(vs.handle, fs.handle, destroyShaders);
         // from bgfx doc:
         // "Destroy shader. Once a shader program is created with _handle, it is safe to destroy that shader."
         if (destroyShaders) {
-            bgfx_destroy_shader(vs_handle);
-            bgfx_destroy_shader(fs_handle);
+            bgfx_destroy_shader(vs.handle);
+            bgfx_destroy_shader(fs.handle);
         }
     }
 
     public void setShaderNames(@NotNull String vertexShaderName, @NotNull String fragmentShaderName) {
-        setVertexShaderName(vertexShaderName);
-        setFragmentShaderName(fragmentShaderName);
-    }
-
-    public void setVertexShaderName(@NotNull String name) {
-        bgfx_set_shader_name(vs_handle, name);
-    }
-
-    public void setFragmentShaderName(@NotNull String name) {
-        bgfx_set_shader_name(fs_handle, name);
+        vs.setName(vertexShaderName);
+        fs.setName(fragmentShaderName);
     }
 
     @Deprecated // not sure if this works
     public void getVertexShaderUniforms() {
         short[] uniforms = new short[0];
-        final int n = bgfx_get_shader_uniforms(vs_handle, uniforms); // todo check if this works!
+        final int n = bgfx_get_shader_uniforms(vs.handle, uniforms); // todo check if this works!
     }
 
     @Deprecated // not sure if this works
     public void getFragmentShaderUniforms() {
         short[] uniforms = new short[0];
-        final int n = bgfx_get_shader_uniforms(fs_handle, uniforms); // todo check if this works!
+        final int n = bgfx_get_shader_uniforms(fs.handle, uniforms); // todo check if this works!
     }
 
     @Override
@@ -68,7 +61,8 @@ public class Program implements Disposable, Handle {
      * @param fs The fragment shader that corresponds to the passed vertex shader.
      * @return A program created from the two shaders.
      */
-    public static @NotNull Program create(@NotNull Shader vs, @NotNull Shader fs) {
+    @NotNull
+    public static Program create(@NotNull Shader vs, @NotNull Shader fs) {
         return create(vs, fs, false);
     }
 
@@ -83,8 +77,9 @@ public class Program implements Disposable, Handle {
      * @param destroyShaders Whether or not to destroy the shaders after creating the program (will not affect program).
      * @return A program created from the vs and fs shaders.
      */
-    public static @NotNull Program create(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
-        return new Program(vs.handle, fs.handle, destroyShaders);
+    @NotNull
+    public static Program create(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
+        return new Program(vs, fs, destroyShaders);
     }
 
     /**
@@ -94,8 +89,9 @@ public class Program implements Disposable, Handle {
      * @return A program created from the loaded vs and fs shaders.
      * @throws IOException thrown if either {@link URL} is invalid.
      */
-    public static @NotNull Program load(@NotNull URL vs, @NotNull URL fs) throws IOException {
-        return new Program(Resources.loadShader(vs), Resources.loadShader(fs), true);
+    @NotNull
+    public static Program load(@NotNull URL vs, @NotNull URL fs) throws IOException {
+        return create(Shader.load(vs), Shader.load(fs), true);
     }
 
     /**
@@ -104,9 +100,10 @@ public class Program implements Disposable, Handle {
      * @param fs The {@link URL} of the corresponding fragment shader to load.
      * @return A program created from the loaded vs and fs shaders.
      */
-    public static @Nullable Program loadOrNull(@NotNull URL vs, @NotNull URL fs) {
+    @Nullable
+    public static Program loadOrNull(@NotNull URL vs, @NotNull URL fs) {
         try {
-            return new Program(Resources.loadShader(vs), Resources.loadShader(fs), true);
+            return create(Shader.load(vs), Shader.load(fs), true);
         } catch (IOException e) {
             return null;
         }
@@ -115,22 +112,6 @@ public class Program implements Disposable, Handle {
     @Override
     public short handle() {
         return p_handle;
-    }
-
-    public short vs_handle() {
-        return vs_handle;
-    }
-
-    public short fs_handle() {
-        return fs_handle;
-    }
-
-    public short getVertexShaderHandle() {
-        return vs_handle;
-    }
-
-    public short getFragmentShaderHandle() {
-        return fs_handle;
     }
 }
 

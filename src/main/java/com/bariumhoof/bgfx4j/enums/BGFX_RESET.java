@@ -1,5 +1,7 @@
 package com.bariumhoof.bgfx4j.enums;
 
+import java.util.Set;
+
 import static org.lwjgl.bgfx.BGFX.*;
 
 public enum BGFX_RESET {
@@ -28,5 +30,13 @@ public enum BGFX_RESET {
 
     BGFX_RESET(int value) {
         this.VALUE = value;
+    }
+
+    public static long flags(Set<BGFX_RESET> states) {
+        long bits = 0L;
+        for (BGFX_RESET next : states) {
+            bits |= next.VALUE;
+        }
+        return bits;
     }
 }

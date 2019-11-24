@@ -1,7 +1,9 @@
 package com.bariumhoof.assertions;
 
+import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
 import org.jetbrains.annotations.Contract;
 
+import java.util.Collection;
 import java.util.function.Supplier;
 
 // todo make seperate lib
@@ -15,6 +17,12 @@ interface AssertionFunctions {
     void requireNonNull(Object object, Supplier<String> message);
     void requireBgfxInitialized(String reason);
     void require(boolean b);
+    void requireIfCapEnabled(boolean b, BGFX_CAPS caps);
+    void requireIfCapsEnabled(boolean b, BGFX_CAPS ... caps);
+    void requireIfCapDisabled(boolean b, BGFX_CAPS caps);
+    void requireIfCapsDisabled(boolean b, BGFX_CAPS ... caps);
+    void requireEmpty(Collection<?> c);
+    void requireNonEmpty(Collection<?> c);
     void requireNonNegative(byte n);
     void requireNonNegative(short n);
     void requireNonNegative(int n);
