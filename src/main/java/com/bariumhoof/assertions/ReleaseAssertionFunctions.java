@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 /**
  * During release assertions become NO-OPS to be optimized away.
- * Note this breaks contracts, but this is OK.
+ * Note this breaks IDEA contracts, but this is OK.
  */
 final class ReleaseAssertionFunctions implements AssertionFunctions {
 

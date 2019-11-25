@@ -88,7 +88,6 @@ public class Texture2D extends Texture {
 //            beginWith(attrib, type, NORMALIZED_DEFAULT, AS_INT_DEFAULT);
 //            return new BuilderSurplusStage(decl);
 //        }
-//
 //    }
 
     private static void requireNotEmpty(@NotNull TextureFlags textureFlags) {

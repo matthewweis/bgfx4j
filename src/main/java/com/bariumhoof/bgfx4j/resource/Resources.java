@@ -82,5 +82,4 @@ public final class Resources {
         res.flip();
         return res;
     }
-
 }

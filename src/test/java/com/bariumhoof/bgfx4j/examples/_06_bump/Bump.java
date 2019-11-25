@@ -19,20 +19,20 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 public class Bump extends Application {
 
-//    private BGFXVertexDecl layout;
+    //    private BGFXVertexDecl layout;
     private VertexDecl layout;
     private ByteBuffer vertices;
     private VertexBuffer vb;
-//    private short vbh;
+    //    private short vbh;
     private ByteBuffer indices;
     private IndexBuffer ib;
-//    private short ibh;
+    //    private short ibh;
     private short uniformTexColor;
     private short uniformTexNormal;
     private int numLights;
     private short uniformLightPosRadius;
     private short uniformLightRgbInnerR;
-//    private short program;
+    //    private short program;
     private Program program;
     private Texture textureColor;
     private Texture textureNormal;
@@ -251,8 +251,8 @@ public class Bump extends Application {
 
         textureColor = Texture.loadOrNull(
                 Texture.TextureFlags.create(
-                    EnumSet.of(BGFX_TEXTURE.NONE),
-                    EnumSet.of(BGFX_SAMPLER.NONE)),
+                        EnumSet.of(BGFX_TEXTURE.NONE),
+                        EnumSet.of(BGFX_SAMPLER.NONE)),
                 Bump.class.getResource("/textures/fieldstone-n.dds")
         );
 

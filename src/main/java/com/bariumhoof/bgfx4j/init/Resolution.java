@@ -9,8 +9,8 @@ import org.jilt.Builder;
 import org.jilt.BuilderStyle;
 import org.jilt.Opt;
 
-@Builder(style = BuilderStyle.TYPE_SAFE)
 @Value
+@Builder(style = BuilderStyle.TYPE_SAFE)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class Resolution {
     final int width; // required

@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Value;
 import org.jilt.Builder;
 
-@Builder
 @Value
+@Builder
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public final class PlatformData {
 
