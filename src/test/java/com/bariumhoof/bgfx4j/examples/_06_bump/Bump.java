@@ -1,5 +1,6 @@
 package com.bariumhoof.bgfx4j.examples._06_bump;
 
+import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.wip.*;
@@ -225,7 +226,7 @@ public class Bump extends Application {
                 .build();
 
         BGFXCaps caps = bgfx_get_caps();
-        instancingSupported = (caps.supported() & BGFX_CAPS_INSTANCING) != 0;
+        instancingSupported = Capabilities.isSupported(BGFX_CAPS.INSTANCING);
 
         vertices = calcTangents(cubeVertices, cubeVertices.length, layout.get(), cubeIndices, cubeIndices.length);
 

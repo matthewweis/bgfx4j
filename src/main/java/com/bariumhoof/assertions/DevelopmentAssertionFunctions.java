@@ -3,6 +3,7 @@ package com.bariumhoof.assertions;
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,6 +11,7 @@ import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+@Slf4j
 final class DevelopmentAssertionFunctions implements AssertionFunctions {
 
     @Contract("null -> fail")
@@ -33,6 +35,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireBgfxInitialized(String reason) {
         if (!Application.isInitialized()) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalStateException();
         }
     }
@@ -40,6 +44,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void require(boolean b) {
         if (!b) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -48,15 +54,19 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     public void requireIfCapEnabled(boolean b, @NotNull BGFX_CAPS cap) {
         if (Capabilities.isSupported(cap)) {
             if (!b) {
+                log.error("Assertion Failed!");
+                Thread.dumpStack();
                 throw new UnsupportedOperationException();
             }
         }
     }
 
     @Override
-    public void requireIfCapsEnabled(boolean b, @NotNull BGFX_CAPS ... caps) {
+    public void requireIfCapsEnabled(boolean b, @NotNull BGFX_CAPS... caps) {
         if (Capabilities.allSupported(caps)) {
             if (!b) {
+                log.error("Assertion Failed!");
+                Thread.dumpStack();
                 throw new UnsupportedOperationException();
             }
         }
@@ -66,15 +76,19 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     public void requireIfCapDisabled(boolean b, @NotNull BGFX_CAPS cap) {
         if (!Capabilities.isSupported(cap)) {
             if (!b) {
+                log.error("Assertion Failed!");
+                Thread.dumpStack();
                 throw new UnsupportedOperationException();
             }
         }
     }
 
     @Override
-    public void requireIfCapsDisabled(boolean b, @NotNull BGFX_CAPS ... caps) {
+    public void requireIfCapsDisabled(boolean b, @NotNull BGFX_CAPS... caps) {
         if (Capabilities.noneSupported(caps)) {
             if (!b) {
+                log.error("Assertion Failed!");
+                Thread.dumpStack();
                 throw new UnsupportedOperationException();
             }
         }
@@ -83,6 +97,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireEmpty(Collection<?> c) {
         if (!c.isEmpty()) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException("Collection must be empty.");
         }
     }
@@ -90,6 +106,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonEmpty(Collection<?> c) {
         if (!c.isEmpty()) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException("Collection must be empty.");
         }
     }
@@ -97,6 +115,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(byte n) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -104,6 +124,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(short n) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -111,6 +133,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(int n) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -118,6 +142,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(long n) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -125,6 +151,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(float n) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -132,6 +160,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(double n) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -139,6 +169,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(byte n, String message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -146,6 +178,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(short n, String message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -153,6 +187,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(int n, String message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -160,6 +196,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(long n, String message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -167,6 +205,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(float n, String message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -174,6 +214,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(double n, String message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -181,6 +223,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(byte n, Supplier<String> message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -188,6 +232,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(short n, Supplier<String> message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -195,6 +241,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(int n, Supplier<String> message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -202,6 +250,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(long n, Supplier<String> message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -209,6 +259,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(float n, Supplier<String> message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -216,6 +268,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requireNonNegative(double n, Supplier<String> message) {
         if (n < 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -223,6 +277,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(byte n) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -230,6 +286,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(short n) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -237,6 +295,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(int n) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -244,6 +304,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(long n) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -251,6 +313,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(float n) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -258,6 +322,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(double n) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException();
         }
     }
@@ -265,6 +331,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(byte n, String message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -272,6 +340,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(short n, String message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -279,6 +349,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(int n, String message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -286,6 +358,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(long n, String message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -293,6 +367,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(float n, String message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -300,6 +376,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(double n, String message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message);
         }
     }
@@ -307,6 +385,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(byte n, Supplier<String> message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -314,6 +394,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(short n, Supplier<String> message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -321,6 +403,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(int n, Supplier<String> message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -328,6 +412,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(long n, Supplier<String> message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -335,6 +421,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(float n, Supplier<String> message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }
@@ -342,6 +430,8 @@ final class DevelopmentAssertionFunctions implements AssertionFunctions {
     @Override
     public void requirePositive(double n, Supplier<String> message) {
         if (n <= 0) {
+            log.error("Assertion Failed!");
+            Thread.dumpStack();
             throw new IllegalArgumentException(message.get());
         }
     }

@@ -1,10 +1,7 @@
 package com.bariumhoof;
 
 import com.bariumhoof.assertions.Assertions;
-import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
-import com.bariumhoof.bgfx4j.enums.BGFX_PCI_ID;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
+import com.bariumhoof.bgfx4j.enums.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXCaps;
@@ -60,8 +57,10 @@ public class Capabilities {
     @Getter @NotNull
     private static final Set<BGFX_CAPS> supportedCapabilities = determineSupportedCapabilities();
 
-    @Getter @NotNull
-    private static final Set<BGFX_TEXTURE_FORMAT> textureFormats = determineTextureFormats();
+//    @Getter @NotNull
+//    private static final Set<BGFX_TEXTURE_FORMAT> textureFormats = determineTextureFormats();
+
+    private static final short[] textureFormatCapabilities = determineTextureFormats();
 
     public static boolean isSupported(@NotNull BGFX_CAPS capability) {
         return Flags.containsFlag(supported, capability.VALUE);
@@ -75,6 +74,7 @@ public class Capabilities {
         }
         return true;
     }
+
 
     public static boolean anySupported(@NotNull BGFX_CAPS ... capabilities) {
         for (BGFX_CAPS cap : capabilities) {
@@ -94,8 +94,36 @@ public class Capabilities {
         return true;
     }
 
-    public static boolean isSupported(@NotNull BGFX_TEXTURE_FORMAT format) {
-        return textureFormats.contains(format); // Set is an EnumSet with very fast lookup time
+    public static boolean isSupported(@NotNull BGFX_TEXTURE_FORMAT format, @NotNull BGFX_CAPS_FORMAT_TEXTURE capability) {
+        return Flags.containsFlag(textureFormatCapabilities[format.ordinal()], capability.VALUE);
+    }
+
+    public static boolean allSupported(@NotNull BGFX_TEXTURE_FORMAT format, @NotNull BGFX_CAPS_FORMAT_TEXTURE ... capabilities) {
+        for (BGFX_CAPS_FORMAT_TEXTURE cap : capabilities) {
+            if (!isSupported(format, cap)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    public static boolean anySupported(@NotNull BGFX_TEXTURE_FORMAT format, @NotNull BGFX_CAPS_FORMAT_TEXTURE ... capabilities) {
+        for (BGFX_CAPS_FORMAT_TEXTURE cap : capabilities) {
+            if (isSupported(format, cap)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean noneSupported(@NotNull BGFX_TEXTURE_FORMAT format, @NotNull BGFX_CAPS_FORMAT_TEXTURE ... capabilities) {
+        for (BGFX_CAPS_FORMAT_TEXTURE cap : capabilities) {
+            if (isSupported(format, cap)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private static BGFX_PCI_ID determineSelectedVendor() {
@@ -159,26 +187,35 @@ public class Capabilities {
         return new CapsLimits(caps.limits());
     }
 
-    private static Set<BGFX_TEXTURE_FORMAT> determineTextureFormats() {
+//    private static Set<BGFX_TEXTURE_FORMAT> determineTextureFormats() {
+//        final int count = BGFX_TEXTURE_FORMAT.COUNT.VALUE;
+//
+//        final var availableFormats = EnumSet.noneOf(BGFX_TEXTURE_FORMAT.class);
+//        final BGFX_TEXTURE_FORMAT[] potentialFormats = BGFX_TEXTURE_FORMAT.values();
+//
+//        for (int i=0; i < count; i++) {
+//            final short nextAvailableFormat = caps.formats(i);
+//            boolean wasFormatDetermined = false;
+//            for (BGFX_TEXTURE_FORMAT potentialFormat : potentialFormats) {
+//                if (nextAvailableFormat == potentialFormat.VALUE) {
+//                    availableFormats.add(potentialFormat);
+//                    wasFormatDetermined = true;
+//                    break;
+//                }
+//            }
+//            Assertions.require(wasFormatDetermined);
+//        }
+//
+//        return Collections.unmodifiableSet(availableFormats);
+//    }
+
+    private static short[] determineTextureFormats() {
         final int count = BGFX_TEXTURE_FORMAT.COUNT.VALUE;
-
-        final var availableFormats = EnumSet.noneOf(BGFX_TEXTURE_FORMAT.class);
-        final BGFX_TEXTURE_FORMAT[] potentialFormats = BGFX_TEXTURE_FORMAT.values();
-
+        final short[] formatCaps = new short[count];
         for (int i=0; i < count; i++) {
-            final short nextAvailableFormat = caps.formats(i);
-            boolean wasFormatDetermined = false;
-            for (BGFX_TEXTURE_FORMAT potentialFormat : potentialFormats) {
-                if (nextAvailableFormat == potentialFormat.VALUE) {
-                    availableFormats.add(potentialFormat);
-                    wasFormatDetermined = true;
-                    break;
-                }
-            }
-            Assertions.require(wasFormatDetermined);
+            formatCaps[i] = caps.formats(i);
         }
-
-        return Collections.unmodifiableSet(availableFormats);
+        return formatCaps;
     }
 
     @ToString
