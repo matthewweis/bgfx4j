@@ -6,6 +6,7 @@ import com.bariumhoof.bgfx4j.init.Init;
 import com.bariumhoof.bgfx4j.init.PlatformData;
 import com.bariumhoof.bgfx4j.init.Resolution;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
@@ -27,6 +28,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+@Slf4j
 public abstract class Application {
 
     private static AtomicReference<Application> atomicInstance = new AtomicReference<>();
@@ -361,12 +363,22 @@ public abstract class Application {
         dest.setPerspectiveLH(fovRadians, aspect, near, far, zZeroToOne);
     }
 
+    private boolean hasDeliveredWindowWidthWarning = false;
     public int getWindowWidth() {
-        throw new UnsupportedOperationException();
+        if (!hasDeliveredWindowWidthWarning) {
+            log.warn("getWindowWidth is not yet implemented and is instead returning virtual width!");
+            hasDeliveredWindowWidthWarning = true;
+        }
+        return getWidth();
     }
 
+    private boolean hasDeliveredWindowHeightWarning = false;
     public int getWindowHeight() {
-        throw new UnsupportedOperationException();
+        if (!hasDeliveredWindowHeightWarning) {
+            log.warn("getWindowHeight is not yet implemented and is instead returning virtual height!");
+            hasDeliveredWindowHeightWarning = true;
+        }
+        return getHeight();
     }
 
     public int getWidth() {

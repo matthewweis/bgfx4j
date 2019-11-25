@@ -35,6 +35,11 @@ public final class Resources {
         return bgfx_create_shader(bgfxMemory);
     }
 
+    public static short loadTexture(long flags, int skip, @NotNull URL url) throws IOException {
+        final var bgfxMemory = loadResourceIntoMemory(url);
+        return bgfx_create_texture(bgfxMemory, flags, skip, null); // todo info handle
+    }
+
     // todo look into how null bgfxMemory creates mutable texture!
     public static short loadTexture2D(int width, int height, boolean hasMips, int numLayers,
                                       int format, long flags, @NotNull URL url) throws IOException {

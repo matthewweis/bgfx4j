@@ -24,6 +24,11 @@ public final class IndexBuffer implements Disposable, Handle {
         this.size = size;
     }
 
+    public static IndexBuffer create(@NotNull ByteBuffer indices, int count) {
+        final short handle = createIndexBuffer(indices);
+        return new IndexBuffer(indices, handle, count);
+    }
+
     public static IndexBuffer create(@NotNull int[] indices) {
         Assertions.requirePositive(indices.length);
 
@@ -90,9 +95,14 @@ public final class IndexBuffer implements Disposable, Handle {
         return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER.NONE.VALUE);
     }
 
+    private static short createIndexBuffer(ByteBuffer indices) {
+        BGFXMemory ibhMem = bgfx_make_ref(indices);
+        Assertions.requireNonNull(ibhMem);
+        return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER.NONE.VALUE);
+    }
+
     @Override
     public void dispose() {
-//        bgfx_destroy_vertex_decl();
         bgfx_destroy_vertex_buffer(handle);
     }
 

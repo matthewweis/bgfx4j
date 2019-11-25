@@ -91,7 +91,7 @@ public class Encoder {
      * todo: the rgba arg is ONLY needed when in one of two enum states. Possible to make typesafe?
      */
     public void setState(@NotNull EnumSet<BGFX_STATE> states, int rgba) {
-        bgfx_encoder_set_state(id, EnumUtils.flags(states), rgba);
+        bgfx_encoder_set_state(id, BGFX_STATE.flags(states), rgba);
     }
 
     /**

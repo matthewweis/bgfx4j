@@ -18,30 +18,6 @@ import java.util.Set;
 
 public class Texture2D extends Texture {
 
-    private static final TextureFlags DEFAULT = TextureFlags.create(
-            EnumSet.of(BGFX_TEXTURE.NONE),
-            EnumSet.of(BGFX_SAMPLER.NONE)
-    );
-
-    @ToString
-    @EqualsAndHashCode
-    public static final class TextureFlags {
-
-        @Getter
-        private final long VALUE;
-
-        private TextureFlags(long flags) {
-            this.VALUE = flags;
-        }
-
-        @NotNull
-        public static TextureFlags create(@NotNull Set<BGFX_TEXTURE> textureFlags, @NotNull Set<BGFX_SAMPLER> samplerFlags) {
-            final long texture = BGFX_TEXTURE.flags(textureFlags);
-            final long sampler = BGFX_SAMPLER.flags(samplerFlags);
-            return new TextureFlags(texture | sampler);
-        }
-    }
-
     private Texture2D(short handle) {
         super(handle);
     }

@@ -25,6 +25,11 @@ public final class VertexBuffer implements Disposable, Handle {
         this.size = size;
     }
 
+    public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull ByteBuffer vertices, int count) {
+        final short handle = createVertexBuffer(vertices, decl.get());
+        return new VertexBuffer(vertices, handle, count);
+    }
+
     public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull int[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
