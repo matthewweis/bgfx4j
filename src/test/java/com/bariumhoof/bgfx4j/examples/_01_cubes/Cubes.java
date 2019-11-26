@@ -61,8 +61,6 @@ public class Cubes extends Application {
     private Matrix4f model = new Matrix4f();
     private FloatBuffer modelBuf;
 
-    float time = 0;
-
     @Override
     public void init() {
 
@@ -87,8 +85,7 @@ public class Cubes extends Application {
     }
 
     @Override
-    public void render(double dt) {
-        time += dt*50000f;
+    public void render(float dt, float time) {
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 

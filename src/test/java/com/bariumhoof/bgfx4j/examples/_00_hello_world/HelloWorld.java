@@ -25,7 +25,7 @@ public class HelloWorld extends Application {
     }
 
     @Override
-    public void render(double dt) {
+    public void render(float dt, float time) {
 //        System.out.println("frame! " + dt);
         // Set view 0 default viewport.
         bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());

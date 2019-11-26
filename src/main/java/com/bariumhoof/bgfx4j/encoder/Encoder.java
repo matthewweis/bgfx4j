@@ -1,11 +1,10 @@
 package com.bariumhoof.bgfx4j.encoder;
 
 import com.bariumhoof.EnumUtils;
+import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.IndexBuffer;
-import com.bariumhoof.bgfx4j.wip.Program;
-import com.bariumhoof.bgfx4j.wip.VertexBuffer;
+import com.bariumhoof.bgfx4j.wip.*;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,6 +13,7 @@ import java.nio.FloatBuffer;
 import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.bgfx_encoder_set_texture;
 
 /**
  *
@@ -22,8 +22,10 @@ import static org.lwjgl.bgfx.BGFX.*;
  */
 public class Encoder {
 
+    private final static int USE_DEFAULT_TEXTURE_FLAG = 0xffffffff;
+
     private static @Nullable Encoder singleThreadEncoder = null;
-    private static ThreadLocal<Encoder> encoders = new ThreadLocal<>();
+    private static final ThreadLocal<Encoder> encoders = new ThreadLocal<>();
 
     private final long id;
 
@@ -103,9 +105,63 @@ public class Encoder {
         bgfx_encoder_set_vertex_buffer(id, 0, vertexBuffer.handle(), 0, vertexBuffer.size(), BGFX_INVALID_HANDLE);
     }
 
+    public void setVertexBuffer(VertexBuffer vertexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_vertex_buffer(id, 0, vertexBuffer.handle(), startVertex, size, BGFX_INVALID_HANDLE);
+    }
+
     public void setIndexBuffer(IndexBuffer indexBuffer) {
         bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), 0, indexBuffer.size());
     }
+
+    public void setIndexBuffer(IndexBuffer indexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), startVertex, size);
+    }
+
+    // todo make Uniform types for each value. Sampler, Vec4x4, etc to make typesafe
+    public void setTexture(int stage, @NotNull Uniform sampler, @NotNull Texture texture) {
+        setTexture(stage, sampler, texture, null);
+    }
+
+    public void setTexture(int stage, @NotNull Uniform sampler, @NotNull Texture texture, @Nullable BGFX_SAMPLER samplerSetting) {
+        final int samplerSettingFlag = samplerSetting == null ? USE_DEFAULT_TEXTURE_FLAG : samplerSetting.VALUE;
+        bgfx_encoder_set_texture(id, stage, sampler.handle(), texture.handle(), samplerSettingFlag);
+    }
+
+    public void setUniform(@NotNull Uniform uniform, short ... values) {
+        setUniform(uniform, uniform.getNumElementsInArray(), values);
+    }
+    public void setUniform(@NotNull Uniform uniform, int numElements, short ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    }
+    public void setUniform(@NotNull Uniform uniform, int ... values) {
+        setUniform(uniform, uniform.getNumElementsInArray(), values);
+    }
+    public void setUniform(@NotNull Uniform uniform, int numElements, int ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    }
+    public void setUniform(@NotNull Uniform uniform, long ... values) {
+        setUniform(uniform, uniform.getNumElementsInArray(), values);
+    }
+    public void setUniform(@NotNull Uniform uniform, int numElements, long ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    }
+    public void setUniform(@NotNull Uniform uniform, float ... values) {
+        setUniform(uniform, uniform.getNumElementsInArray(), values);
+    }
+    public void setUniform(@NotNull Uniform uniform, int numElements, float ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    }
+    public void setUniform(@NotNull Uniform uniform, double ... values) {
+        setUniform(uniform, uniform.getNumElementsInArray(), values);
+    }
+    public void setUniform(@NotNull Uniform uniform, int numElements, double ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    }
+
+    // todo add once InstanceDataBuffer exists
+//    public void setInstanceBuffer(InstanceDataBuffer instanceDataBuffer) {
+//        bgfx_encoder_set_index_buffer(id, IndexBuffer);
+//    }
 
     public void submit(View view, Program program) {
         submit(view, program, 0);

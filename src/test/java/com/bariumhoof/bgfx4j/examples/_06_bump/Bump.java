@@ -2,6 +2,7 @@ package com.bariumhoof.bgfx4j.examples._06_bump;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.wip.*;
 import org.joml.Matrix4f;
@@ -14,6 +15,7 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
@@ -28,11 +30,15 @@ public class Bump extends Application {
     private ByteBuffer indices;
     private IndexBuffer ib;
     //    private short ibh;
-    private short uniformTexColor;
-    private short uniformTexNormal;
+//    private short uniformTexColor;
+//    private short uniformTexNormal;
     private int numLights;
-    private short uniformLightPosRadius;
-    private short uniformLightRgbInnerR;
+//    private short uniformLightPosRadius;
+//    private short uniformLightRgbInnerR;
+    private Uniform uniformTexColor;
+    private Uniform uniformTexNormal;
+    private Uniform uniformLightPosRadius;
+    private Uniform uniformLightRgbInnerR;
     //    private short program;
     private Program program;
     private Texture textureColor;
@@ -45,7 +51,9 @@ public class Bump extends Application {
     private FloatBuffer projBuf;
     private Matrix4f mtx = new Matrix4f();
     private FloatBuffer mtxBuf;
-    private ByteBuffer uniformBuf;
+//    private ByteBuffer uniformBuf;
+//    private FloatBuffer uniformBuf;
+    private float[] uniformBuf;
 
     private static int packUint32(int _x, int _y, int _z, int _w) {
         return ((_w & 0xff) << 24) | ((_z & 0xff) << 16) | ((_y & 0xff) << 8) | (_x & 0xff);
@@ -236,12 +244,19 @@ public class Bump extends Application {
 
         ib = IndexBuffer.create(indices, cubeIndices.length * 2);
 
-        uniformTexColor = bgfx_create_uniform("s_texColor", BGFX_UNIFORM_TYPE_VEC4, 1);
-        uniformTexNormal = bgfx_create_uniform("s_texNormal", BGFX_UNIFORM_TYPE_VEC4, 1);
+//        uniformTexColor = bgfx_create_uniform("s_texColor", BGFX_UNIFORM_TYPE_VEC4, 1);
+//        uniformTexNormal = bgfx_create_uniform("s_texNormal", BGFX_UNIFORM_TYPE_VEC4, 1);
+
+//        numLights = 4;
+//        uniformLightPosRadius = bgfx_create_uniform("u_lightPosRadius", BGFX_UNIFORM_TYPE_VEC4, numLights);
+//        uniformLightRgbInnerR = bgfx_create_uniform("u_lightRgbInnerR", BGFX_UNIFORM_TYPE_VEC4, numLights);
+
+        uniformTexColor = Uniform.create("s_texColor", BGFX_UNIFORM_TYPE.VEC4, 1);
+        uniformTexNormal = Uniform.create("s_texNormal", BGFX_UNIFORM_TYPE.VEC4, 1);
 
         numLights = 4;
-        uniformLightPosRadius = bgfx_create_uniform("u_lightPosRadius", BGFX_UNIFORM_TYPE_VEC4, numLights);
-        uniformLightRgbInnerR = bgfx_create_uniform("u_lightRgbInnerR", BGFX_UNIFORM_TYPE_VEC4, numLights);
+        uniformLightPosRadius = Uniform.create("u_lightPosRadius", BGFX_UNIFORM_TYPE.VEC4, numLights);
+        uniformLightRgbInnerR = Uniform.create("u_lightRgbInnerR", BGFX_UNIFORM_TYPE.VEC4, numLights);
 
         program = Program.loadOrNull(
                 (instancingSupported ?
@@ -267,7 +282,9 @@ public class Bump extends Application {
         viewBuf = MemoryUtil.memAllocFloat(16);
         projBuf = MemoryUtil.memAllocFloat(16);
         mtxBuf = MemoryUtil.memAllocFloat(16);
-        uniformBuf = MemoryUtil.memAlloc(16 * 4);
+//        uniformBuf = MemoryUtil.memAlloc(16 * 4);
+//        uniformBuf = MemoryUtil.memAllocFloat(16);
+        uniformBuf = new float[16];
     }
 
     private static final float[][] lightRgbInnerR = {
@@ -277,11 +294,8 @@ public class Bump extends Application {
             { 1.0f, 0.4f, 0.2f, 0.8f }
     };
 
-    private float time = 0.0f;
-
     @Override
-    public void render(double dt) {
-        time += dt*500000f;
+    public void render(float dt, float time) {
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/06-bump");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Loading textures.");
         bgfx_dbg_text_printf(0, 3, 0x0f, String.format("Frame: % 7.3f[ms]", (float)dt));
@@ -295,28 +309,33 @@ public class Bump extends Application {
 
         bgfx_set_view_rect(0, 0, 0, getWindowWidth(), getWindowHeight());
 
-        uniformBuf.clear();
+        int i = 0;
         for (int ii = 0; ii < numLights; ++ii) {
-            uniformBuf.putFloat((float) (Math.sin((time * (0.1f + ii * 0.17f) + ii * Math.PI * 0.5f * 1.37f)) * 3.0f));
-            uniformBuf.putFloat((float) (Math.cos((time * (0.2f + ii * 0.29f) + ii * Math.PI * 0.5f * 1.49f)) * 3.0f));
-            uniformBuf.putFloat(-2.5f);
-            uniformBuf.putFloat(3.0f);
+            uniformBuf[i++] = ((float) (Math.sin((time * (0.1f + ii * 0.17f) + ii * Math.PI * 0.5f * 1.37f)) * 3.0f));
+            uniformBuf[i++] = ((float) (Math.cos((time * (0.2f + ii * 0.29f) + ii * Math.PI * 0.5f * 1.49f)) * 3.0f));
+            uniformBuf[i++] = (-2.5f);
+            uniformBuf[i++] = (3.0f);
         }
 
-        long encoder = bgfx_encoder_begin(false);
+//        long encoder = bgfx_encoder_begin(false);
+        Encoder encoder = Encoder.begin(false);
 
-        uniformBuf.flip();
-        bgfx_encoder_set_uniform(encoder, uniformLightPosRadius, uniformBuf, numLights);
+//        uniformBuf.flip();
+//        bgfx_encoder_set_uniform(encoder, uniformLightPosRadius, uniformBuf, numLights);
+        encoder.setUniform(uniformLightPosRadius, numLights, uniformBuf);
 
-        uniformBuf.clear();
+
+//        uniformBuf.clear();
+        i = 0;
         for (float[] ll : lightRgbInnerR) {
             for (float l : ll) {
-                uniformBuf.putFloat(l);
+                uniformBuf[i++] = (l);
             }
         }
 
-        uniformBuf.flip();
-        bgfx_encoder_set_uniform(encoder, uniformLightRgbInnerR, uniformBuf, numLights);
+//        uniformBuf.flip();
+//        bgfx_encoder_set_uniform(encoder, uniformLightRgbInnerR, uniformBuf, numLights);
+        encoder.setUniform(uniformLightRgbInnerR, numLights, uniformBuf);
 
         int instanceStride = 64;
         int numInstances = 3;
@@ -336,58 +355,83 @@ public class Bump extends Application {
                 }
 
                 // Set instance data buffer.
-                bgfx_encoder_set_instance_data_buffer(encoder, idb, 0, numInstances);
+                bgfx_encoder_set_instance_data_buffer(encoder.id(), idb, 0, numInstances);
 
                 // Set vertex and index buffer.
-                bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
-                bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+//                bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
+//                bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+                encoder.setVertexBuffer(vb);
+                encoder.setIndexBuffer(ib);
 
                 // Bind textures.
-                bgfx_encoder_set_texture(encoder, 0, uniformTexColor, textureColor.handle(), 0xffffffff);
-                bgfx_encoder_set_texture(encoder, 1, uniformTexNormal, textureNormal.handle(), 0xffffffff);
+//                bgfx_encoder_set_texture(encoder, 0, uniformTexColor, textureColor.handle(), 0xffffffff);
+//                bgfx_encoder_set_texture(encoder, 1, uniformTexNormal, textureNormal.handle(), 0xffffffff);
+                encoder.setTexture(0, uniformTexColor, textureColor);
+                encoder.setTexture(1, uniformTexNormal, textureNormal);
 
                 // Set render states.
-                bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
-                        | BGFX_STATE_WRITE_A
-                        | BGFX_STATE_WRITE_Z
-                        | BGFX_STATE_DEPTH_TEST_LESS
-                        | BGFX_STATE_MSAA, 0);
+//                bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
+//                        | BGFX_STATE_WRITE_A
+//                        | BGFX_STATE_WRITE_Z
+//                        | BGFX_STATE_DEPTH_TEST_LESS
+//                        | BGFX_STATE_MSAA, 0);
+                encoder.setState(EnumSet.of(
+                        BGFX_STATE.WRITE_RGB,
+                        BGFX_STATE.WRITE_A,
+                        BGFX_STATE.WRITE_Z,
+                        BGFX_STATE.DEPTH_TEST_LESS,
+                        BGFX_STATE.MSAA));
 
                 // Submit primitive for rendering to view 0.
-                bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
+                bgfx_encoder_submit(encoder.id(), 0, program.handle(), 0, false);
                 idb.free();
             }
         } else {
             for (int yy = 0; yy < 3; ++yy) {
                 for (int xx = 0; xx < 3; ++xx) {
                     // Set transform for draw call.
-                    bgfx_encoder_set_transform(encoder,
+//                    bgfx_encoder_set_transform(encoder,
+//                            mtx.setRotationXYZ(time * 0.023f + xx * 0.21f, time * 0.03f + yy * 0.37f, 0.0f)
+//                                    .setTranslation(-3.0f + xx * 3.0f, -3.0f + yy * 3.0f, 0.0f)
+//                                    .get(mtxBuf));
+                    encoder.setTransform(
                             mtx.setRotationXYZ(time * 0.023f + xx * 0.21f, time * 0.03f + yy * 0.37f, 0.0f)
                                     .setTranslation(-3.0f + xx * 3.0f, -3.0f + yy * 3.0f, 0.0f)
                                     .get(mtxBuf));
 
                     // Set vertex and index buffer.
-                    bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
-                    bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+//                    bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
+//                    bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+                    encoder.setVertexBuffer(vb);
+                    encoder.setIndexBuffer(ib);
 
                     // Bind textures.
-                    bgfx_encoder_set_texture(encoder, 0, uniformTexColor, textureColor.handle(), 0xffffffff);
-                    bgfx_encoder_set_texture(encoder, 1, uniformTexNormal, textureNormal.handle(), 0xffffffff);
+//                    bgfx_encoder_set_texture(encoder, 0, uniformTexColor, textureColor.handle(), 0xffffffff);
+//                    bgfx_encoder_set_texture(encoder, 1, uniformTexNormal, textureNormal.handle(), 0xffffffff);
+                    encoder.setTexture(0, uniformTexColor, textureColor);
+                    encoder.setTexture(1, uniformTexNormal, textureNormal);
 
                     // Set render states.
-                    bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
-                            | BGFX_STATE_WRITE_A
-                            | BGFX_STATE_WRITE_Z
-                            | BGFX_STATE_DEPTH_TEST_LESS
-                            | BGFX_STATE_MSAA, 0);
+//                    bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
+//                            | BGFX_STATE_WRITE_A
+//                            | BGFX_STATE_WRITE_Z
+//                            | BGFX_STATE_DEPTH_TEST_LESS
+//                            | BGFX_STATE_MSAA, 0);
+                    encoder.setState(EnumSet.of(
+                            BGFX_STATE.WRITE_RGB,
+                            BGFX_STATE.WRITE_A,
+                            BGFX_STATE.WRITE_Z,
+                            BGFX_STATE.DEPTH_TEST_LESS,
+                            BGFX_STATE.MSAA));
 
                     // Submit primitive for rendering to view 0.
-                    bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
+                    bgfx_encoder_submit(encoder.id(), 0, program.handle(), 0, false);
                 }
             }
         }
 
-        bgfx_encoder_end(encoder);
+//        bgfx_encoder_end(encoder);
+        encoder.end();
     }
 
     @Override
@@ -398,17 +442,20 @@ public class Bump extends Application {
         textureColor.dispose();
         textureColor.dispose();
 
-        bgfx_destroy_uniform(uniformTexColor);
-        bgfx_destroy_uniform(uniformTexNormal);
-        bgfx_destroy_uniform(uniformLightPosRadius);
-        bgfx_destroy_uniform(uniformLightRgbInnerR);
+//        bgfx_destroy_uniform(uniformTexColor);
+//        bgfx_destroy_uniform(uniformTexNormal);
+//        bgfx_destroy_uniform(uniformLightPosRadius);
+//        bgfx_destroy_uniform(uniformLightRgbInnerR);
+        uniformTexColor.dispose();
+        uniformTexNormal.dispose();
+        uniformLightPosRadius.dispose();
+        uniformLightRgbInnerR.dispose();
 
         MemoryUtil.memFree(vertices);
         MemoryUtil.memFree(indices);
         MemoryUtil.memFree(viewBuf);
         MemoryUtil.memFree(projBuf);
         MemoryUtil.memFree(mtxBuf);
-        MemoryUtil.memFree(uniformBuf);
 
         layout.dispose();
     }

@@ -151,13 +151,13 @@ public abstract class Application {
                 }
 
                 double freq = glfwGetTimerFrequency();
-                double toMs = 1000.0 / freq;
+                float toMs = 1000.0f / (float)freq;
 
-//            float time = (float)((now - startTime) / freq);
+                float time = (float)((now - startTime) / freq);
 
                 bgfx_set_view_rect(0, 0, 0, width, height);
 
-                render(toMs);
+                render(toMs, time);
 
                 // Advance to next frame. Rendering thread will be kicked to
                 // process submitted rendering primitives.
@@ -343,7 +343,7 @@ public abstract class Application {
 
 
     public abstract void init();
-    public abstract void render(double dt);
+    public abstract void render(float dt, float time);
     public abstract void dispose();
 
     private final void shutdown() {
