@@ -23,6 +23,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.bgfx.BGFX.bgfx_get_renderer_type;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
@@ -30,6 +31,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 public abstract class Application {
+
+    @Getter
+    private static int renderer;
 
     private static AtomicReference<Application> atomicInstance = new AtomicReference<>();
 
@@ -123,6 +127,7 @@ public abstract class Application {
             }
             initPlatform();
             bgfxInit();
+            renderer = bgfx_get_renderer_type();
 
             System.out.println("bgfx renderer: " + bgfx_get_renderer_name(bgfx_get_renderer_type()));
 

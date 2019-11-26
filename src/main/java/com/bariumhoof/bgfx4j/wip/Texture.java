@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +24,7 @@ public class Texture implements Disposable, Handle {
 
     private final short handle;
 
+    // todo shonuld default include the sampler? do they always need grouping?
     protected static final TextureFlags DEFAULT = TextureFlags.create(
             EnumSet.of(BGFX_TEXTURE.NONE),
             EnumSet.of(BGFX_SAMPLER.NONE)
@@ -63,12 +65,26 @@ public class Texture implements Disposable, Handle {
 //    }
 
     @NotNull
+    public static Texture load(@NotNull URL url) throws IOException {
+        return load(DEFAULT, url);
+    }
+
+    @NotNull
     public static Texture load(@NotNull TextureFlags flags, @NotNull URL url) throws IOException {
         final short handle = Resources.loadTexture(flags.VALUE, 0, url);
         return new Texture(handle);
     }
 
-    @NotNull
+    @Nullable
+    public static Texture loadOrNull(@NotNull URL url) {
+        try {
+            return load(DEFAULT, url);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @Nullable
     public static Texture loadOrNull(@NotNull TextureFlags flags, @NotNull URL url) {
         try {
             return load(flags, url);

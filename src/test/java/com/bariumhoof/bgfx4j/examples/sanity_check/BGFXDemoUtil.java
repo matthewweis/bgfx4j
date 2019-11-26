@@ -8,6 +8,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXReleaseFunctionCallback;
+import org.lwjgl.bgfx.BGFXVertexDecl;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -83,52 +84,52 @@ final class BGFXDemoUtil {
 //        return layout;
 //    }
 //
-//    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl layout, Object[][] vertices) {
+    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl layout, Object[][] vertices) {
+
+        for (Object[] vtx : vertices) {
+            for (Object attr : vtx) {
+                if (attr instanceof Float) {
+                    buffer.putFloat((float) attr);
+                } else if (attr instanceof Integer) {
+                    buffer.putInt((int) attr);
+                } else {
+                    throw new RuntimeException("Invalid parameter type");
+                }
+            }
+        }
+
+        if (buffer.remaining() != 0) {
+            throw new RuntimeException("ByteBuffer size and number of arguments do not match");
+        }
+
+        buffer.flip();
+
+        return createVertexBuffer(buffer, layout);
+    }
 //
-//        for (Object[] vtx : vertices) {
-//            for (Object attr : vtx) {
-//                if (attr instanceof Float) {
-//                    buffer.putFloat((float) attr);
-//                } else if (attr instanceof Integer) {
-//                    buffer.putInt((int) attr);
-//                } else {
-//                    throw new RuntimeException("Invalid parameter type");
-//                }
-//            }
-//        }
+    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl layout) {
+
+        BGFXMemory vbhMem = bgfx_make_ref(buffer);
+
+        return bgfx_create_vertex_buffer(vbhMem, layout, BGFX_BUFFER_NONE);
+    }
 //
-//        if (buffer.remaining() != 0) {
-//            throw new RuntimeException("ByteBuffer size and number of arguments do not match");
-//        }
-//
-//        buffer.flip();
-//
-//        return createVertexBuffer(buffer, layout);
-//    }
-//
-//    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl layout) {
-//
-//        BGFXMemory vbhMem = bgfx_make_ref(buffer);
-//
-//        return bgfx_create_vertex_buffer(vbhMem, layout, BGFX_BUFFER_NONE);
-//    }
-//
-//    static short createIndexBuffer(ByteBuffer buffer, int[] indices) {
-//
-//        for (int idx : indices) {
-//            buffer.putShort((short) idx);
-//        }
-//
-//        if (buffer.remaining() != 0) {
-//            throw new RuntimeException("ByteBuffer size and number of arguments do not match");
-//        }
-//
-//        buffer.flip();
-//
-//        BGFXMemory ibhMem = bgfx_make_ref(buffer);
-//
-//        return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER_NONE);
-//    }
+    static short createIndexBuffer(ByteBuffer buffer, int[] indices) {
+
+        for (int idx : indices) {
+            buffer.putShort((short) idx);
+        }
+
+        if (buffer.remaining() != 0) {
+            throw new RuntimeException("ByteBuffer size and number of arguments do not match");
+        }
+
+        buffer.flip();
+
+        BGFXMemory ibhMem = bgfx_make_ref(buffer);
+
+        return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER_NONE);
+    }
 
     private static ByteBuffer loadResource(String resourcePath, String name) throws IOException {
 
