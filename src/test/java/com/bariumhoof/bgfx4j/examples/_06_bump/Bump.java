@@ -26,9 +26,9 @@ public class Bump extends Application {
     private VertexDecl layout;
     private ByteBuffer vertices;
     private VertexBuffer vb;
+    private IndexBuffer ib;
     //    private short vbh;
     private ByteBuffer indices;
-    private IndexBuffer ib;
     //    private short ibh;
 //    private short uniformTexColor;
 //    private short uniformTexNormal;

@@ -4,9 +4,8 @@ import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.wip.Shader;
-import com.bariumhoof.bgfx4j.wip.Texture;
-import com.bariumhoof.bgfx4j.wip.VertexDecl;
+import com.bariumhoof.bgfx4j.enums.BGFX_UNIFORM_TYPE;
+import com.bariumhoof.bgfx4j.wip.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXCaps;
@@ -22,20 +21,19 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 public class Bump extends Application {
 
-//    private BGFXVertexDecl layout;
     private VertexDecl layout;
     private ByteBuffer vertices;
-    private short vbh;
-    private ByteBuffer indices;
-    private short ibh;
-    private short uniformTexColor;
-    private short uniformTexNormal;
+    private VertexBuffer vb;
+    private IndexBuffer ib;
+    private Uniform uniformTexColor;
+    private Uniform uniformTexNormal;
     private int numLights;
-    private short uniformLightPosRadius;
-    private short uniformLightRgbInnerR;
-    private short program;
-    private short textureColor;
-    private short textureNormal;
+    private Uniform uniformLightPosRadius;
+    private Uniform uniformLightRgbInnerR;
+    private Program program;
+
+    private Texture textureColor;
+    private Texture textureNormal;
     private boolean instancingSupported;
 
     private Matrix4f view = new Matrix4f();
@@ -235,56 +233,23 @@ public class Bump extends Application {
         instancingSupported = (caps.supported() & BGFX_CAPS_INSTANCING) != 0;
 
         vertices = calcTangents(cubeVertices, cubeVertices.length, layout.get(), cubeIndices, cubeIndices.length);
+        vb = VertexBuffer.create(layout, vertices, cubeVertices.length);
 
-        vbh = BGFXDemoUtil.createVertexBuffer(vertices, layout.get());
+        ib = IndexBuffer.create(cubeIndices);
 
-        indices = MemoryUtil.memAlloc(cubeIndices.length * 2);
-
-        ibh = BGFXDemoUtil.createIndexBuffer(indices, cubeIndices);
-
-        uniformTexColor = bgfx_create_uniform("s_texColor", BGFX_UNIFORM_TYPE_VEC4, 1);
-        uniformTexNormal = bgfx_create_uniform("s_texNormal", BGFX_UNIFORM_TYPE_VEC4, 1);
+        uniformTexColor = Uniform.create("s_texColor", BGFX_UNIFORM_TYPE.VEC4, 1);
+        uniformTexNormal = Uniform.create("s_texNormal", BGFX_UNIFORM_TYPE.VEC4, 1);
 
         numLights = 4;
-        uniformLightPosRadius = bgfx_create_uniform("u_lightPosRadius", BGFX_UNIFORM_TYPE_VEC4, numLights);
-        uniformLightRgbInnerR = bgfx_create_uniform("u_lightRgbInnerR", BGFX_UNIFORM_TYPE_VEC4, numLights);
+        uniformLightPosRadius = Uniform.create("u_lightPosRadius", BGFX_UNIFORM_TYPE.VEC4, numLights);
+        uniformLightRgbInnerR = Uniform.create("u_lightRgbInnerR", BGFX_UNIFORM_TYPE.VEC4, numLights);
 
-        /*
-        Program.loadOrNull(
-                (instancingSupported ?
-                        Bump.class.getResource("/shaders/metal/vs_bump_instanced.bin") :
-                        Bump.class.getResource("/shaders/metal/vs_bump.bin")),
-                Bump.class.getResource("/shaders/metal/fs_bump.bin")  // fragment shader
-        );
-         */
-        short vs = 0;
-        short fs = 0;
-        try {
+        program = Program.loadOrNull(
+                Bump.class.getResource(instancingSupported ? "/shaders/metal/vs_bump_instanced.bin" : "/shaders/metal/vs_bump.bin"),
+                Bump.class.getResource("/shaders/metal/fs_bump.bin"));
 
-            vs = Shader.load(instancingSupported ?
-                    Bump.class.getResource("/shaders/metal/vs_bump_instanced.bin") :
-                    Bump.class.getResource("/shaders/metal/vs_bump.bin")).handle();
-            fs = Shader.load(Bump.class.getResource("/shaders/metal/fs_bump.bin")).handle();
-//            vs = BGFXDemoUtil.loadShader(instancingSupported ? "vs_bump_instanced" : "vs_bump");
-//            fs = BGFXDemoUtil.loadShader("fs_bump");
-        } catch (IOException e) {
-            System.err.println("unable to load shaders");
-            e.printStackTrace();
-            System.exit(-1);
-        }
-
-        program = bgfx_create_program(vs, fs, true);
-
-        try {
-//            textureColor = BGFXDemoUtil.loadTexture("fieldstone-rgba.dds");
-//            textureNormal = BGFXDemoUtil.loadTexture("fieldstone-n.dds");
-            textureColor = Texture.load(Bump.class.getResource("/textures/fieldstone-rgba.dds")).handle();
-            textureNormal = Texture.load(Bump.class.getResource("/textures/fieldstone-n.dds")).handle();
-        } catch (IOException e) {
-            System.err.println("unable to load textures");
-            e.printStackTrace();
-            System.exit(-1);
-        }
+        textureColor = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
+        textureNormal = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-n.dds"));
 
         viewBuf = MemoryUtil.memAllocFloat(16);
         projBuf = MemoryUtil.memAllocFloat(16);
@@ -325,7 +290,7 @@ public class Bump extends Application {
         long encoder = bgfx_encoder_begin(false);
 
         uniformBuf.flip();
-        bgfx_encoder_set_uniform(encoder, uniformLightPosRadius, uniformBuf, numLights);
+        bgfx_encoder_set_uniform(encoder, uniformLightPosRadius.handle(), uniformBuf, numLights);
 
         uniformBuf.clear();
         for (float[] ll : lightRgbInnerR) {
@@ -335,7 +300,7 @@ public class Bump extends Application {
         }
 
         uniformBuf.flip();
-        bgfx_encoder_set_uniform(encoder, uniformLightRgbInnerR, uniformBuf, numLights);
+        bgfx_encoder_set_uniform(encoder, uniformLightRgbInnerR.handle(), uniformBuf, numLights);
 
         int instanceStride = 64;
         int numInstances = 3;
@@ -358,12 +323,12 @@ public class Bump extends Application {
                 bgfx_encoder_set_instance_data_buffer(encoder, idb, 0, numInstances);
 
                 // Set vertex and index buffer.
-                bgfx_encoder_set_vertex_buffer(encoder, 0, vbh, 0, 24, BGFX_INVALID_HANDLE);
-                bgfx_encoder_set_index_buffer(encoder, ibh, 0, 36);
+                bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
+                bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
 
                 // Bind textures.
-                bgfx_encoder_set_texture(encoder, 0, uniformTexColor, textureColor, 0xffffffff);
-                bgfx_encoder_set_texture(encoder, 1, uniformTexNormal, textureNormal, 0xffffffff);
+                bgfx_encoder_set_texture(encoder, 0, uniformTexColor.handle(), textureColor.handle(), 0xffffffff);
+                bgfx_encoder_set_texture(encoder, 1, uniformTexNormal.handle(), textureNormal.handle(), 0xffffffff);
 
                 // Set render states.
                 bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
@@ -373,7 +338,7 @@ public class Bump extends Application {
                         | BGFX_STATE_MSAA, 0);
 
                 // Submit primitive for rendering to view 0.
-                bgfx_encoder_submit(encoder, 0, program, 0, false);
+                bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
                 idb.free();
             }
         } else {
@@ -386,12 +351,12 @@ public class Bump extends Application {
                                     .get(mtxBuf));
 
                     // Set vertex and index buffer.
-                    bgfx_encoder_set_vertex_buffer(encoder, 0, vbh, 0, 24, BGFX_INVALID_HANDLE);
-                    bgfx_encoder_set_index_buffer(encoder, ibh, 0, 36);
+                    bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
+                    bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
 
                     // Bind textures.
-                    bgfx_encoder_set_texture(encoder, 0, uniformTexColor, textureColor, 0xffffffff);
-                    bgfx_encoder_set_texture(encoder, 1, uniformTexNormal, textureNormal, 0xffffffff);
+                    bgfx_encoder_set_texture(encoder, 0, uniformTexColor.handle(), textureColor.handle(), 0xffffffff);
+                    bgfx_encoder_set_texture(encoder, 1, uniformTexNormal.handle(), textureNormal.handle(), 0xffffffff);
 
                     // Set render states.
                     bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
@@ -401,7 +366,7 @@ public class Bump extends Application {
                             | BGFX_STATE_MSAA, 0);
 
                     // Submit primitive for rendering to view 0.
-                    bgfx_encoder_submit(encoder, 0, program, 0, false);
+                    bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
                 }
             }
         }
@@ -411,18 +376,18 @@ public class Bump extends Application {
 
     @Override
     public void dispose() {
-        bgfx_destroy_index_buffer(ibh);
-        bgfx_destroy_vertex_buffer(vbh);
-        bgfx_destroy_program(program);
-        bgfx_destroy_texture(textureColor);
-        bgfx_destroy_texture(textureNormal);
-        bgfx_destroy_uniform(uniformTexColor);
-        bgfx_destroy_uniform(uniformTexNormal);
-        bgfx_destroy_uniform(uniformLightPosRadius);
-        bgfx_destroy_uniform(uniformLightRgbInnerR);
+        ib.dispose();
+        vb.dispose();
+        program.dispose();
+
+        textureColor.dispose();
+        textureNormal.dispose();
+        uniformTexColor.dispose();
+        uniformTexNormal.dispose();
+        uniformLightPosRadius.dispose();
+        uniformLightRgbInnerR.dispose();
 
         MemoryUtil.memFree(vertices);
-        MemoryUtil.memFree(indices);
         MemoryUtil.memFree(viewBuf);
         MemoryUtil.memFree(projBuf);
         MemoryUtil.memFree(mtxBuf);
