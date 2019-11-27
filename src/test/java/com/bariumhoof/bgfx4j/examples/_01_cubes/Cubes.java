@@ -3,7 +3,6 @@ package com.bariumhoof.bgfx4j.examples._01_cubes;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.*;
-import com.bariumhoof.bgfx4j.examples.sanity_check.SanityCheck;
 import com.bariumhoof.bgfx4j.view.ClearStrategy;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
@@ -73,8 +72,8 @@ public class Cubes extends Application {
         indices = IndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
-                SanityCheck.class.getResource("/shaders/metal/cubes.vert"), // vertex shader
-                SanityCheck.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
+                Cubes.class.getResource("/shaders/metal/cubes.vert"), // vertex shader
+                Cubes.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
         );
 
         bgfxView = View.create("my view");
