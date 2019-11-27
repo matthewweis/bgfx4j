@@ -5,7 +5,7 @@ import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
-import org.lwjgl.bgfx.BGFXVertexDecl;
+import org.lwjgl.bgfx.BGFXVertexLayout;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -22,7 +22,7 @@ public class DynamicVertexBuffer implements Disposable, Handle {
         this.handle = handle;
     }
 
-    public static DynamicVertexBuffer create(@NotNull VertexDecl decl, @NotNull Number[][] vertices) {
+    public static DynamicVertexBuffer create(@NotNull VertexLayout decl, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -50,7 +50,7 @@ public class DynamicVertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl, Number[][] vertices) {
+    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, Number[][] vertices) {
         for (Object[] vtx : vertices) {
             for (Object attr : vtx) {
                 if (attr instanceof Float) {
@@ -73,7 +73,7 @@ public class DynamicVertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl) {
+    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl) {
         final BGFXMemory vbhMem = bgfx_make_ref(buffer);
         Assertions.requireNonNull(vbhMem);
         return bgfx_create_dynamic_vertex_buffer_mem(vbhMem, decl, BGFX_BUFFER_NONE);

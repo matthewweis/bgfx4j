@@ -5,7 +5,7 @@ import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
-import org.lwjgl.bgfx.BGFXVertexDecl;
+import org.lwjgl.bgfx.BGFXVertexLayout;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
@@ -25,12 +25,12 @@ public final class VertexBuffer implements Disposable, Handle {
         this.size = size;
     }
 
-    public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull ByteBuffer vertices, int count) {
+    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull ByteBuffer vertices, int count) {
         final short handle = createVertexBuffer(vertices, decl.get());
         return new VertexBuffer(vertices, handle, count);
     }
 
-    public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull int[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull int[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -60,7 +60,7 @@ public final class VertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl, int[][] vertices) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, int[][] vertices) {
         for (int[] vtx : vertices) {
             for (int attr : vtx) {
                 buffer.putInt(attr);
@@ -77,7 +77,7 @@ public final class VertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl) {
         final BGFXMemory vbhMem = bgfx_make_ref(buffer);
         Assertions.requireNonNull(vbhMem);
         return bgfx_create_vertex_buffer(vbhMem, decl, BGFX_BUFFER_NONE);
@@ -105,7 +105,7 @@ public final class VertexBuffer implements Disposable, Handle {
         return strideSum;
     }
 
-    public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull float[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull float[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -135,7 +135,7 @@ public final class VertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl, float[][] vertices) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, float[][] vertices) {
         for (float[] vtx : vertices) {
             for (float attr : vtx) {
                 buffer.putFloat(attr);
@@ -172,7 +172,7 @@ public final class VertexBuffer implements Disposable, Handle {
     }
 
     // todo replace Number[][] with a version per primitive!
-    public static VertexBuffer create(@NotNull VertexDecl decl, @NotNull Number[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -204,7 +204,7 @@ public final class VertexBuffer implements Disposable, Handle {
      * From lwjgl bgfx tutorial - Cubes
      */
     // todo replace Number[][] with a verion per primitive!!! *unless can be either?*
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl, Number[][] vertices) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, Number[][] vertices) {
         for (Object[] vtx : vertices) {
             for (Object attr : vtx) {
                 if (attr instanceof Float) {
@@ -227,7 +227,7 @@ public final class VertexBuffer implements Disposable, Handle {
 //    /*
 //     * From lwjgl bgfx tutorial - Cubes
 //     */
-//    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl decl) {
+//    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl) {
 //        final BGFXMemory vbhMem = bgfx_make_ref(buffer);
 //        Assertions.requireNonNull(vbhMem);
 //        return bgfx_create_vertex_buffer(vbhMem, decl, BGFX_BUFFER_NONE);

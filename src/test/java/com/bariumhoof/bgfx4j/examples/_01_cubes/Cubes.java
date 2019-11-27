@@ -3,19 +3,17 @@ package com.bariumhoof.bgfx4j.examples._01_cubes;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.*;
-import com.bariumhoof.bgfx4j.view.ClearStrategy;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
 import com.bariumhoof.bgfx4j.wip.Program;
 import com.bariumhoof.bgfx4j.wip.VertexBuffer;
-import com.bariumhoof.bgfx4j.wip.VertexDecl;
+import com.bariumhoof.bgfx4j.wip.VertexLayout;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
@@ -47,7 +45,7 @@ public class Cubes extends Application {
             6, 3, 7
     };
 
-    private VertexDecl layout;
+    private VertexLayout layout;
     private VertexBuffer vertices;
     private IndexBuffer indices;
     private Program program;
@@ -63,7 +61,7 @@ public class Cubes extends Application {
     @Override
     public void init() {
 
-        layout = VertexDecl.builder(BGFX_RENDERER_TYPE.METAL)
+        layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
                 .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();

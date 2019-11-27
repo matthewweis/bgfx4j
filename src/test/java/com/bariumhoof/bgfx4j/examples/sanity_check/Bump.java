@@ -8,9 +8,8 @@ import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
-import org.lwjgl.bgfx.BGFXCaps;
 import org.lwjgl.bgfx.BGFXInstanceDataBuffer;
-import org.lwjgl.bgfx.BGFXVertexDecl;
+import org.lwjgl.bgfx.BGFXVertexLayout;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class Bump extends Application {
 
     private View myView;
 
-    private VertexDecl layout;
+    private VertexLayout layout;
     private ByteBuffer vertices;
     private VertexBuffer vb;
     private IndexBuffer ib;
@@ -113,7 +112,7 @@ public class Bump extends Application {
     }
 
     private static ByteBuffer calcTangents(Object[][] _vertices, int _numVertices,
-            BGFXVertexDecl _layout, int[] _indices, int _numIndices) {
+            BGFXVertexLayout _layout, int[] _indices, int _numIndices) {
 
         float[] out = new float[4];
         float[] tangents = new float[6 * _numVertices];
@@ -217,7 +216,7 @@ public class Bump extends Application {
     public void init() {
         myView = View.create("My view");
 
-        layout = VertexDecl.builder(BGFX_RENDERER_TYPE.METAL)
+        layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
                 .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUseNormalizedAsInt(BGFX_ATTRIB.NORMAL, BGFX_ATTRIB_TYPE.UINT8)
                 .thenUseNormalizedAsInt(BGFX_ATTRIB.TANGENT, BGFX_ATTRIB_TYPE.UINT8)

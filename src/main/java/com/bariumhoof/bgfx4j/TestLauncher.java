@@ -6,7 +6,7 @@ import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
 import com.bariumhoof.bgfx4j.wip.Program;
 import com.bariumhoof.bgfx4j.wip.VertexBuffer;
-import com.bariumhoof.bgfx4j.wip.VertexDecl;
+import com.bariumhoof.bgfx4j.wip.VertexLayout;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -118,7 +118,7 @@ public class TestLauncher {
         final ByteBuffer logo = Logo.createLogo();
 
         // MY CODE
-        final VertexDecl decl = VertexDecl.builder(BGFX_RENDERER_TYPE.METAL)
+        final VertexLayout decl = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
                 .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8)
                 .build();

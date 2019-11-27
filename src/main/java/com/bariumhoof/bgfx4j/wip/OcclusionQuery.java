@@ -15,19 +15,8 @@ public class OcclusionQuery implements Handle, Disposable {
     }
 
     public static OcclusionQuery create() {
-//        bgfx_submit_occlusion_query();
-//        bgfx_encoder_submit_occlusion_query();
-//        bgfx_occlusio
         return new OcclusionQuery(bgfx_create_occlusion_query());
     }
-
-//    public void Submit(View view, Program program, ) {
-//        bgfx_submit_occlusion_query(view.);
-//    }
-
-//    public void SubmitToEncoder(Encoder encoder) {
-//
-//    }
 
     @Override
     public void dispose() {

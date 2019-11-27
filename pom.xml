@@ -22,8 +22,8 @@
         <logback.version>1.0.1</logback.version>
 
         <!-- lwjgl -->
-        <lwjgl.version>3.2.2</lwjgl.version>
-<!--        <lwjgl.version>3.2.3</lwjgl.version>--> <!-- this has minor breaking api changes (decl -> layout) -->
+        <lwjgl.version>3.2.3</lwjgl.version>
+
         <joml.version>1.9.15</joml.version>
 
         <!-- lombok -->

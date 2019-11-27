@@ -5,20 +5,23 @@ import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.bgfx.BGFXVertexDecl;
+import org.lwjgl.bgfx.BGFXVertexLayout;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
 // todo make this use builder lib
-public final class VertexDecl implements Disposable {
+@Slf4j
+public final class VertexLayout implements Disposable {
 
     private final static boolean AS_INT_DEFAULT = false;
+
     private final static boolean NORMALIZED_DEFAULT = false;
 
-    private final BGFXVertexDecl decl;
+    private final BGFXVertexLayout decl;
 
-    private VertexDecl(BGFXVertexDecl decl) {
+    private VertexLayout(BGFXVertexLayout decl) {
         this.decl = decl;
     }
 
@@ -26,7 +29,7 @@ public final class VertexDecl implements Disposable {
         return new BuilderInitialStage(rendererType);
     }
 
-    public BGFXVertexDecl get() {
+    public BGFXVertexLayout get() {
         return decl;
     }
 
@@ -37,11 +40,11 @@ public final class VertexDecl implements Disposable {
 
     public static class BuilderInitialStage {
 
-        private final BGFXVertexDecl decl;
+        private final BGFXVertexLayout decl;
 
         private BuilderInitialStage(BGFX_RENDERER_TYPE renderer) {
-            this.decl = BGFXVertexDecl.calloc();
-            bgfx_vertex_decl_begin(decl, renderer.VALUE);
+            this.decl = BGFXVertexLayout.calloc();
+            bgfx_vertex_layout_begin(decl, renderer.VALUE);
         }
 
         public BuilderSurplusStage beginWith(@NotNull BGFX_ATTRIB attrib, @NotNull BGFX_ATTRIB_TYPE type) {
@@ -65,16 +68,16 @@ public final class VertexDecl implements Disposable {
         }
 
         public BuilderSurplusStage beginWith(@NotNull BGFX_ATTRIB attrib, @NotNull BGFX_ATTRIB_TYPE type, boolean normalized, boolean asInt) {
-            bgfx_vertex_decl_add(decl, attrib.VALUE, getNumFromAttrib(attrib), type.VALUE, normalized, asInt);
+            bgfx_vertex_layout_add(decl, attrib.VALUE, getNumFromAttrib(attrib), type.VALUE, normalized, asInt);
             return new BuilderSurplusStage(decl);
         }
     }
 
     public static class BuilderSurplusStage {
 
-        private final BGFXVertexDecl decl;
+        private final BGFXVertexLayout decl;
 
-        private BuilderSurplusStage(BGFXVertexDecl decl) {
+        private BuilderSurplusStage(BGFXVertexLayout decl) {
             this.decl = decl;
         }
 
@@ -100,22 +103,28 @@ public final class VertexDecl implements Disposable {
 
         // todo see old code save for nums associated with each
         public BuilderSurplusStage thenUse(@NotNull BGFX_ATTRIB attrib, @NotNull BGFX_ATTRIB_TYPE type, boolean normalized, boolean asInt) {
-            bgfx_vertex_decl_add(decl, attrib.VALUE, getNumFromAttrib(attrib), type.VALUE, normalized, asInt);
+            bgfx_vertex_layout_add(decl, attrib.VALUE, getNumFromAttrib(attrib), type.VALUE, normalized, asInt);
             return new BuilderSurplusStage(decl);
         }
 
-        public VertexDecl build() {
-            bgfx_vertex_decl_end(decl);
-            return new VertexDecl(decl);
+        public VertexLayout build() {
+            bgfx_vertex_layout_end(decl);
+            return new VertexLayout(decl);
         }
     }
 
+    private static boolean hasWarned = false;
     private static int getNumFromAttrib(BGFX_ATTRIB attrib) {
         switch (attrib) {
             case POSITION:
                 return 3;
             case NORMAL:
-                return 4;
+                if (!hasWarned) {
+                    log.warn("Using NORMAL getNumFromAttrib, however this seems to vary (4 for Bump, 3 for Metaballs)");
+                    hasWarned = false;
+                }
+                return 3;
+//                return 4; // todo does this vary??
             case TANGENT:
                 return 4;
             case BITANGENT:

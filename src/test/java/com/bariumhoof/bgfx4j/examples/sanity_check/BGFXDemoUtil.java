@@ -4,11 +4,12 @@
  */
 package com.bariumhoof.bgfx4j.examples.sanity_check;
 
+import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXReleaseFunctionCallback;
-import org.lwjgl.bgfx.BGFXVertexDecl;
+import org.lwjgl.bgfx.BGFXVertexLayout;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import static org.lwjgl.system.APIUtil.apiLog;
 import static org.lwjgl.system.MemoryUtil.*;
 
 @SuppressWarnings("StaticNonFinalField")
-final class BGFXDemoUtil {
+public final class BGFXDemoUtil {
 
     private static int renderer = -1;
     private static boolean zZeroToOne;
@@ -28,6 +29,7 @@ final class BGFXDemoUtil {
     private static BGFXReleaseFunctionCallback releaseMemoryCb = BGFXReleaseFunctionCallback.create((_ptr, _userData) -> nmemFree(_ptr));
 
     private BGFXDemoUtil() {
+//        renderer = bgfx_get_renderer_type();
     }
 
     static void configure(int renderer) {
@@ -39,52 +41,52 @@ final class BGFXDemoUtil {
         releaseMemoryCb.free();
     }
 
-//    static BGFXVertexDecl createVertexLayout(boolean withNormals, boolean withColor, int numUVs) {
+    public static BGFXVertexLayout createVertexLayout(boolean withNormals, boolean withColor, int numUVs) {
+
+        BGFXVertexLayout layout = BGFXVertexLayout.calloc();
+
+        bgfx_vertex_layout_begin(layout, renderer);
+
+        bgfx_vertex_layout_add(layout,
+                BGFX_ATTRIB_POSITION,
+                3,
+                BGFX_ATTRIB_TYPE_FLOAT,
+                false,
+                false);
+
+        if (withNormals) {
+            bgfx_vertex_layout_add(layout,
+                    BGFX_ATTRIB_NORMAL,
+                    3,
+                    BGFX_ATTRIB_TYPE_FLOAT,
+                    false,
+                    false);
+        }
+
+        if (withColor) {
+            bgfx_vertex_layout_add(layout,
+                    BGFX_ATTRIB_COLOR0,
+                    4,
+                    BGFX_ATTRIB_TYPE_UINT8,
+                    true,
+                    false);
+        }
+
+        if (numUVs > 0) {
+            bgfx_vertex_layout_add(layout,
+                    BGFX_ATTRIB_TEXCOORD0,
+                    2,
+                    BGFX_ATTRIB_TYPE_FLOAT,
+                    false,
+                    false);
+        }
+
+        bgfx_vertex_layout_end(layout);
+
+        return layout;
+    }
 //
-//        BGFXVertexDecl layout = BGFXVertexDecl.calloc();
-//
-//        bgfx_vertex_decl_begin(layout, renderer);
-//
-//        bgfx_vertex_decl_add(layout,
-//                BGFX_ATTRIB_POSITION,
-//                3,
-//                BGFX_ATTRIB_TYPE_FLOAT,
-//                false,
-//                false);
-//
-//        if (withNormals) {
-//            bgfx_vertex_decl_add(layout,
-//                    BGFX_ATTRIB_NORMAL,
-//                    3,
-//                    BGFX_ATTRIB_TYPE_FLOAT,
-//                    false,
-//                    false);
-//        }
-//
-//        if (withColor) {
-//            bgfx_vertex_decl_add(layout,
-//                    BGFX_ATTRIB_COLOR0,
-//                    4,
-//                    BGFX_ATTRIB_TYPE_UINT8,
-//                    true,
-//                    false);
-//        }
-//
-//        if (numUVs > 0) {
-//            bgfx_vertex_decl_add(layout,
-//                    BGFX_ATTRIB_TEXCOORD0,
-//                    2,
-//                    BGFX_ATTRIB_TYPE_FLOAT,
-//                    false,
-//                    false);
-//        }
-//
-//        bgfx_vertex_decl_end(layout);
-//
-//        return layout;
-//    }
-//
-    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl layout, Object[][] vertices) {
+    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout layout, Object[][] vertices) {
 
         for (Object[] vtx : vertices) {
             for (Object attr : vtx) {
@@ -107,7 +109,7 @@ final class BGFXDemoUtil {
         return createVertexBuffer(buffer, layout);
     }
 //
-    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexDecl layout) {
+    static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout layout) {
 
         BGFXMemory vbhMem = bgfx_make_ref(buffer);
 
@@ -160,11 +162,11 @@ final class BGFXDemoUtil {
         return resource;
     }
 
-    static short loadShader(String name) throws IOException {
+    public static short loadShader(String name) throws IOException {
 
         String resourcePath = "/org/lwjgl/demo/bgfx/shaders/";
 
-        switch (renderer) {
+        switch (bgfx_get_renderer_type()) {
 
             case BGFX_RENDERER_TYPE_DIRECT3D11:
             case BGFX_RENDERER_TYPE_DIRECT3D12:
@@ -192,10 +194,10 @@ final class BGFXDemoUtil {
         return bgfx_create_shader(bgfx_make_ref_release(shaderCode, releaseMemoryCb, NULL));
     }
 
-    static short loadShader(char[] shaderCodeGLSL, char[] shaderCodeD3D9, char[] shaderCodeD3D11, char[] shaderCodeMtl) throws IOException {
+    public static short loadShader(char[] shaderCodeGLSL, char[] shaderCodeD3D9, char[] shaderCodeD3D11, char[] shaderCodeMtl) throws IOException {
         char[] sc;
 
-        switch (renderer) {
+        switch (bgfx_get_renderer_type()) {
 
             case BGFX_RENDERER_TYPE_DIRECT3D11:
             case BGFX_RENDERER_TYPE_DIRECT3D12:

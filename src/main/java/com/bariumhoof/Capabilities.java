@@ -271,7 +271,7 @@ public class Capabilities {
             this.maxTextures = reference.maxTextures();
             this.maxTextureSamplers = reference.maxTextureSamplers();
             this.maxComputeBindings = reference.maxComputeBindings();
-            this.maxVertexDecls = reference.maxVertexDecls();
+            this.maxVertexDecls = reference.maxVertexLayouts();
             this.maxVertexStreams = reference.maxVertexStreams();
             this.maxIndexBuffers = reference.maxIndexBuffers();
             this.maxVertexBuffers = reference.maxVertexBuffers();
