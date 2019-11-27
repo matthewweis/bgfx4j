@@ -83,7 +83,7 @@ public final class View {
         }
 
         if (Objects.nonNull(clearStrategy)) {
-//            bgfx_set_view_clear(id, clearStrategy.VALUE, DEFAULT_CLEAR_RGBA, DEFAULT_CLEAR_DEPTH, DEFAULT_CLEAR_STENCIL);
+            bgfx_set_view_clear(id, clearStrategy.VALUE, DEFAULT_CLEAR_RGBA, DEFAULT_CLEAR_DEPTH, DEFAULT_CLEAR_STENCIL);
         }
         return new View(id, name, clearStrategy, viewMode);
     }
@@ -134,6 +134,10 @@ public final class View {
 
     public void setTransform(@Nullable float[] view, @Nullable float[] proj) {
         bgfx_set_view_transform(id, view, proj);
+    }
+
+    public void setViewRect(int x, int y, int width, int height) {
+        bgfx_set_view_rect(id, x, y, width, height);
     }
 
     public int id() {

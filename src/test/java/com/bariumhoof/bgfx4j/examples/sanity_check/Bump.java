@@ -1,10 +1,10 @@
 package com.bariumhoof.bgfx4j.examples.sanity_check;
 
+import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
-import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_UNIFORM_TYPE;
+import com.bariumhoof.bgfx4j.encoder.Encoder;
+import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -16,10 +16,13 @@ import org.lwjgl.system.MemoryUtil;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
 public class Bump extends Application {
+
+    private View myView;
 
     private VertexDecl layout;
     private ByteBuffer vertices;
@@ -42,7 +45,8 @@ public class Bump extends Application {
     private FloatBuffer projBuf;
     private Matrix4f mtx = new Matrix4f();
     private FloatBuffer mtxBuf;
-    private ByteBuffer uniformBuf;
+//    private ByteBuffer uniformBuf;
+    private float[] uniformBuf;
 
     private static int packUint32(int _x, int _y, int _z, int _w) {
         return ((_w & 0xff) << 24) | ((_z & 0xff) << 16) | ((_y & 0xff) << 8) | (_x & 0xff);
@@ -215,6 +219,9 @@ public class Bump extends Application {
 
     @Override
     public void init() {
+
+        myView = View.create("My view");
+
 //        layout = BGFXVertexDecl.calloc();
 //        bgfx_vertex_decl_begin(layout, getRenderer());
 //        bgfx_vertex_decl_add(layout, BGFX_ATTRIB_POSITION, 3, BGFX_ATTRIB_TYPE_FLOAT, false, false);
@@ -230,11 +237,12 @@ public class Bump extends Application {
                 .build();
 
         BGFXCaps caps = bgfx_get_caps();
-        instancingSupported = (caps.supported() & BGFX_CAPS_INSTANCING) != 0;
+        // instancingSupported = (caps.supported() & BGFX_CAPS_INSTANCING) != 0;
+        instancingSupported = Capabilities.isSupported(BGFX_CAPS.INSTANCING);
 
         vertices = calcTangents(cubeVertices, cubeVertices.length, layout.get(), cubeIndices, cubeIndices.length);
-        vb = VertexBuffer.create(layout, vertices, cubeVertices.length);
 
+        vb = VertexBuffer.create(layout, vertices, cubeVertices.length);
         ib = IndexBuffer.create(cubeIndices);
 
         uniformTexColor = Uniform.create("s_texColor", BGFX_UNIFORM_TYPE.VEC4, 1);
@@ -254,7 +262,8 @@ public class Bump extends Application {
         viewBuf = MemoryUtil.memAllocFloat(16);
         projBuf = MemoryUtil.memAllocFloat(16);
         mtxBuf = MemoryUtil.memAllocFloat(16);
-        uniformBuf = MemoryUtil.memAlloc(16 * 4);
+//        uniformBuf = MemoryUtil.memAlloc(16 * 4);
+        uniformBuf = new float[16];
     }
 
     private static final float[][] lightRgbInnerR = {
@@ -272,35 +281,43 @@ public class Bump extends Application {
 
         Vector3f eye = new Vector3f(0.0f, 0.0f, -7.0f);
 
-        BGFXDemoUtil.lookAt(new Vector3f(0.0f, 0.0f, 0.0f), eye, view);
-        BGFXDemoUtil.perspective(60.0f, getWindowWidth(), getWindowHeight(), 0.1f, 100.0f, proj);
+        lookAt(new Vector3f(0.0f, 0.0f, 0.0f), eye, view);
+        perspective(60.0f, getWindowWidth(), getWindowHeight(), 0.1f, 100.0f, proj);
 
-        bgfx_set_view_transform(0, view.get(viewBuf), proj.get(projBuf));
+//        bgfx_set_view_transform(0, view.get(viewBuf), proj.get(projBuf));
+        myView.setTransform(view.get(viewBuf), proj.get(projBuf));
 
-        bgfx_set_view_rect(0, 0, 0, getWindowWidth(), getWindowHeight());
+//        bgfx_set_view_rect(0, 0, 0, getWindowWidth(), getWindowHeight());
+        myView.setViewRect(0, 0, getWindowWidth(), getWindowHeight());
 
-        uniformBuf.clear();
+//        uniformBuf.clear();
         for (int ii = 0; ii < numLights; ++ii) {
-            uniformBuf.putFloat((float) (Math.sin((time * (0.1f + ii * 0.17f) + ii * Math.PI * 0.5f * 1.37f)) * 3.0f));
-            uniformBuf.putFloat((float) (Math.cos((time * (0.2f + ii * 0.29f) + ii * Math.PI * 0.5f * 1.49f)) * 3.0f));
-            uniformBuf.putFloat(-2.5f);
-            uniformBuf.putFloat(3.0f);
+            uniformBuf[4*ii] = ((float) (Math.sin((time * (0.1f + ii * 0.17f) + ii * Math.PI * 0.5f * 1.37f)) * 3.0f));
+            uniformBuf[4*ii + 1] = ((float) (Math.cos((time * (0.2f + ii * 0.29f) + ii * Math.PI * 0.5f * 1.49f)) * 3.0f));
+            uniformBuf[4*ii + 2] = (-2.5f);
+            uniformBuf[4*ii + 3] = (3.0f);
         }
 
-        long encoder = bgfx_encoder_begin(false);
+//        long encoder = bgfx_encoder_begin(false);
+        final Encoder encoder = Encoder.begin(false);
 
-        uniformBuf.flip();
-        bgfx_encoder_set_uniform(encoder, uniformLightPosRadius.handle(), uniformBuf, numLights);
+//        uniformBuf.flip();
+//        bgfx_encoder_set_uniform(encoder, uniformLightPosRadius.handle(), uniformBuf, numLights);
+        encoder.setUniform(uniformLightPosRadius, numLights, uniformBuf);
 
-        uniformBuf.clear();
+//        uniformBuf.clear();
+        int i = 0;
         for (float[] ll : lightRgbInnerR) {
             for (float l : ll) {
-                uniformBuf.putFloat(l);
+//                uniformBuf.putFloat(l);
+                uniformBuf[i++] = l;
             }
         }
 
-        uniformBuf.flip();
-        bgfx_encoder_set_uniform(encoder, uniformLightRgbInnerR.handle(), uniformBuf, numLights);
+//        uniformBuf.flip();
+        i = 0;
+//        bgfx_encoder_set_uniform(encoder, uniformLightRgbInnerR.handle(), uniformBuf, numLights);
+        encoder.setUniform(uniformLightRgbInnerR, numLights, uniformBuf);
 
         int instanceStride = 64;
         int numInstances = 3;
@@ -320,58 +337,75 @@ public class Bump extends Application {
                 }
 
                 // Set instance data buffer.
-                bgfx_encoder_set_instance_data_buffer(encoder, idb, 0, numInstances);
+                bgfx_encoder_set_instance_data_buffer(encoder.id(), idb, 0, numInstances);
 
                 // Set vertex and index buffer.
-                bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
-                bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+//                bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
+//                bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+                encoder.setVertexBuffer(vb);
+                encoder.setIndexBuffer(ib);
 
                 // Bind textures.
-                bgfx_encoder_set_texture(encoder, 0, uniformTexColor.handle(), textureColor.handle(), 0xffffffff);
-                bgfx_encoder_set_texture(encoder, 1, uniformTexNormal.handle(), textureNormal.handle(), 0xffffffff);
+//                bgfx_encoder_set_texture(encoder, 0, uniformTexColor.handle(), textureColor.handle(), 0xffffffff);
+//                bgfx_encoder_set_texture(encoder, 1, uniformTexNormal.handle(), textureNormal.handle(), 0xffffffff);
+                encoder.setTexture(0, uniformTexColor, textureColor);
+                encoder.setTexture(1, uniformTexNormal, textureNormal);
 
                 // Set render states.
-                bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
-                        | BGFX_STATE_WRITE_A
-                        | BGFX_STATE_WRITE_Z
-                        | BGFX_STATE_DEPTH_TEST_LESS
-                        | BGFX_STATE_MSAA, 0);
+//                bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
+//                        | BGFX_STATE_WRITE_A
+//                        | BGFX_STATE_WRITE_Z
+//                        | BGFX_STATE_DEPTH_TEST_LESS
+//                        | BGFX_STATE_MSAA, 0);
+                encoder.setState(EnumSet.of(BGFX_STATE.WRITE_RGB, BGFX_STATE.WRITE_A, BGFX_STATE.WRITE_Z, BGFX_STATE.DEPTH_TEST_LESS, BGFX_STATE.MSAA));
 
                 // Submit primitive for rendering to view 0.
-                bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
+//                bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
+                encoder.submit(myView, program);
                 idb.free();
             }
         } else {
             for (int yy = 0; yy < 3; ++yy) {
                 for (int xx = 0; xx < 3; ++xx) {
                     // Set transform for draw call.
-                    bgfx_encoder_set_transform(encoder,
+//                    bgfx_encoder_set_transform(encoder,
+//                            mtx.setRotationXYZ(time * 0.023f + xx * 0.21f, time * 0.03f + yy * 0.37f, 0.0f)
+//                                    .setTranslation(-3.0f + xx * 3.0f, -3.0f + yy * 3.0f, 0.0f)
+//                                    .get(mtxBuf));
+                    encoder.setTransform(
                             mtx.setRotationXYZ(time * 0.023f + xx * 0.21f, time * 0.03f + yy * 0.37f, 0.0f)
                                     .setTranslation(-3.0f + xx * 3.0f, -3.0f + yy * 3.0f, 0.0f)
                                     .get(mtxBuf));
 
                     // Set vertex and index buffer.
-                    bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
-                    bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+//                    bgfx_encoder_set_vertex_buffer(encoder, 0, vb.handle(), 0, 24, BGFX_INVALID_HANDLE);
+//                    bgfx_encoder_set_index_buffer(encoder, ib.handle(), 0, 36);
+                    encoder.setVertexBuffer(vb);
+                    encoder.setIndexBuffer(ib);
 
                     // Bind textures.
-                    bgfx_encoder_set_texture(encoder, 0, uniformTexColor.handle(), textureColor.handle(), 0xffffffff);
-                    bgfx_encoder_set_texture(encoder, 1, uniformTexNormal.handle(), textureNormal.handle(), 0xffffffff);
+//                    bgfx_encoder_set_texture(encoder, 0, uniformTexColor.handle(), textureColor.handle(), 0xffffffff);
+//                    bgfx_encoder_set_texture(encoder, 1, uniformTexNormal.handle(), textureNormal.handle(), 0xffffffff);
+                    encoder.setTexture(0, uniformTexColor, textureColor);
+                    encoder.setTexture(1, uniformTexNormal, textureNormal);
 
                     // Set render states.
-                    bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
-                            | BGFX_STATE_WRITE_A
-                            | BGFX_STATE_WRITE_Z
-                            | BGFX_STATE_DEPTH_TEST_LESS
-                            | BGFX_STATE_MSAA, 0);
+//                    bgfx_encoder_set_state(encoder, BGFX_STATE_WRITE_RGB
+//                            | BGFX_STATE_WRITE_A
+//                            | BGFX_STATE_WRITE_Z
+//                            | BGFX_STATE_DEPTH_TEST_LESS
+//                            | BGFX_STATE_MSAA, 0);
+                    encoder.setState(EnumSet.of(BGFX_STATE.WRITE_RGB, BGFX_STATE.WRITE_A, BGFX_STATE.WRITE_Z, BGFX_STATE.DEPTH_TEST_LESS, BGFX_STATE.MSAA));
 
                     // Submit primitive for rendering to view 0.
-                    bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
+//                    bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
+                    encoder.submit(myView, program);
                 }
             }
         }
 
-        bgfx_encoder_end(encoder);
+//        bgfx_encoder_end(encoder);
+        encoder.end();
     }
 
     @Override
@@ -391,7 +425,7 @@ public class Bump extends Application {
         MemoryUtil.memFree(viewBuf);
         MemoryUtil.memFree(projBuf);
         MemoryUtil.memFree(mtxBuf);
-        MemoryUtil.memFree(uniformBuf);
+//        MemoryUtil.memFree(uniformBuf);
 
         layout.dispose();
     }
