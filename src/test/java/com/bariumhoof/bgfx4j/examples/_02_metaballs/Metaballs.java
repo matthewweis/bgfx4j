@@ -153,7 +153,6 @@ public class Metaballs extends Application {
 
     @Override
     public void init() {
-//        layout = BGFXDemoUtil.createVertexLayout(true, true, 0);
         layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
                 .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.NORMAL, BGFX_ATTRIB_TYPE.FLOAT, false, false)

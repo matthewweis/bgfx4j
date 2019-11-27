@@ -10,13 +10,15 @@ import lombok.Getter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.bgfx.BGFXMemory;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.EnumSet;
 import java.util.Set;
 
-import static org.lwjgl.bgfx.BGFX.bgfx_destroy_texture;
+import static org.lwjgl.bgfx.BGFX.*;
+import static org.lwjgl.system.MemoryUtil.NULL;
 
 
 public class Texture implements Disposable, Handle {
