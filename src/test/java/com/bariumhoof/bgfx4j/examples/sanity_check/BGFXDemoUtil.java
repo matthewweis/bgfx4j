@@ -4,7 +4,6 @@
  */
 package com.bariumhoof.bgfx4j.examples.sanity_check;
 
-import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXMemory;

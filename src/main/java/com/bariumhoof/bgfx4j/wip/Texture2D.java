@@ -2,19 +2,12 @@ package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
-import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
-import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE;
 import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import com.bariumhoof.bgfx4j.resource.Resources;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.EnumSet;
-import java.util.Set;
 
 public class Texture2D extends Texture {
 

@@ -5,7 +5,6 @@ import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
 import com.bariumhoof.bgfx4j.init.Init;
 import com.bariumhoof.bgfx4j.init.PlatformData;
 import com.bariumhoof.bgfx4j.init.Resolution;
-import com.bariumhoof.bgfx4j.view.View;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.bgfx.BGFX.bgfx_get_renderer_type;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.stackPush;

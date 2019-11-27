@@ -9,8 +9,10 @@ import com.bariumhoof.bgfx4j.examples.sanity_check.BGFXDemoUtil;
 import com.bariumhoof.bgfx4j.wip.VertexLayout;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Math;
-import org.joml.*;
-import org.lwjgl.bgfx.*;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.lwjgl.bgfx.BGFXTransientVertexBuffer;
+import org.lwjgl.bgfx.BGFXVertexLayout;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 

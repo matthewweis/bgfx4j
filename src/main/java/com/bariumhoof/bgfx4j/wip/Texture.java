@@ -4,7 +4,6 @@ import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE;
-import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import com.bariumhoof.bgfx4j.resource.Resources;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

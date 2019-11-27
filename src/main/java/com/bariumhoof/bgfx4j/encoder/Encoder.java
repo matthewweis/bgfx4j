@@ -1,6 +1,5 @@
 package com.bariumhoof.bgfx4j.encoder;
 
-import com.bariumhoof.EnumUtils;
 import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
@@ -13,7 +12,6 @@ import java.nio.FloatBuffer;
 import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.bgfx.BGFX.bgfx_encoder_set_texture;
 
 /**
  *
