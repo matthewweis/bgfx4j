@@ -2,7 +2,6 @@ package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
-import com.bariumhoof.bgfx4j.enums.BGFX_CAPS_FORMAT_TEXTURE;
 import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import com.bariumhoof.bgfx4j.resource.Resources;
 import org.jetbrains.annotations.NotNull;

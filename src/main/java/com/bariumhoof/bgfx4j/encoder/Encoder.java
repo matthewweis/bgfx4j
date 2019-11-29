@@ -20,31 +20,23 @@ import static org.lwjgl.bgfx.BGFX.*;
  */
 public class Encoder {
 
-    private final static int USE_DEFAULT_TEXTURE_FLAG = 0xffffffff;
-
-    private static @Nullable Encoder singleThreadEncoder = null;
-    private static final ThreadLocal<Encoder> encoders = new ThreadLocal<>();
+    private final static int USE_DEFAULT_TEXTURE_FLAG = 0xFFFFFFFF;
 
     private final long id;
 
-    private Encoder(boolean forThread) {
-        id = bgfx_encoder_begin(forThread);// default is false
+    // todo want to avoid creating Encoder garbage each frame.
+    // todo threadlocal's dont work.
+
+    private Encoder(boolean forWorkerThread) {
+        id = bgfx_encoder_begin(forWorkerThread);// default is false
     }
 
-    public static Encoder begin(boolean forThread) {
-        if (forThread) {
-            var encoder = encoders.get();
-            if (encoder == null) {
-                encoder = new Encoder(forThread);
-                encoders.set(encoder);
-            }
-            return encoder;
-        } else {
-            if (singleThreadEncoder == null) { // todo race condition if multithreaded?
-                singleThreadEncoder = new Encoder(forThread);
-            }
-            return singleThreadEncoder;
-        }
+    public static Encoder begin() {
+        return new Encoder(false);
+    }
+
+    public static Encoder begin(boolean forWorkerThread) {
+        return new Encoder(forWorkerThread);
     }
 
     public void end() {
@@ -128,30 +120,39 @@ public class Encoder {
     public void setUniform(@NotNull Uniform uniform, short ... values) {
         setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
+
     public void setUniform(@NotNull Uniform uniform, int numElements, short ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
+
     public void setUniform(@NotNull Uniform uniform, int ... values) {
         setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
+
     public void setUniform(@NotNull Uniform uniform, int numElements, int ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
+
     public void setUniform(@NotNull Uniform uniform, long ... values) {
         setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
+
     public void setUniform(@NotNull Uniform uniform, int numElements, long ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
+
     public void setUniform(@NotNull Uniform uniform, float ... values) {
         setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
+
     public void setUniform(@NotNull Uniform uniform, int numElements, float ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
+
     public void setUniform(@NotNull Uniform uniform, double ... values) {
         setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
+
     public void setUniform(@NotNull Uniform uniform, int numElements, double ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
