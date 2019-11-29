@@ -250,4 +250,364 @@ final class ReleaseAssertionFunctions implements AssertionFunctions {
     public void requirePositive(double n, Supplier<String> message) {
         // NO OP.
     }
+
+    @Override
+    public void requireLessThan(byte n, byte upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(short n, short upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(int n, int upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(long n, long upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(float n, float upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(double n, double upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(byte n, byte upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(short n, short upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(int n, int upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(long n, long upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(float n, float upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(double n, double upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(byte n, byte upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(short n, short upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(int n, int upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(long n, long upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(float n, float upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThan(double n, double upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(byte n, byte upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(short n, short upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(int n, int upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(long n, long upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(float n, float upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(double n, double upperBoundExclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(byte n, byte upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(short n, short upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(int n, int upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(long n, long upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(float n, float upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(double n, double upperBoundExclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(byte n, byte upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(short n, short upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(int n, int upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(long n, long upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(float n, float upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThan(double n, double upperBoundExclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(byte n, byte upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(short n, short upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(int n, int upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(long n, long upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(float n, float upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(double n, double upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(byte n, byte upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(short n, short upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(int n, int upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(long n, long upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(float n, float upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(double n, double upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(byte n, byte upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(short n, short upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(int n, int upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(long n, long upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(float n, float upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireLessThanOrEqualTo(double n, double upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(byte n, byte upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(short n, short upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(int n, int upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(long n, long upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(float n, float upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(double n, double upperBoundInclusive) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(byte n, byte upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(short n, short upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(int n, int upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(long n, long upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(float n, float upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(double n, double upperBoundInclusive, String message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(byte n, byte upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(short n, short upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(int n, int upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(long n, long upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(float n, float upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireGreaterThanOrEqualTo(double n, double upperBoundInclusive, Supplier<String> message) {
+        // NO OP.
+    }
 }

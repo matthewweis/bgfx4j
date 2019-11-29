@@ -5,16 +5,12 @@ import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE;
 import com.bariumhoof.bgfx4j.resource.Resources;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.EnumSet;
-import java.util.Set;
 
 import static org.lwjgl.bgfx.BGFX.bgfx_destroy_texture;
 
@@ -28,25 +24,6 @@ public class Texture implements Disposable, Handle {
             EnumSet.of(BGFX_TEXTURE.NONE),
             EnumSet.of(BGFX_SAMPLER.NONE)
     );
-
-    @ToString
-    @EqualsAndHashCode
-    public static final class TextureFlags {
-
-        @Getter
-        protected final long VALUE;
-
-        private TextureFlags(long flags) {
-            this.VALUE = flags;
-        }
-
-        @NotNull
-        public static TextureFlags create(@NotNull Set<BGFX_TEXTURE> textureFlags, @NotNull Set<BGFX_SAMPLER> samplerFlags) {
-            final long texture = BGFX_TEXTURE.flags(textureFlags);
-            final long sampler = BGFX_SAMPLER.flags(samplerFlags);
-            return new TextureFlags(texture | sampler);
-        }
-    }
 
     protected Texture(short handle) {
         this.handle = handle;
