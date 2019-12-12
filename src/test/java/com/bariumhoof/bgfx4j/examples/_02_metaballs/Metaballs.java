@@ -26,6 +26,10 @@ import static org.lwjgl.bgfx.BGFX.*;
 import static org.lwjgl.glfw.GLFW.glfwGetTimerFrequency;
 import static org.lwjgl.glfw.GLFW.glfwGetTimerValue;
 
+/**
+ * Port of:
+ * https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/Metaballs.java
+ */
 @Slf4j
 public class Metaballs extends Application {
 

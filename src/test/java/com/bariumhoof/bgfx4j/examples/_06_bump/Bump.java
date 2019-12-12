@@ -19,6 +19,10 @@ import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
+/**
+ * Port of:
+ * https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/Bump.java
+ */
 public class Bump extends Application {
 
     private View view;
@@ -72,8 +76,8 @@ public class Bump extends Application {
         uniformLightRgbInnerR = Uniform.create("u_lightRgbInnerR", BGFX_UNIFORM_TYPE.VEC4, numLights);
 
         program = Program.loadOrNull(
-                Bump.class.getResource(instancingSupported ? "/shaders/metal/vs_bump_instanced.bin" : "/shaders/metal/vs_bump.bin"),
-                Bump.class.getResource("/shaders/metal/fs_bump.bin"));
+                Application.locateVertexShaderByName(instancingSupported ? "bump_instanced" : "bump"), // vertex shader
+                Application.locateFragmentShaderByName("bump")); // fragment shader
 
         textureColor = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
         textureNormal = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-n.dds"));

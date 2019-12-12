@@ -1,5 +1,6 @@
 package com.bariumhoof.bgfx4j;
 
+import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
 import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
 import com.bariumhoof.bgfx4j.init.Init;
@@ -19,6 +20,7 @@ import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Platform;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -393,6 +395,48 @@ public abstract class Application {
     public int getHeight() {
         return height;
 //        return init.getResolution().getHeight();
+    }
+
+    @NotNull
+    public static URL locateFragmentShaderByName(@NotNull String shaderName) {
+        switch (Capabilities.getRendererType()) {
+            case DIRECT3D9:
+                return Application.class.getResource(String.format("/shaders/dx9/fs_%s.bin", shaderName));
+            case DIRECT3D11:
+            case DIRECT3D12:
+                return Application.class.getResource(String.format("/shaders/dx11/fs_%s.bin", shaderName));
+            case METAL:
+                return Application.class.getResource(String.format("/shaders/metal/fs_%s.bin", shaderName));
+            case OPENGL:
+            case OPENGLES:
+                return Application.class.getResource(String.format("/shaders/glsl/fs_%s.bin", shaderName));
+            case VULKAN:
+                throw new UnsupportedOperationException("todo compile shaders for vulkan!");
+            default:
+                throw new UnsupportedOperationException(
+                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
+        }
+    }
+
+    @NotNull
+    public static URL locateVertexShaderByName(@NotNull String shaderName) {
+        switch (Capabilities.getRendererType()) {
+            case DIRECT3D9:
+                return Application.class.getResource(String.format("/shaders/dx9/vs_%s.bin", shaderName));
+            case DIRECT3D11:
+            case DIRECT3D12:
+                return Application.class.getResource(String.format("/shaders/dx11/vs_%s.bin", shaderName));
+            case METAL:
+                return Application.class.getResource(String.format("/shaders/metal/vs_%s.bin", shaderName));
+            case OPENGL:
+            case OPENGLES:
+                return Application.class.getResource(String.format("/shaders/glsl/vs_%s.bin", shaderName));
+            case VULKAN:
+                throw new UnsupportedOperationException("todo compile shaders for vulkan!");
+            default:
+                throw new UnsupportedOperationException(
+                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
+        }
     }
 
 }

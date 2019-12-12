@@ -10,6 +10,9 @@ import static org.lwjgl.bgfx.BGFX.*;
 /**
  * Bgfx4j port of bgfx example:
  * https://raw.githubusercontent.com/bkaradzic/bgfx/master/examples/00-helloworld/helloworld.cpp
+ *
+ * Bgfx4j port of lwjgl's port of the above port (lol):
+ * https://github.com/LWJGL/lwjgl3/blob/master/modules/samples/src/test/java/org/lwjgl/demo/bgfx/HelloBGFX.java
  */
 public class HelloWorld extends Application {
 

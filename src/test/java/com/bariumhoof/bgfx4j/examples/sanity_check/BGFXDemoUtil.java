@@ -19,6 +19,12 @@ import static org.lwjgl.bgfx.BGFX.*;
 import static org.lwjgl.system.APIUtil.apiLog;
 import static org.lwjgl.system.MemoryUtil.*;
 
+/**
+ * Copy (with some modifications) of:
+ * https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/BGFXDemoUtil.java
+ *
+ * going to be removed once api is finished
+ */
 @SuppressWarnings("StaticNonFinalField")
 public final class BGFXDemoUtil {
 

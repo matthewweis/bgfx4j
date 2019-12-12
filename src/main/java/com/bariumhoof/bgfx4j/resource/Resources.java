@@ -24,7 +24,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public final class Resources {
 
     // todo integrate with custom memory release callbacks?
-    // todo this should have its dispose called, but how to do from static method? (does it matter?)
+    // todo this should have its dispose called, but how to do from static method? (does it matter if jvm is shutting down?)
     private static BGFXReleaseFunctionCallback RELEASE_MEMORY_CALLBACK =
             BGFXReleaseFunctionCallback.create((_ptr, _userData) -> nmemFree(_ptr));
 

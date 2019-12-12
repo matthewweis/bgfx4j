@@ -84,8 +84,8 @@ public class CubesMultithreaded extends Application {
         indices = IndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
-                CubesMultithreaded.class.getResource("/shaders/metal/cubes.vert"), // vertex shader
-                CubesMultithreaded.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
+                Application.locateVertexShaderByName("cubes"), // vertex shader
+                Application.locateFragmentShaderByName("cubes") // fragment shader
         );
 
         bgfxView = View.create("my view");

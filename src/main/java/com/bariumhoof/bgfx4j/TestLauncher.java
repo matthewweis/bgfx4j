@@ -154,8 +154,8 @@ public class TestLauncher {
         final IndexBuffer indexBuffer = IndexBuffer.create(cubeIndices);
 
         final Program program = Program.load(
-                TestLauncher.class.getResource("/shaders/metal/cubes.vert"), // vertex shader
-                TestLauncher.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
+                TestLauncher.class.getResource("/shaders/metal/vs_cubes.bin"), // vertex shader
+                TestLauncher.class.getResource("/shaders/metal/fs_cubes.bin")  // fragment shader
         );
 
 

@@ -20,6 +20,10 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.bgfx.BGFX.bgfx_dbg_text_printf;
 
+/**
+ * Port of:
+ * https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/Cubes.java
+ */
 public class Cubes extends Application {
 
     private static final Number[][] cubeVertices = {
@@ -73,8 +77,8 @@ public class Cubes extends Application {
         indices = IndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
-                Cubes.class.getResource("/shaders/metal/cubes.vert"), // vertex shader
-                Cubes.class.getResource("/shaders/metal/cubes.frag")  // fragment shader
+                Application.locateVertexShaderByName("cubes"), // vertex shader
+                Application.locateFragmentShaderByName("cubes") // fragment shader
         );
 
         bgfxView = View.create("my view");
