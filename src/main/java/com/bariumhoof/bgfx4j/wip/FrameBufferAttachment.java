@@ -7,12 +7,12 @@ import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE;
 import org.apache.commons.lang3.NotImplementedException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.lwjgl.bgfx.BGFXAttachment;
 
 import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
+// todo remove me?
 // distinct from frameBuffer as frameBufferAttachment's getTexture method requires an attachmentIndex
 public class FrameBufferAttachment implements Disposable, Handle {
 
@@ -29,7 +29,7 @@ public class FrameBufferAttachment implements Disposable, Handle {
 
     // TODO IMPLEMENT THIS
     @NotNull
-    public static FrameBufferAttachment create(BGFXAttachment.Buffer attachment, boolean destroyHandles) {
+    public static FrameBufferAttachment create(@NotNull Attachment attachment, boolean destroyHandles) {
         throw new NotImplementedException("todo");
 //        final short handle = bgfx_create_frame_buffer_from_attachment(attachment, destroyHandles);
 //        return new FrameBufferAttachment(0, 0, handle);

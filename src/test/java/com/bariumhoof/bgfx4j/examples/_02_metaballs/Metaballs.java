@@ -163,7 +163,7 @@ public class Metaballs extends Application {
                 .thenUse(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build()
                 .get();
-
+ 
         short vs = 0;
         short fs = 0;
         try {

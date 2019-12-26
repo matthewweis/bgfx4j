@@ -2,8 +2,11 @@ package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
+import lombok.extern.slf4j.Slf4j;
 
-// todo low priority
+// todo low priority (realistically when does a higher-level gfx lib face SIMD limits parallel despite data xfer overhead of a gfxcard card)
+
+@Slf4j
 public class ComputeProgram implements Disposable, Handle {
     @Override
     public void dispose() {
@@ -11,6 +14,7 @@ public class ComputeProgram implements Disposable, Handle {
 
     @Override
     public short handle() {
+        log.warn("ComputeProgram's handle() method is not implemented and returning 0. TODO IMPL ME. DO NOT USE YET!");
         return 0;
     }
 

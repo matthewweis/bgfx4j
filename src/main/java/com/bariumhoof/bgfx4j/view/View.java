@@ -1,6 +1,7 @@
 package com.bariumhoof.bgfx4j.view;
 
 
+import com.bariumhoof.bgfx4j.enums.BGFX_BACKBUFFER_RATIO;
 import com.bariumhoof.bgfx4j.enums.BGFX_VIEW_MODE;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
@@ -138,6 +139,16 @@ public final class View {
 
     public void setViewRect(int x, int y, int width, int height) {
         bgfx_set_view_rect(id, x, y, width, height);
+    }
+
+    /**
+     *
+     * @param x position x from upper-left window corner
+     * @param y position y from upper-left window corner
+     * @param ratio strategy for setting width and height of view
+     */
+    public void setViewRectRatio(int x, int y, @NotNull BGFX_BACKBUFFER_RATIO ratio) {
+        bgfx_set_view_rect_ratio(id, x, y, ratio.VALUE);
     }
 
     public int id() {

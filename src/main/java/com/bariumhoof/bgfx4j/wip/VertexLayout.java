@@ -29,6 +29,23 @@ public final class VertexLayout implements Disposable {
         return new BuilderInitialStage(rendererType);
     }
 
+    public void decode() {
+        // todo implement me. not sure
+        throw new RuntimeException("not yet implemented");
+    }
+
+    public boolean has(@NotNull BGFX_ATTRIB attrib) {
+        return bgfx_vertex_layout_has(decl, attrib.VALUE);
+    }
+
+    public static VertexLayout skip(@NotNull VertexLayout source, int num) {
+        return new VertexLayout(bgfx_vertex_layout_skip(source.decl, num));
+    }
+
+    public VertexLayout skip(int num) {
+        return new VertexLayout(bgfx_vertex_layout_skip(decl, num));
+    }
+
     public BGFXVertexLayout get() {
         return decl;
     }
