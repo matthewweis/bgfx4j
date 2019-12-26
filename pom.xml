@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <!-- define language level as java 11 -->
+        <!-- define language level as java 11, api is designed with value types ("structs") in mind when they are released -->
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
 
@@ -198,8 +198,21 @@
             <version>4.4</version>
         </dependency>
 
-
     </dependencies>
+
+    <!-- todo refactor resource format, and only include resources for profile's platform -->
+    <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}/src/main/resources</directory>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>${project.basedir}/src/test/resources</directory>
+            </testResource>
+        </testResources>
+    </build>
 
 <!--    <build>-->
 <!--        <plugins>-->

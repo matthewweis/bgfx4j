@@ -99,6 +99,7 @@ public final class View {
         this.clearRgba = DEFAULT_CLEAR_RGBA;
         this.clearDepth = DEFAULT_CLEAR_DEPTH;
         this.clearStencil = DEFAULT_CLEAR_STENCIL;
+//        bgfx_set_view_name(id, name);
     }
 
     public void setClearStrategy(@NonNull ClearStrategy clearStrategy) {
