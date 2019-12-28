@@ -17,10 +17,6 @@ import static org.lwjgl.bgfx.BGFX.bgfx_alloc_transient_buffers;
 @ToString
 public final class TransientBuffers {
 
-//    public static boolean alloc(@NotNull TransientVertexBuffer transientVertexBuffer, @NotNull TransientIndexBuffer transientIndexBuffer) {
-//
-//    }
-
     private TransientBuffers(@NotNull TransientVertexBuffer transientVertexBuffer,
                              @NotNull TransientIndexBuffer transientIndexBuffer,
                              @NotNull VertexLayout layout) {
@@ -61,39 +57,5 @@ public final class TransientBuffers {
 
         return null;
     }
-
-    private static int computeTotalBytesAssumingSquare(int stride, int count, @NotNull Number[][] vertices) {
-        int strideSum = 0;
-        for (int i = 0; i < stride; i++) {
-            final Number component = vertices[0][i];
-            if (component instanceof Byte) {
-                strideSum += Byte.BYTES;
-            } else if (component instanceof Short) {
-                strideSum += Short.BYTES;
-            } else if (component instanceof Integer) {
-                strideSum += Integer.BYTES;
-            } else if (component instanceof Long) {
-                strideSum += Long.BYTES;
-            } else if (component instanceof Float) {
-                strideSum += Float.BYTES;
-            } else if (component instanceof Double) {
-                strideSum += Double.BYTES;
-            } else {
-                throw new IllegalStateException();
-            }
-        }
-        return strideSum * count;
-    }
-//
-//    /**
-//     * Attempts to reuse the transientBuffers declared in a previous frame to avoid reallocation and garbage collections.
-//     * @return a boolean indicating whether or not this could be successfully allocated for the frame
-//     */
-//    public boolean reuse() {
-//        BGFXTransientIndexBuffer tib = new BGFXTransientIndexBuffer(indexBuffer);
-//        BGFXTransientVertexBuffer tvb = new BGFXTransientVertexBuffer(vertexBuffer);
-//
-//        return bgfx_alloc_transient_buffers(tvb, layout.get(), tvb.size(), tib, tib.size());
-//    }
 
 }
