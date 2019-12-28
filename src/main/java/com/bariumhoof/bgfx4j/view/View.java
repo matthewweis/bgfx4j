@@ -6,6 +6,7 @@ import com.bariumhoof.bgfx4j.enums.BGFX_VIEW_MODE;
 import lombok.NonNull;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -138,8 +139,66 @@ public final class View {
         bgfx_set_view_transform(id, view, proj);
     }
 
+    /**
+     * According to: https://bkaradzic.github.io/bgfx/internals.html (under view API)
+     *
+     * "Calling any view API for different views from different threads is safe.
+     *  What’s not safe is to update the same view from multiple threads. This will lead to undefined behavior."
+     *
+     *  For this reason, it's safe to have a non-concurrent variable for output each time this method is called.
+     */
+    private final float[] reusableViewOutput = new float[16]; // for use with setTransform(Matrix4f, Matrix4f) method only!
+    private final float[] reusableProjOutput = new float[16]; // for use with setTransform(Matrix4f, Matrix4f) method only!
+    @SuppressWarnings({"ConstantConditions", "UnnecessaryReturnStatement"})
+    public void setTransform(@Nullable Matrix4f view, @Nullable Matrix4f proj) {
+//        if (view != null) {
+//            view.get(reusableViewOutput);
+//
+//            if (proj != null) {
+//                proj.get(reusableProjOutput);
+//                bgfx_set_view_transform(id, reusableViewOutput, reusableProjOutput);
+//            } else {
+//                bgfx_set_view_transform(id, reusableViewOutput, null);
+//            }
+//
+//        } else if (proj != null) {
+//            proj.get(reusableProjOutput);
+//            bgfx_set_view_transform(id, null, reusableProjOutput);
+//        } else {
+//            bgfx_set_view_transform(id, reusableViewOutput, null);
+//        }
+
+        if (view != null && proj != null) {
+            view.get(reusableViewOutput);
+            proj.get(reusableProjOutput);
+            bgfx_set_view_transform(id, reusableViewOutput, reusableProjOutput);
+            return;
+        }
+
+        if (view == null && proj != null) {
+            proj.get(reusableProjOutput);
+            bgfx_set_view_transform(id, null, reusableProjOutput);
+            return;
+        }
+
+        if (view != null && proj == null) {
+            view.get(reusableViewOutput);
+            bgfx_set_view_transform(id, reusableViewOutput, null);
+            return;
+        }
+
+        if (view == null && proj == null) {
+            bgfx_set_view_transform(id, (float[]) null, null);
+            return;
+        }
+    }
+
     public void setViewRect(int x, int y, int width, int height) {
         bgfx_set_view_rect(id, x, y, width, height);
+    }
+
+    public void touch() {
+        bgfx_touch(id);
     }
 
     /**

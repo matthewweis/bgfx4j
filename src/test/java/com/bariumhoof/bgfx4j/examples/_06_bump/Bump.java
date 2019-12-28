@@ -68,12 +68,12 @@ public class Bump extends Application {
         vb = VertexBuffer.create(layout, vertices, cubeVertices.length);
         ib = IndexBuffer.create(cubeIndices);
 
-        uniformTexColor = Uniform.create("s_texColor", BGFX_UNIFORM_TYPE.VEC4, 1);
-        uniformTexNormal = Uniform.create("s_texNormal", BGFX_UNIFORM_TYPE.VEC4, 1);
+        uniformTexColor = Uniform.create("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
+        uniformTexNormal = Uniform.create("s_texNormal", BGFX_UNIFORM_TYPE.VEC4);
 
         numLights = 4;
-        uniformLightPosRadius = Uniform.create("u_lightPosRadius", BGFX_UNIFORM_TYPE.VEC4, numLights);
-        uniformLightRgbInnerR = Uniform.create("u_lightRgbInnerR", BGFX_UNIFORM_TYPE.VEC4, numLights);
+        uniformLightPosRadius = Uniform.create("u_lightPosRadius", BGFX_UNIFORM_TYPE.VEC4);
+        uniformLightRgbInnerR = Uniform.create("u_lightRgbInnerR", BGFX_UNIFORM_TYPE.VEC4);
 
         program = Program.loadOrNull(
                 Application.locateVertexShaderByName(instancingSupported ? "bump_instanced" : "bump"), // vertex shader

@@ -1,6 +1,7 @@
 package com.bariumhoof.bgfx4j.wip;
 
 
+import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -25,7 +26,12 @@ public final class VertexLayout implements Disposable {
         this.decl = decl;
     }
 
-    public static BuilderInitialStage builder(BGFX_RENDERER_TYPE rendererType) {
+    public static BuilderInitialStage builder() {
+        return new BuilderInitialStage(Capabilities.getRendererType());
+    }
+
+    @Deprecated // depreciate while deciding if we want this option (since capabilities covers this now)
+    public static BuilderInitialStage builder(@NotNull BGFX_RENDERER_TYPE rendererType) {
         return new BuilderInitialStage(rendererType);
     }
 

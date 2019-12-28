@@ -107,6 +107,22 @@ public class Encoder {
         bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), startVertex, size);
     }
 
+    public void setVertexBuffer(TransientVertexBuffer vertexBuffer) {
+        bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), 0, vertexBuffer.size(), BGFX_INVALID_HANDLE);
+    }
+
+    public void setVertexBuffer(TransientVertexBuffer vertexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size, BGFX_INVALID_HANDLE);
+    }
+
+    public void setIndexBuffer(TransientIndexBuffer indexBuffer) {
+        bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), 0, indexBuffer.size());
+    }
+
+    public void setIndexBuffer(TransientIndexBuffer indexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), startVertex, size);
+    }
+
     // todo make Uniform types for each value. Sampler, Vec4x4, etc to make typesafe
     public void setTexture(int stage, @NotNull Uniform sampler, @NotNull Texture texture) {
         setTexture(stage, sampler, texture, null);
@@ -117,40 +133,20 @@ public class Encoder {
         bgfx_encoder_set_texture(id, stage, sampler.handle(), texture.handle(), samplerSettingFlag);
     }
 
-    public void setUniform(@NotNull Uniform uniform, short ... values) {
-        setUniform(uniform, uniform.getNumElementsInArray(), values);
-    }
-
     public void setUniform(@NotNull Uniform uniform, int numElements, short ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
-    }
-
-    public void setUniform(@NotNull Uniform uniform, int ... values) {
-        setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
 
     public void setUniform(@NotNull Uniform uniform, int numElements, int ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
 
-    public void setUniform(@NotNull Uniform uniform, long ... values) {
-        setUniform(uniform, uniform.getNumElementsInArray(), values);
-    }
-
     public void setUniform(@NotNull Uniform uniform, int numElements, long ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
     }
 
-    public void setUniform(@NotNull Uniform uniform, float ... values) {
-        setUniform(uniform, uniform.getNumElementsInArray(), values);
-    }
-
     public void setUniform(@NotNull Uniform uniform, int numElements, float ... values) {
         bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
-    }
-
-    public void setUniform(@NotNull Uniform uniform, double ... values) {
-        setUniform(uniform, uniform.getNumElementsInArray(), values);
     }
 
     public void setUniform(@NotNull Uniform uniform, int numElements, double ... values) {
