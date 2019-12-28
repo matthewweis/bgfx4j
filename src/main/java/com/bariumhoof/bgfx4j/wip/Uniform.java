@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.lwjgl.bgfx.BGFX.*;
 
 // todo make abstract and instead havbe UniformSampler, UniformVec4, etc. for type safety elsewhere in api
+// todo make uniform array, and leave this class for a uniform of only one value
 public class Uniform implements Handle, Disposable {
 
     // todo impl getShaderUniforms in shader
