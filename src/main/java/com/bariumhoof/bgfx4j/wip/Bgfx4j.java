@@ -10,8 +10,9 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 public class Bgfx4j {
 
-    static int U_INT8_MAX = 255;
-    static int U_INT16_MAX = 65535;
+    public static int U_INT8_MAX = 255;
+//    public static int U_INT16_MAX = 65535;
+    public static int U_INT16_MAX = 0xFFFF;
 
     public static void vertexPack(float[] input, boolean isNormalized, @NotNull BGFX_ATTRIB attrib, @NotNull VertexLayout layout, int index) {
         bgfx_vertex_pack(input, isNormalized, attrib.VALUE, layout.get(), ByteBuffer.allocate(input.length), index);

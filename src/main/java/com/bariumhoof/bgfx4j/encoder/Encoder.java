@@ -4,6 +4,7 @@ import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.*;
+import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,6 +19,7 @@ import static org.lwjgl.bgfx.BGFX.*;
  * "Encoders are used for submitting draw calls from multiple threads. Only one encoder per thread should be used.
  * Use bgfx::begin() to obtain an encoder for a thread."
  */
+@Slf4j
 public class Encoder {
 
     private final static int USE_DEFAULT_TEXTURE_FLAG = 0xFFFFFFFF;
@@ -53,6 +55,10 @@ public class Encoder {
 
     public void setTransform(@NotNull float[] mtx) {
         bgfx_encoder_set_transform(id, mtx);
+    }
+
+    public void touch(@NotNull View view) {
+        bgfx_encoder_touch(id, view.id());
     }
 
     /**
@@ -115,12 +121,32 @@ public class Encoder {
         bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size, BGFX_INVALID_HANDLE);
     }
 
-    public void setIndexBuffer(TransientIndexBuffer indexBuffer) {
+    public void setTransientIndexBuffer(TransientIndexBuffer indexBuffer) {
         bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), 0, indexBuffer.size());
     }
 
-    public void setIndexBuffer(TransientIndexBuffer indexBuffer, int startVertex, int size) {
+    public void setTransientIndexBuffer(TransientIndexBuffer indexBuffer, int startVertex, int size) {
         bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), startVertex, size);
+    }
+
+    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer) {
+        bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), 0, vertexBuffer.size(), vertexBuffer.layoutHandle());
+    }
+
+    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size, vertexBuffer.layoutHandle());
+    }
+
+    // todo make stream object
+    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer, int stream) {
+        bgfx_encoder_set_transient_vertex_buffer(id, stream, vertexBuffer.getBuf(), 0, vertexBuffer.size(), vertexBuffer.layoutHandle());
+    }
+
+    // todo make stream object
+    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer, int stream, int startVertex, int size) {
+        log.warn("examples use invalid handle for setting transientVertexBuffer, look into reasoning");
+        bgfx_encoder_set_transient_vertex_buffer(id, stream, vertexBuffer.getBuf(), startVertex, size, BGFX_INVALID_HANDLE);
+//        bgfx_encoder_set_transient_vertex_buffer(id, stream, vertexBuffer.getBuf(), startVertex, size, vertexBuffer.layoutHandle());
     }
 
     // todo make Uniform types for each value. Sampler, Vec4x4, etc to make typesafe
@@ -133,24 +159,49 @@ public class Encoder {
         bgfx_encoder_set_texture(id, stage, sampler.handle(), texture.handle(), samplerSettingFlag);
     }
 
-    public void setUniform(@NotNull Uniform uniform, int numElements, short ... values) {
-        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+//    public void setUniform(@NotNull Uniform uniform, int numElements, short ... values) {
+//        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+//    }
+//
+//    public void setUniform(@NotNull Uniform uniform, int numElements, int ... values) {
+//        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+//    }
+//
+//    public void setUniform(@NotNull Uniform uniform, int numElements, long ... values) {
+//        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+//    }
+//
+//    public void setUniform(@NotNull Uniform uniform, int numElements, float ... values) {
+//        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+//    }
+//
+//    public void setUniform(@NotNull Uniform uniform, int numElements, double ... values) {
+//        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+//    }
+
+    public void setUniform(@NotNull Uniform uniform, short ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, uniform.getCount());
     }
 
-    public void setUniform(@NotNull Uniform uniform, int numElements, int ... values) {
-        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    public void setUniform(@NotNull Uniform uniform, int ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, uniform.getCount());
     }
 
-    public void setUniform(@NotNull Uniform uniform, int numElements, long ... values) {
-        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    public void setUniform(@NotNull Uniform uniform, long ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, uniform.getCount());
     }
 
-    public void setUniform(@NotNull Uniform uniform, int numElements, float ... values) {
-        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    public void setUniform(@NotNull Uniform uniform, float ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, uniform.getCount());
     }
 
-    public void setUniform(@NotNull Uniform uniform, int numElements, double ... values) {
-        bgfx_encoder_set_uniform(id, uniform.handle(), values, numElements);
+    public void setUniform(@NotNull Uniform uniform, double ... values) {
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, uniform.getCount());
+    }
+
+    public void setUniform(@NotNull Uniform uniform, @NotNull ByteBuffer values) {
+        // todo look into why using UINT16_MAX doesn't work here (even when properly declaring size at creation time)
+        bgfx_encoder_set_uniform(id, uniform.handle(), values, uniform.getCount());
     }
 
     // todo add once InstanceDataBuffer exists

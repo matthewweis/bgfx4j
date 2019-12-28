@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXTransientVertexBuffer;
 import org.lwjgl.bgfx.BGFXVertexLayout;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.NativeType;
 
 import java.nio.ByteBuffer;
 
@@ -57,6 +59,8 @@ public class TransientVertexBuffer implements Disposable, Handle {
         return new TransientVertexBuffer(tvb);
     }
 
+    // todo seperate between methods like this which create and init a buffer and those which create an uninitialized buffer.
+    //      this should eventually be type safe (and an uninitialized buffer is called like a blueprint or something)
     @NotNull
     public static TransientVertexBuffer create(@NotNull VertexLayout decl, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
@@ -65,6 +69,19 @@ public class TransientVertexBuffer implements Disposable, Handle {
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
         final BGFXTransientVertexBuffer buf = createTransientVertexBuffer(vbuf, decl.get(), vertices);
 
+        return new TransientVertexBuffer(buf);
+    }
+
+    @NotNull
+    public static TransientVertexBuffer create(@NotNull MemoryStack memoryStack) {
+        final BGFXTransientVertexBuffer buf = BGFXTransientVertexBuffer.callocStack(memoryStack);
+        return new TransientVertexBuffer(buf);
+    }
+
+    @NotNull
+    public static TransientVertexBuffer createAndInit(@NotNull MemoryStack memoryStack, int num, @NotNull VertexLayout layout) {
+        final BGFXTransientVertexBuffer buf = BGFXTransientVertexBuffer.callocStack(memoryStack);
+        bgfx_alloc_transient_vertex_buffer(buf, num, layout.get());
         return new TransientVertexBuffer(buf);
     }
 
@@ -165,17 +182,43 @@ public class TransientVertexBuffer implements Disposable, Handle {
         return strideSum;
     }
 
+    public int sizeof() {
+        return buf.sizeof();
+    }
+
+    @NativeType("uint8_t *")
+    public ByteBuffer data() {
+        return buf.data();
+    }
+
     @Override
     public void dispose() {
         bgfx_destroy_vertex_buffer(buf.handle());
     }
 
+    @NativeType("bgfx_vertex_buffer_handle_t")
     @Override
     public short handle() {
         return buf.handle();
     }
 
+    @NativeType("bgfx_vertex_layout_handle_t")
+    public short layoutHandle() {
+        return buf.layoutHandle();
+    }
+
+    @NativeType("uint32_t")
     public int size() {
         return buf.size();
+    }
+
+    @NativeType("uint32_t")
+    public int startVertex() {
+        return buf.startVertex();
+    }
+
+    @NativeType("uint16_t")
+    public short stride() {
+        return buf.stride();
     }
 }

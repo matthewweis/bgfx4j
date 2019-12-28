@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXTransientIndexBuffer;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import org.lwjgl.system.NativeType;
 
 import java.nio.ByteBuffer;
 
@@ -68,6 +70,19 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         return new TransientIndexBuffer(buf);
     }
 
+    @NotNull
+    public static TransientIndexBuffer create(@NotNull MemoryStack memoryStack) {
+        final BGFXTransientIndexBuffer buf = BGFXTransientIndexBuffer.callocStack(memoryStack);
+        return new TransientIndexBuffer(buf);
+    }
+
+    @NotNull
+    public static TransientIndexBuffer createAndInit(@NotNull MemoryStack memoryStack, int num) {
+        final BGFXTransientIndexBuffer buf = BGFXTransientIndexBuffer.callocStack(memoryStack);
+        bgfx_alloc_transient_index_buffer(buf, num);
+        return new TransientIndexBuffer(buf);
+    }
+
     private static int getByteCount(@NotNull int[] indices) {
 //        return indices.length * Integer.BYTES;
         return indices.length * 2; // see Cubes example, they multiply by only 2 (since it must become a short?)
@@ -118,6 +133,15 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         return tib;
     }
 
+    public int sizeof() {
+        return buf.sizeof();
+    }
+
+    @NativeType("uint8_t *")
+    public ByteBuffer data() {
+        return buf.data();
+    }
+
     @Override
     public void dispose() {
         bgfx_destroy_vertex_buffer(buf.handle());
@@ -128,8 +152,14 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         return buf.handle();
     }
 
+    @NativeType("uint32_t")
     public int size() {
         return buf.size();
+    }
+
+    @NativeType("uint32_t")
+    public int startIndex() {
+        return buf.startIndex();
     }
 
 

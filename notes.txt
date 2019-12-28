@@ -9,7 +9,12 @@ MemoryStack > MemoryUtil > BufferUtils
 
 
 
+TODO:
 
+- Unify API and promote type safety
+  - Make common types interfaces with implementations depending on usage
+  - For example, different types of uniform impls should exist depending on if size is known at creation or later
+- Allow patterns which can use MemoryStack under surface without forcing user to know about it
 
 
 

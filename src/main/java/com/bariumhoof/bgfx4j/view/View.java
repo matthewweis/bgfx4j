@@ -197,6 +197,18 @@ public final class View {
         bgfx_set_view_rect(id, x, y, width, height);
     }
 
+    public void setViewTransform(@Nullable ByteBuffer view, @Nullable ByteBuffer proj) {
+        bgfx_set_view_transform(id, view, proj);
+    }
+
+    public void setViewTransform(@Nullable FloatBuffer view, @Nullable FloatBuffer proj) {
+        bgfx_set_view_transform(id, view, proj);
+    }
+
+    public void setViewTransform(@Nullable float[] view, @Nullable float[] proj) {
+        bgfx_set_view_transform(id, view, proj);
+    }
+
     public void touch() {
         bgfx_touch(id);
     }

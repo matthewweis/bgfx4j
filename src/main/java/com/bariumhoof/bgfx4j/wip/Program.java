@@ -84,6 +84,8 @@ public class Program implements Disposable, Handle {
 
     /**
      * Creates a program from two {@link URL}s that point to corresponding vertex and fragment shaders.
+     * This method will destroy the shaders after loading.
+     *
      * @param vs The {@link URL} of a vertex shader to load.
      * @param fs The {@link URL} of the corresponding fragment shader to load.
      * @return A program created from the loaded vs and fs shaders.
@@ -96,6 +98,8 @@ public class Program implements Disposable, Handle {
 
     /**
      * Creates a program from two {@link URL}s that point to corresponding vertex and fragment shaders.
+     * This method will destroy the shaders after loading.
+     *
      * @param vs The {@link URL} of a vertex shader to load.
      * @param fs The {@link URL} of the corresponding fragment shader to load.
      * @return A program created from the loaded vs and fs shaders.
