@@ -17,6 +17,11 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 /**
  *
+ * Notes:
+ *  - View is a primary sorting mechanism and nothing more. All views draw to the same backbuffer (see exception).
+ *    --> An exception to this rule is when a custom rendertarget is set instead. All views without custom rendertargets
+ *        draw to backbuffer.
+ *
  * BEGIN QUOTE (https://bkaradzic.github.io/bgfx/bgfx.html#views)
  *   View is primary sorting mechanism in bgfx. View represent bucket of draw and compute calls. Compute and draw calls
  *   inside bucket are sorted in the way that all compute calls are executed before draw calls. Compute calls are always
@@ -29,6 +34,7 @@ import static org.lwjgl.bgfx.BGFX.*;
  *
  *   View state is preserved between multiple frames.
  * END QUOTE
+ *
  */
 public final class View {
 

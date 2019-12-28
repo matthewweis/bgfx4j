@@ -210,7 +210,7 @@ public class Encoder {
 //    }
 
     public void submit(View view, Program program) {
-        submit(view, program, 0);
+        submit(view, program, 0, false);
     }
 
     public void submit(View view, Program program, int depth) {

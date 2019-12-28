@@ -22,8 +22,7 @@ import java.nio.FloatBuffer;
 import static org.lwjgl.bgfx.BGFX.*;
 
 /**
- * Port of:
- * https://github.com/bkaradzic/bgfx/blob/master/examples/03-raymarch/screenshot.png
+ * Reference implementation for raymarch impl
  */
 @Slf4j
 public class RaymarchLwjglDemo extends Application {

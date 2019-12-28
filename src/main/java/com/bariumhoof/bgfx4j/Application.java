@@ -161,13 +161,14 @@ public abstract class Application {
 
                 float time = (float)((now - startTime) / freq);
 
-                bgfx_set_view_rect(0, 0, 0, width, height);
+//                bgfx_set_view_rect(0, 0, 0, width, height);
 
                 render(toMs, time);
 
                 // Advance to next frame. Rendering thread will be kicked to
                 // process submitted rendering primitives.
                 bgfx_frame(false);
+
                 try {
                     Thread.sleep(50L); // save battery on debug
                 } catch (InterruptedException e) {

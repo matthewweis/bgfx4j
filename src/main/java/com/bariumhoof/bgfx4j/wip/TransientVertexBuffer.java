@@ -20,6 +20,8 @@ import static org.lwjgl.bgfx.BGFX.bgfx_destroy_vertex_buffer;
 @Slf4j
 public class TransientVertexBuffer implements Disposable, Handle {
 
+    // todo this always exists regardless of instantiaion, but layout does not. (Nor does size)
+    //      make this information part of a builder surplus stage which is also extended by this class?
     @Getter
     private final @NotNull BGFXTransientVertexBuffer buf;
 
