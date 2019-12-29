@@ -115,6 +115,7 @@ public class CubesMultipleVertexStream extends Application {
 
     @Override
     public void render(float dt, float time) {
+        bgfx_set_view_rect(0, 0, 0, width, height);
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes (multiple vertex streams)");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 

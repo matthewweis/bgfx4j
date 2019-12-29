@@ -4,7 +4,6 @@ import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.IndexBuffer;
@@ -19,6 +18,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.bgfx.BGFX.bgfx_dbg_text_printf;
+import static org.lwjgl.bgfx.BGFX.bgfx_set_view_rect;
 
 /**
  * Port of:
@@ -68,7 +68,7 @@ public class Cubes extends Application {
     @Override
     public void init() {
 
-        layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
+        layout = VertexLayout.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
@@ -90,6 +90,7 @@ public class Cubes extends Application {
 
     @Override
     public void render(float dt, float time) {
+        bgfx_set_view_rect(0, 0, 0, width, height);
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 

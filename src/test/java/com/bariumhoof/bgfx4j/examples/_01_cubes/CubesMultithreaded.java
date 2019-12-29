@@ -21,8 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import static org.lwjgl.bgfx.BGFX.bgfx_dbg_text_printf;
-import static org.lwjgl.bgfx.BGFX.bgfx_encoder_touch;
+import static org.lwjgl.bgfx.BGFX.*;
 
 public class CubesMultithreaded extends Application {
 
@@ -96,6 +95,7 @@ public class CubesMultithreaded extends Application {
 
     @Override
     public void render(float dt, float time) {
+        bgfx_set_view_rect(0, 0, 0, width, height);
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes (multithreaded)");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Each 4x4 square is rendered on its own thread.");
 
