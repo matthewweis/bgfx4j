@@ -4,8 +4,16 @@
 # AUTOMATICALLY FINDS SHADERS FOLLOWING THE name.defsc, name.vertsc, name.fragsc format in resources/shaders and compiles
 # / places them in a subdirectory appropriate for their target
 
+
+### VARIABLES
+INDIR="../src/test/resources/shaders/" # directory containing inputs
+OUTDIR="../src/test/resources/shaders/" #directory to put outputs (with intermediate profile directory inbetween)
+
+TARGET="metal" # directory its saved in
+PROFILE="metal"  # profile (see comment code below for possibilities)
+###
+
 dir=$(pwd)
-OUTDIR="../src/test/resources/shaders/"
 
 echo "determining os..."
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -24,11 +32,6 @@ else
         echo "ERROR: invalid OS"
         exit 1
 fi
-
-### VARIABLES
-TARGET="metal" # directory its saved in
-PROFILE="metal"  #profile (see comment code below for possibilities)
-###
 
 
 SRC="../bgfx/src/"
@@ -101,16 +104,15 @@ dext=".defsc"
 fext=".fragsc"
 vext=".vertsc"
 
-
 ### shader gen
 echo "generating shaders..."
-for file in ../src/test/resources/shaders/*.fragsc; do
+for file in ${INDIR}/*.fragsc; do
     baseName=$(basename ${file} ${fext})
 
     ${SC} -f ${file} -o ${OUTDIR}${TARGET}/fs_${baseName}.bin --platform ${PLATFORM} -p ${PROFILE} --type f --varyingdef ${OUTDIR}${baseName}${dext} -i ${COMMON} -i ${SRC} -O 3
 done
 
-for file in ../src/test/resources/shaders/*.vertsc; do
+for file in ${INDIR}/*.vertsc; do
     baseName=$(basename ${file} ${vext})
 
     ${SC} -f ${file} -o ${OUTDIR}${TARGET}/vs_${baseName}.bin --platform ${PLATFORM} -p ${PROFILE} --type v --varyingdef ${OUTDIR}${baseName}${dext} -i ${COMMON} -i ${SRC} -O 3
