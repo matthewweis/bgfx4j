@@ -1,15 +1,11 @@
 package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.IndexBuffer;
-import com.bariumhoof.bgfx4j.wip.Program;
-import com.bariumhoof.bgfx4j.wip.VertexBuffer;
-import com.bariumhoof.bgfx4j.wip.VertexLayout;
+import com.bariumhoof.bgfx4j.wip.*;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;

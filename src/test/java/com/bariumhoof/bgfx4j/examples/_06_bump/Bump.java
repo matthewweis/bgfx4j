@@ -2,7 +2,6 @@ package com.bariumhoof.bgfx4j.examples._06_bump;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.*;

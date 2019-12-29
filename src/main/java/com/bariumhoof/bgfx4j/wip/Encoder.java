@@ -1,9 +1,8 @@
-package com.bariumhoof.bgfx4j.encoder;
+package com.bariumhoof.bgfx4j.wip;
 
 import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.*;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -137,16 +136,12 @@ public class Encoder {
         bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size, vertexBuffer.layoutHandle());
     }
 
-    // todo make stream object
-    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer, int stream) {
-        bgfx_encoder_set_transient_vertex_buffer(id, stream, vertexBuffer.getBuf(), 0, vertexBuffer.size(), vertexBuffer.layoutHandle());
+    public void setInstanceBuffer(@NotNull InstanceBuffer instanceBuffer) {
+        bgfx_encoder_set_instance_data_buffer(id, instanceBuffer.get(), 0, instanceBuffer.num());
     }
 
-    // todo make stream object
-    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer, int stream, int startVertex, int size) {
-        log.warn("examples use invalid handle for setting transientVertexBuffer, look into reasoning");
-        bgfx_encoder_set_transient_vertex_buffer(id, stream, vertexBuffer.getBuf(), startVertex, size, BGFX_INVALID_HANDLE);
-//        bgfx_encoder_set_transient_vertex_buffer(id, stream, vertexBuffer.getBuf(), startVertex, size, vertexBuffer.layoutHandle());
+    public void setInstanceBuffer(@NotNull InstanceBuffer instanceBuffer, int startVertex, int size) {
+        bgfx_encoder_set_instance_data_buffer(id, instanceBuffer.get(), startVertex, size);
     }
 
     // todo make Uniform types for each value. Sampler, Vec4x4, etc to make typesafe

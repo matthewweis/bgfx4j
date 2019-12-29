@@ -1,7 +1,6 @@
 package com.bariumhoof.bgfx4j.examples._03_raymarch;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.encoder.Encoder;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
