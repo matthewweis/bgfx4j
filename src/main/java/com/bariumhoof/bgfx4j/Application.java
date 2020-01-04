@@ -323,21 +323,35 @@ public abstract class Application {
             }
 
             // limits
-//            if (exists(init.getLimits())) {
-//                _init.limits(it -> {
-//                    // todo create limits builder and then fill this in
-////                    final var data = init.getLimits();
-////                    if (exists(data.maxEncoders())) {
-////
-////                    }
-//                });
-//            }
+            if (exists(init.getLimits())) {
+                _init.limits(it -> {
+                    final var limits = init.getLimits();
+
+                    if (!exists(limits.maxEncoders())) {
+                        log.warn("init's getLimits's maxEncoders does not appear to exist but is being set");
+                    }
+
+                    if (!exists(limits.transientVbSize())) {
+                        log.warn("init's getLimits's transientVbSize does not appear to exist but is being set");
+                    }
+
+                    if (!exists(limits.transientIbSize())) {
+                        log.warn("init's getLimits's transientIbSize does not appear to exist but is being set");
+                    }
+
+                    it.set(limits.maxEncoders(), limits.transientVbSize(), limits.transientIbSize());
+                });
+            }
 
             // allocator
-            // todo allocator
-
-            // callbacks
-            // todo callbacks
+//            if (exists(init.getAllocator())) {
+//                _init.allocator(init.getAllocator());
+//            }
+//
+//            // callbacks
+//            if (exists(init.getCallback())) {
+//                _init.callback(init.getCallback());
+//            }
 
             if (!bgfx_init(_init)) {
                 throw new RuntimeException("Error initializing bgfx renderer");

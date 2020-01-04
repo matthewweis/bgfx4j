@@ -7,9 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jilt.Builder;
 import org.jilt.BuilderStyle;
 import org.jilt.Opt;
-import org.lwjgl.bgfx.BGFXAllocatorInterface;
-import org.lwjgl.bgfx.BGFXCallbackInterface;
-import org.lwjgl.bgfx.BGFXInitLimits;
 
 @Value
 @Builder(style = BuilderStyle.TYPE_SAFE)
@@ -25,9 +22,12 @@ public final class Init {
     @Opt final @Nullable Short deviceId;
     @Opt final @Nullable Boolean debug;
     @Opt final @Nullable Boolean profile;
-    @Opt final @Nullable BGFXInitLimits limits; // todo
-    @Opt final @Nullable BGFXCallbackInterface callback; // todo
-    @Opt final @Nullable BGFXAllocatorInterface allocator; // todo
+
+    @Opt final @Nullable InitLimits limits; // this is blueprint
+
+//    @Opt final @Nullable BGFXInitLimits limits; // todo need this to exist off memstack?
+//    @Opt final @Nullable BGFXCallbackInterface callback; // todo need this to exist off memstack?
+//    @Opt final @Nullable BGFXAllocatorInterface allocator; // todo need this to exist off memstack?
 
     public static InitBuilders.PlatformData builder() {
         return InitBuilder.init();

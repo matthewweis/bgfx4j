@@ -21,6 +21,10 @@ import static org.lwjgl.bgfx.BGFX.*;
  *  - View is a primary sorting mechanism and nothing more. All views draw to the same backbuffer (see exception).
  *    --> An exception to this rule is when a custom rendertarget is set instead. All views without custom rendertargets
  *        draw to backbuffer.
+ *    --> So then does it make sense to call it view?? On one one hand everything the "view" represents is technically
+ *        correct. But also view, especially in the gfx community, has a loaded term and some github issues have caused
+ *        confusion. So then I have no good answer.
+ *    --> Since bgfx4j is meant to be close to the real api (with java-like idioms and semantics)
  *
  * BEGIN QUOTE (https://bkaradzic.github.io/bgfx/bgfx.html#views)
  *   View is primary sorting mechanism in bgfx. View represent bucket of draw and compute calls. Compute and draw calls
