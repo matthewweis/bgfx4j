@@ -1,7 +1,10 @@
 package com.bariumhoof.bgfx4j.wip;
 
+import com.bariumhoof.assertions.Assertions;
+import com.bariumhoof.bgfx4j.buffer.*;
 import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -21,12 +24,78 @@ import static org.lwjgl.bgfx.BGFX.*;
 @Slf4j
 public class Encoder {
 
+    /**
+     * Only one encoder may exist per thread, but multiple threads may use one encoder.
+     * Thus, one encoder may exist between multiple threads.
+     *
+     * It MIGHT be efficient to cache encoders, but also might be slower.
+     */
+    final static ThreadLocal<Encoder> ENCODER_CACHE = new ThreadLocal<>();
+
     private final static int USE_DEFAULT_TEXTURE_FLAG = 0xFFFFFFFF;
 
     private final long id;
 
     // todo want to avoid creating Encoder garbage each frame.
     // todo threadlocal's dont work.
+
+    // bgfx4j api
+
+    public void debugTextClear() {
+        debugTextClear(null, false);
+    }
+
+    public void debugTextClear(@Nullable DebugColor background) {
+        debugTextClear(background, false);
+    }
+
+    public void debugTextClear(boolean small) {
+        debugTextClear(null, small);
+    }
+
+    /*
+     * regarding attr from debugTextPrintf documentation:
+     *
+     * Color palette. Where top 4-bits represent index of background,
+     * and bottom 4-bits represent foreground color from standard VGA text palette (ANSI escape codes).
+     */
+    public void debugTextClear(@Nullable DebugColor background, boolean small) {
+        if (background == null) {
+            bgfx_dbg_text_clear(DebugColor.BLACK.value, small);
+        } else {
+            bgfx_dbg_text_clear(background.value, small);
+        }
+    }
+
+    public void debugTextPrintf(int x, int y, @NotNull String format) {
+        debugTextPrintf(x, y, null, null, format);
+    }
+
+    public void debugTextPrintf(int x, int y, @Nullable DebugColor background, @Nullable DebugColor foreground, @NotNull String format) {
+        Assertions.requireGreaterThanOrEqualTo(x, 0);
+        Assertions.requireGreaterThanOrEqualTo(y, 0);
+
+        bgfx_dbg_text_printf(x, y, createDebugAttr(background, foreground), format);
+    }
+
+    private static int createDebugAttr(@Nullable DebugColor background, @Nullable DebugColor foreground) {
+        final int bg = background == null ? 0x0 : background.value;
+        final int fg = foreground == null ? 0x0 : foreground.value;
+        final int topFourBits = (bg & 0xF) << 4;
+        final int bottomFourBits = fg & 0xF;
+        return topFourBits | bottomFourBits;
+    }
+
+
+    // todo make make bgfx4j quality (typesafe, no bytebuffer, overloaded signatures, etc.)
+    public void debugTextImage(int x, int y, int width, int height, ByteBuffer data, int pitch) {
+        bgfx_dbg_text_image(x, y, width, height, data, pitch);
+    }
+
+    // todo bgfx_dbg_text_vprintf
+
+
+    // bgfx api
 
     private Encoder(boolean forWorkerThread) {
         id = bgfx_encoder_begin(forWorkerThread);// default is false
@@ -96,43 +165,55 @@ public class Encoder {
      * // todo look into "stream"
      * @param vertexBuffer non-aliasing buffer?
      */
-    public void setVertexBuffer(VertexBuffer vertexBuffer) {
+
+    // TODO FIX BGFX_INVALID_HANDLE usage!
+    public void setVertexBuffer(@NotNull VertexBuffer vertexBuffer) {
         bgfx_encoder_set_vertex_buffer(id, 0, vertexBuffer.handle(), 0, vertexBuffer.size(), BGFX_INVALID_HANDLE);
     }
 
-    public void setVertexBuffer(VertexBuffer vertexBuffer, int startVertex, int size) {
+    public void setVertexBuffer(@NotNull VertexBuffer vertexBuffer, int startVertex, int size) {
         bgfx_encoder_set_vertex_buffer(id, 0, vertexBuffer.handle(), startVertex, size, BGFX_INVALID_HANDLE);
     }
 
-    public void setIndexBuffer(IndexBuffer indexBuffer) {
+    public void setIndexBuffer(@NotNull IndexBuffer indexBuffer) {
         bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), 0, indexBuffer.size());
     }
 
-    public void setIndexBuffer(IndexBuffer indexBuffer, int startVertex, int size) {
+    public void setIndexBuffer(@NotNull IndexBuffer indexBuffer, int startVertex, int size) {
         bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), startVertex, size);
     }
 
-    public void setVertexBuffer(TransientVertexBuffer vertexBuffer) {
-        bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), 0, vertexBuffer.size(), BGFX_INVALID_HANDLE);
+    public void setDynamicVertexBuffer(@NotNull DynamicVertexBuffer dynamicVertexBuffer) {
+        // todo want this or INVALID_HANDLE??
+        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), 0, dynamicVertexBuffer.getNumVertices(), dynamicVertexBuffer.layoutHandle());
     }
 
-    public void setVertexBuffer(TransientVertexBuffer vertexBuffer, int startVertex, int size) {
-        bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size, BGFX_INVALID_HANDLE);
+    public void setDynamicVertexBuffer(@NotNull DynamicVertexBuffer dynamicVertexBuffer, int startVertex, int size) {
+        // todo want this or INVALID_HANDLE??
+        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), startVertex, size, dynamicVertexBuffer.layoutHandle());
     }
 
-    public void setTransientIndexBuffer(TransientIndexBuffer indexBuffer) {
+    public void setDynamicIndexBuffer(@NotNull DynamicIndexBuffer dynamicIndexBuffer) {
+        bgfx_encoder_set_dynamic_index_buffer(id, dynamicIndexBuffer.handle(), 0, dynamicIndexBuffer.getNumIndices());
+    }
+
+    public void setDynamicIndexBuffer(@NotNull DynamicIndexBuffer dynamicIndexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_dynamic_index_buffer(id, dynamicIndexBuffer.handle(), startVertex, size);
+    }
+
+    public void setTransientIndexBuffer(@NotNull TransientIndexBuffer indexBuffer) {
         bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), 0, indexBuffer.size());
     }
 
-    public void setTransientIndexBuffer(TransientIndexBuffer indexBuffer, int startVertex, int size) {
+    public void setTransientIndexBuffer(@NotNull TransientIndexBuffer indexBuffer, int startVertex, int size) {
         bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), startVertex, size);
     }
 
-    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer) {
+    public void setTransientVertexBuffer(@NotNull TransientVertexBuffer vertexBuffer) {
         bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), 0, vertexBuffer.size(), vertexBuffer.layoutHandle());
     }
 
-    public void setTransientVertexBuffer(TransientVertexBuffer vertexBuffer, int startVertex, int size) {
+    public void setTransientVertexBuffer(@NotNull TransientVertexBuffer vertexBuffer, int startVertex, int size) {
         bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size, vertexBuffer.layoutHandle());
     }
 

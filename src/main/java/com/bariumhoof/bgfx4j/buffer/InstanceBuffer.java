@@ -1,4 +1,4 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.buffer;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
@@ -22,6 +22,13 @@ public final class InstanceBuffer implements Disposable, Handle {
     @NotNull
     public static InstanceBuffer create(@NotNull MemoryStack memoryStack, int num, int stride) {
         final BGFXInstanceDataBuffer buf = BGFXInstanceDataBuffer.callocStack(memoryStack);
+        bgfx_alloc_instance_data_buffer(buf, num, stride);
+        return new InstanceBuffer(buf);
+    }
+
+    @NotNull
+    public static InstanceBuffer heapCreate(int num, int stride) {
+        final BGFXInstanceDataBuffer buf = BGFXInstanceDataBuffer.calloc();
         bgfx_alloc_instance_data_buffer(buf, num, stride);
         return new InstanceBuffer(buf);
     }
@@ -67,7 +74,7 @@ public final class InstanceBuffer implements Disposable, Handle {
     }
 
     @NotNull
-    final BGFXInstanceDataBuffer get() {
+    public final BGFXInstanceDataBuffer get() {
         return buffer;
     }
 }

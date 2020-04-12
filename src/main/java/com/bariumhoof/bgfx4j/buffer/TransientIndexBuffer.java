@@ -1,4 +1,4 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.buffer;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.Disposable;
@@ -6,6 +6,7 @@ import com.bariumhoof.bgfx4j.Handle;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.lwjgl.bgfx.BGFXTransientIndexBuffer;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
@@ -14,7 +15,6 @@ import org.lwjgl.system.NativeType;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.bgfx_alloc_transient_index_buffer;
-import static org.lwjgl.bgfx.BGFX.bgfx_destroy_vertex_buffer;
 
 @Slf4j
 public final class TransientIndexBuffer implements Disposable, Handle {
@@ -26,32 +26,54 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         this.buf = buf;
     }
 
+    // todo expose in advanced api
     @NotNull
     static TransientIndexBuffer wrap(@NotNull BGFXTransientIndexBuffer value) {
         return new TransientIndexBuffer(value);
     }
 
+    // todo want this?
     @NotNull
-    public static TransientIndexBuffer allocShorts(int count) {
-        final int bytes = count * Short.BYTES;
-//        final BGFXTransientIndexBuffer tib = new BGFXTransientIndexBuffer(MemoryUtil.memAlloc(bytes));
-        final BGFXTransientIndexBuffer tib = BGFXTransientIndexBuffer.malloc();
-        bgfx_alloc_transient_index_buffer(tib, count * Short.BYTES);
-        return new TransientIndexBuffer(tib);
+    public static TransientIndexBuffer heapCreate() {
+        return createImpl(null);
     }
 
     @NotNull
-    public static TransientIndexBuffer allocInts(int count) {
-        // todo see Cubes example, they multiply by only 2 (since it must become a short?)
-        log.warn("check into allocInts byteCount is multiplied by short or integer num bytes (see example from cubes)");
-//        final BGFXTransientIndexBuffer tib = new BGFXTransientIndexBuffer(MemoryUtil.memAlloc(count * Integer.BYTES));
-        final BGFXTransientIndexBuffer tib = BGFXTransientIndexBuffer.malloc();
-        bgfx_alloc_transient_index_buffer(tib, count * Short.BYTES);
-        return new TransientIndexBuffer(tib);
+    public static TransientIndexBuffer create(@NotNull MemoryStack stack) {
+        return createImpl(stack);
     }
 
     @NotNull
-    public static TransientIndexBuffer create(@NotNull int[] indices) {
+    public static TransientIndexBuffer heapAlloc(int count) {
+        return allocImpl(count, null);
+    }
+
+    @NotNull
+    public static TransientIndexBuffer alloc(int count, @NotNull MemoryStack stack) {
+        return allocImpl(count, stack);
+    }
+
+    @NotNull
+    private static TransientIndexBuffer createImpl(@Nullable MemoryStack stack) {
+        final BGFXTransientIndexBuffer buf;
+        if (stack != null) {
+            buf = BGFXTransientIndexBuffer.callocStack(stack);
+        } else {
+            buf = BGFXTransientIndexBuffer.calloc();
+        }
+        return new TransientIndexBuffer(buf);
+    }
+
+    @NotNull
+    public static TransientIndexBuffer allocImpl(int count, @Nullable MemoryStack stack) {
+        final TransientIndexBuffer tib = createImpl(stack);
+        tib.alloc(count);
+        return tib;
+    }
+
+    @Deprecated
+    @NotNull
+    public static TransientIndexBuffer heapCreate(@NotNull int[] indices) {
         Assertions.requirePositive(indices.length);
 
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
@@ -60,8 +82,9 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         return new TransientIndexBuffer(buf);
     }
 
+    @Deprecated
     @NotNull
-    public static TransientIndexBuffer create(@NotNull short[] indices) {
+    public static TransientIndexBuffer heapCreate(@NotNull short[] indices) {
         Assertions.requirePositive(indices.length);
 
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
@@ -70,17 +93,15 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         return new TransientIndexBuffer(buf);
     }
 
-    @NotNull
-    public static TransientIndexBuffer create(@NotNull MemoryStack memoryStack) {
-        final BGFXTransientIndexBuffer buf = BGFXTransientIndexBuffer.callocStack(memoryStack);
-        return new TransientIndexBuffer(buf);
-    }
+//    @NotNull
+//    public static TransientIndexBuffer createAndInit(@NotNull MemoryStack memoryStack, int num) {
+//        final BGFXTransientIndexBuffer buf = BGFXTransientIndexBuffer.callocStack(memoryStack);
+//        bgfx_alloc_transient_index_buffer(buf, num);
+//        return new TransientIndexBuffer(buf);
+//    }
 
-    @NotNull
-    public static TransientIndexBuffer createAndInit(@NotNull MemoryStack memoryStack, int num) {
-        final BGFXTransientIndexBuffer buf = BGFXTransientIndexBuffer.callocStack(memoryStack);
-        bgfx_alloc_transient_index_buffer(buf, num);
-        return new TransientIndexBuffer(buf);
+    public void alloc(int count) {
+        bgfx_alloc_transient_index_buffer(buf, count);
     }
 
     private static int getByteCount(@NotNull int[] indices) {
@@ -108,7 +129,6 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         buffer.flip();
 
         final BGFXTransientIndexBuffer tib = new BGFXTransientIndexBuffer(buffer);
-        bgfx_alloc_transient_index_buffer(tib, indices.length);
 
         return tib;
     }
@@ -142,9 +162,14 @@ public final class TransientIndexBuffer implements Disposable, Handle {
         return buf.data();
     }
 
+    /**
+     * Frees the data backing this {@link TransientIndexBuffer}. This is only required for
+     * {@link TransientIndexBuffer}s that are created on heap. Those created on stack (by passing {@link MemoryStack})
+     * are automatically disposed at the end of the try(MemoryStack stack = MemoryStack.stackPush()) { ... } block.
+     */
     @Override
     public void dispose() {
-        bgfx_destroy_vertex_buffer(buf.handle());
+        buf.free();
     }
 
     @Override

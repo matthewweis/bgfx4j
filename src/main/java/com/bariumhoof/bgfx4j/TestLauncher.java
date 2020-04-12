@@ -1,12 +1,11 @@
 package com.bariumhoof.bgfx4j;
 
+import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.wip.IndexBuffer;
-import com.bariumhoof.bgfx4j.wip.Program;
-import com.bariumhoof.bgfx4j.wip.VertexBuffer;
-import com.bariumhoof.bgfx4j.wip.VertexLayout;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
@@ -118,9 +117,9 @@ public class TestLauncher {
         final ByteBuffer logo = Logo.createLogo();
 
         // MY CODE
-        final VertexLayout decl = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT)
-                .thenUseNormalized(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8)
+        final VertexLayout decl = VertexLayout.builder()
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
+                .thenUseNormalized(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8)
                 .build();
 
         final float[][] cubeVertices = {

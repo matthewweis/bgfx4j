@@ -2,8 +2,10 @@ package com.bariumhoof.bgfx4j;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
+import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
 import com.bariumhoof.bgfx4j.init.Init;
+import com.bariumhoof.bgfx4j.init.InitBuilders;
 import com.bariumhoof.bgfx4j.init.PlatformData;
 import com.bariumhoof.bgfx4j.init.Resolution;
 import lombok.Getter;
@@ -23,6 +25,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.IntStream;
 
 import static org.lwjgl.bgfx.BGFX.*;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
@@ -32,6 +35,12 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 @Slf4j
 public abstract class Application {
+
+    {
+//        log.warn("Debug configuration set in Application. Allocation will be slower.");
+//        Configuration.DEBUG.set(true);
+//        Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
+    }
 
     @Getter
     private static int renderer;
@@ -60,15 +69,18 @@ public abstract class Application {
     }
 
     @Getter
-    private static boolean isInitialized = false;
+    private static volatile boolean isInitialized = false;
 
-    protected final int width = 1280;
-    protected final int height = 720;
+    public static final int INITIAL_WIDTH = 1280;
+    public static final int INITIAL_HEIGHT = 720;
+
+    protected final int width = INITIAL_WIDTH;
+    protected final int height = INITIAL_HEIGHT;
     private @NotNull BGFX_DEBUG debug = BGFX_DEBUG.TEXT;
 
     private Init init = null;
 
-    private long window = -1L;
+    private static long window = -1L;
 
     @Getter
     private static boolean zZeroToOne;
@@ -93,15 +105,28 @@ public abstract class Application {
         registerAsSingletonInstance(this);
     }
 
-    private @NotNull Init createDefaultInit() {
-        // todo: JK, use EnumSet class instead!
-        // todo: change from taking BGFX_RESET a class representing the union of potentially many BGFX_RESET bit operations
-        final var resolution = Resolution.of(width, height).reset(BGFX_RESET.VSYNC).build();
+//    private @NotNull Init createDefaultInit() {
+//        // todo: JK, use EnumSet class instead!
+//        // todo: change from taking BGFX_RESET a class representing the union of potentially many BGFX_RESET bit operations
+//        final var resolution = Resolution.of(width, height).reset(BGFX_RESET.VSYNC).build();
+//        final var platformData = createDefaultPlatformDataFromOS();
+//        return Init.platformData(platformData).resolution(resolution).build();
+//    }
+
+    @NotNull
+    protected static InitBuilders.Optionals defaultInitBuilder() {
+        final var resolution = Resolution.of(INITIAL_WIDTH, INITIAL_HEIGHT).reset(BGFX_RESET.VSYNC).build();
         final var platformData = createDefaultPlatformDataFromOS();
-        return Init.platformData(platformData).resolution(resolution).build();
+        return Init.platformData(platformData).resolution(resolution);
     }
 
-    private @NotNull PlatformData createDefaultPlatformDataFromOS() {
+    @NotNull
+    private static PlatformData createDefaultPlatformDataFromOS() {
+        try {
+            initPlatform(); // this will set value of window to a correct handle
+        } catch (IOException e) {
+            throw new RuntimeException("Could not init platform.");
+        }
         switch (Platform.get()) {
             case LINUX:
                 return PlatformData
@@ -123,13 +148,17 @@ public abstract class Application {
 
     public final void start() throws IOException {
         try {
-            if (Objects.isNull(init)) {
-                init = createDefaultInit(); // set default init if user didn't create one // todo perhaps change this behavior to another class like SimpleApplication?
+            if (!isInitialized) {
+                initPlatform(); // can be early initialized by createDefaultPlatformDataFromOS
             }
-            initPlatform();
+            if (Objects.isNull(init)) {
+                init = defaultInitBuilder().build(); // set default init if user didn't create one // todo perhaps change this behavior to another class like SimpleApplication?
+            }
             bgfxInit();
+
             renderer = bgfx_get_renderer_type();
 
+            printAvailableRenderers();
             System.out.println("bgfx renderer: " + bgfx_get_renderer_name(bgfx_get_renderer_type()));
 
             // Enable debug text.
@@ -178,6 +207,7 @@ public abstract class Application {
 
 //            shutdown();
         } catch (Exception e) {
+            e.printStackTrace(); // print now because exception in dispose() or shutdown() will mask this exception
             throw e;
         } finally {
             dispose();
@@ -185,7 +215,13 @@ public abstract class Application {
         }
     }
 
-    private void initPlatform() throws IOException {
+    private static void printAvailableRenderers() {
+        int[] r = new int[BGFX_RENDERER_TYPE.COUNT.VALUE];
+        bgfx_get_supported_renderers(r);
+        IntStream.of(r).filter(n -> n != 0).forEachOrdered(n -> System.out.println(bgfx_get_renderer_name(n)));
+    }
+
+    private static void initPlatform() throws IOException {
         if (!glfwInit()) {
             throw new RuntimeException("Error initializing GLFW");
         }
@@ -196,7 +232,7 @@ public abstract class Application {
             glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
         }
 
-        window = glfwCreateWindow(getWidth(), getHeight(), "TestApplication", 0, 0);
+        window = glfwCreateWindow(INITIAL_WIDTH, INITIAL_HEIGHT, "TestApplication", 0, 0);
 
         if (window == NULL) {
             throw new RuntimeException("Error creating GLFW window");
@@ -343,7 +379,7 @@ public abstract class Application {
                 });
             }
 
-            // allocator
+//            // allocator
 //            if (exists(init.getAllocator())) {
 //                _init.allocator(init.getAllocator());
 //            }
@@ -440,6 +476,50 @@ public abstract class Application {
                 return Application.class.getResource(String.format("/shaders/glsl/fs_%s.bin", shaderName));
             case VULKAN:
                 throw new UnsupportedOperationException("todo compile shaders for vulkan!");
+            default:
+                throw new UnsupportedOperationException(
+                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
+        }
+    }
+
+    // newer lookup using glslValidator and spirv-cross utilities
+    @NotNull
+    public static URL locateFragmentShaderByName2(@NotNull String shaderName) {
+        switch (Capabilities.getRendererType()) {
+            case DIRECT3D9:
+            case DIRECT3D11:
+            case DIRECT3D12:
+                return Application.class.getResource(String.format("/shaders/hlsl/%s.frag.hlsl", shaderName));
+            case METAL:
+                return Application.class.getResource(String.format("/shaders/metal/%s.frag.metal", shaderName));
+            case OPENGL:
+                return Application.class.getResource(String.format("/shaders/glsl/%s.frag.glsl", shaderName));
+            case OPENGLES:
+                return Application.class.getResource(String.format("/shaders/glsl-es/%s.frag.es.glsl", shaderName));
+            case VULKAN:
+                return Application.class.getResource(String.format("/shaders/spirv/%s.frag.spv", shaderName));
+            default:
+                throw new UnsupportedOperationException(
+                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
+        }
+    }
+
+    // newer lookup using glslValidator and spirv-cross utilities
+    @NotNull
+    public static URL locateVertexShaderByName2(@NotNull String shaderName) {
+        switch (Capabilities.getRendererType()) {
+            case DIRECT3D9:
+            case DIRECT3D11:
+            case DIRECT3D12:
+                return Application.class.getResource(String.format("/shaders/hlsl/%s.vert.hlsl", shaderName));
+            case METAL:
+                return Application.class.getResource(String.format("/shaders/metal/%s.vert.metal", shaderName));
+            case OPENGL:
+                return Application.class.getResource(String.format("/shaders/glsl/%s.vert.glsl", shaderName));
+            case OPENGLES:
+                return Application.class.getResource(String.format("/shaders/glsl-es/%s.vert.es.glsl", shaderName));
+            case VULKAN:
+                return Application.class.getResource(String.format("/shaders/spirv/%s.vert.spv", shaderName));
             default:
                 throw new UnsupportedOperationException(
                         String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));

@@ -1,4 +1,4 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.shaders;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
@@ -17,40 +17,32 @@ import static org.lwjgl.bgfx.BGFX.bgfx_set_shader_name;
 
 @ToString
 @EqualsAndHashCode
-public class Shader implements Disposable, Handle {
+public class FragmentShader implements Disposable, Handle {
 
     final short handle;
-    @NotNull private String name;
 
-    private Shader(@NotNull String name, short handle) {
+    private FragmentShader(@NotNull String name, short handle) {
         this.handle = handle;
-        this.name = name;
         setName(name);
     }
 
     public void setName(@NotNull String name) {
         bgfx_set_shader_name(handle, name);
-        this.name = name;
     }
 
     @NotNull
-    public String getName() {
-        return name;
-    }
-
-    @NotNull
-    public static Shader load(@NotNull URL url) throws IOException {
+    public static FragmentShader load(@NotNull URL url) throws IOException {
         final String defaultName = FilenameUtils.getBaseName(url.toString());
-        return new Shader(defaultName, Resources.loadShader(url));
+        return new FragmentShader(defaultName, Resources.loadShader(url));
     }
 
     @NotNull
-    public static Shader load(@NotNull String name, @NotNull URL url) throws IOException {
-        return new Shader(name, Resources.loadShader(url));
+    public static FragmentShader load(@NotNull String name, @NotNull URL url) throws IOException {
+        return new FragmentShader(name, Resources.loadShader(url));
     }
 
     @Nullable
-    public static Shader loadOrNull(@NotNull URL url) {
+    public static FragmentShader loadOrNull(@NotNull URL url) {
         try {
             return load(url);
         } catch (IOException e) {
@@ -59,7 +51,7 @@ public class Shader implements Disposable, Handle {
     }
 
     @Nullable
-    public static Shader loadOrNull(@NotNull String name, @NotNull URL url) {
+    public static FragmentShader loadOrNull(@NotNull String name, @NotNull URL url) {
         try {
             return load(name, url);
         } catch (IOException e) {
@@ -75,10 +67,6 @@ public class Shader implements Disposable, Handle {
     @Override
     public short handle() {
         return handle;
-    }
-
-    public @Nullable String name() {
-        return name;
     }
 
 }

@@ -16,8 +16,11 @@ TODO:
   - For example, different types of uniform impls should exist depending on if size is known at creation or later
 - Allow patterns which can use MemoryStack under surface without forcing user to know about it
 
+- Split Assertions into two libs (like slf4j and logging backend) with default NO-OPs
+- Move all API to interface and Implementations to concrete class which implements handle() and wrap() for all!
 
-
+- make SEPERATE types for Transient/Dynamic/normal Buffers depending on if they are allocated on stack or heap
+ - this is because stack allocated will NOT need a dispose() function
 
 GOAL:
 

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 
 ### create directory
-mkdir -p "../src/main/resources/shaders/spirv/"
+mkdir -p "../src/main/resources/shaders/bgfx-metal-bin/"
 
 ### cleanup
-for file in ../src/main/resources/shaders/spirv/*.vert.spv; do
+for file in ../src/main/resources/shaders/bgfx-metal-bin/*.vert.gl; do
   if [ -f ${file} ]; then
     echo "removing ${file}"
     rm ${file}
   fi
 done
 
-for file in ../src/main/resources/shaders/spirv/*.frag.spv; do
+for file in ../src/main/resources/shaders/bgfx-metal-bin/*.frag.gl; do
   if [ -f ${file} ]; then
     echo "removing ${file}"
     rm ${file}
@@ -24,11 +24,11 @@ echo "generating shaders..."
 for file in ../src/main/resources/shaders/*.vert; do
   echo "compiling ${file}"
   baseName=$(basename ${file} ".vert")
-  glSlangValidator -V ${file} -o ../src/main/resources/shaders/spirv/${baseName}.vert.spv
+  glSlangValidator -G ${file} -o ../src/main/resources/shaders/bgfx-metal-bin/${baseName}.vert.gl
 done
 
 for file in ../src/main/resources/shaders/*.frag; do
   echo "compiling ${file}"
   baseName=$(basename ${file} ".frag")
-  glSlangValidator -V ${file} -o ../src/main/resources/shaders/spirv/${baseName}.frag.spv
+  glSlangValidator -G ${file} -o ../src/main/resources/shaders/bgfx-metal-bin/${baseName}.frag.gl
 done

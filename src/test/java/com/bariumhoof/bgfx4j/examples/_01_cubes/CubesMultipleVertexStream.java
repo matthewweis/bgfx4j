@@ -1,14 +1,13 @@
 package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.IndexBuffer;
-import com.bariumhoof.bgfx4j.wip.Program;
-import com.bariumhoof.bgfx4j.wip.VertexBuffer;
-import com.bariumhoof.bgfx4j.wip.VertexLayout;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
@@ -71,8 +70,6 @@ public class CubesMultipleVertexStream extends Application {
             6, 3, 7
     };
 
-    private VertexLayout layout_position;
-    private VertexLayout layout_color;
     private VertexBuffer vb_position;
     private VertexBuffer vb_color;
     private IndexBuffer indices;
@@ -89,12 +86,12 @@ public class CubesMultipleVertexStream extends Application {
     @Override
     public void init() {
 
-        layout_position = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
+        final VertexLayout layout_position = VertexLayout.builder()
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .build();
 
-        layout_color = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
-                .beginWith(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
+        final VertexLayout layout_color = VertexLayout.builder()
+                .beginWith(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
         vb_position = VertexBuffer.create(layout_position, cubePosVertices);

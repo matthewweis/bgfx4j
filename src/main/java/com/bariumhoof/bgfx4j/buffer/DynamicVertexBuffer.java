@@ -1,35 +1,68 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.buffer;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
+import com.bariumhoof.bgfx4j.enums.BGFX_BUFFER;
+import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
 public class DynamicVertexBuffer implements Disposable, Handle {
 
-    private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
+    private final short layoutHandle;
 
-    private DynamicVertexBuffer(@NotNull ByteBuffer verticesBuf, short handle) {
-        this.verticesBuf = verticesBuf;
-        this.handle = handle;
+    public short layoutHandle() {
+        return layoutHandle;
     }
 
-    public static DynamicVertexBuffer create(@NotNull VertexLayout decl, @NotNull Number[][] vertices) {
+    @Getter
+    private final int numVertices;
+
+    private DynamicVertexBuffer(short handle, short layoutHandle, int numVertices) {
+        this.handle = handle;
+        this.layoutHandle = layoutHandle;
+        this.numVertices = numVertices;
+    }
+
+    public static DynamicVertexBuffer create(@NotNull VertexLayout vertexLayout, int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags) {
+        Assertions.requirePositive(numVertices);
+        final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, vertexLayout.get(), (int) BGFX_BUFFER.flags(flags));
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        return new DynamicVertexBuffer(handle, layoutHandle, numVertices);
+    }
+
+    public static DynamicVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull BGFXMemory init, @NotNull EnumSet<BGFX_BUFFER> flags) {
+        final short handle = bgfx_create_dynamic_vertex_buffer_mem(init, vertexLayout.get(), (int) BGFX_BUFFER.flags(flags));
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        return new DynamicVertexBuffer(handle, layoutHandle, init.size() / vertexLayout.getStrideBytes());
+    }
+
+    public static DynamicVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createDynamicVertexBuffer(vbuf, decl.get(), vertices);
+        final short handle = createDynamicVertexBuffer(vbuf, vertexLayout.get(), vertices);
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
 
-        return new DynamicVertexBuffer(vbuf, handle);
+        return new DynamicVertexBuffer(handle, layoutHandle, vertices.length);
+    }
+
+    public void update(@NotNull BGFXMemory memory) {
+        update(0, memory);
+    }
+
+    public void update(int startVertex, @NotNull BGFXMemory memory) {
+        bgfx_update_dynamic_vertex_buffer(handle, startVertex, memory);
     }
 
     private static int getByteCount(@NotNull Number[][] vertices) {
@@ -50,7 +83,7 @@ public class DynamicVertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, Number[][] vertices) {
+    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexLayout vertexLayout, Number[][] vertices) {
         for (Object[] vtx : vertices) {
             for (Object attr : vtx) {
                 if (attr instanceof Float) {
@@ -67,16 +100,16 @@ public class DynamicVertexBuffer implements Disposable, Handle {
             throw new RuntimeException("ByteBuffer size and number of arguments do not match");
         }
         buffer.flip();
-        return createDynamicVertexBuffer(buffer, decl);
+        return createDynamicVertexBuffer(buffer, vertexLayout, EnumSet.of(BGFX_BUFFER.NONE));
     }
 
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl) {
+    private static short createDynamicVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, EnumSet<BGFX_BUFFER> flags) {
         final BGFXMemory vbhMem = bgfx_make_ref(buffer);
         Assertions.requireNonNull(vbhMem);
-        return bgfx_create_dynamic_vertex_buffer_mem(vbhMem, decl, BGFX_BUFFER_NONE);
+        return bgfx_create_dynamic_vertex_buffer_mem(vbhMem, decl, (int) BGFX_BUFFER.flags(flags));
     }
 
     // todo keep one strategy
@@ -131,7 +164,7 @@ public class DynamicVertexBuffer implements Disposable, Handle {
 
     @Override
     public void dispose() {
-        bgfx_destroy_vertex_buffer(handle);
+        bgfx_destroy_dynamic_vertex_buffer(handle);
     }
 
     @Override

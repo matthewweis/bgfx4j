@@ -1,12 +1,18 @@
 package com.bariumhoof.bgfx4j.examples._03_raymarch;
 
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.buffer.TransientBuffers;
+import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
 import com.bariumhoof.bgfx4j.enums.BGFX_UNIFORM_TYPE;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.*;
+import com.bariumhoof.bgfx4j.wip.Encoder;
+import com.bariumhoof.bgfx4j.wip.Uniform;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -19,7 +25,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.bgfx.BGFX.bgfx_dbg_text_printf;
-import static org.lwjgl.bgfx.BGFX.bgfx_encoder_end;
 
 /**
  * Port of:
@@ -60,8 +65,7 @@ public class Raymarch extends Application {
 
             // todo clean up this system find better way (perhaps make buffer access enclosed in similar try-catch idiom
             //     to allow memStack efficient stack allocation behind the scenes
-            final TransientBuffers buffers =
-                    TransientBuffers.allocTransientBuffers(stack, layout, 4, 6);
+            final TransientBuffers buffers = TransientBuffers.alloc(layout, 4, 6, stack);
 
             if (buffers != null) {
                 final TransientVertexBuffer tvb = buffers.getTransientVertexBuffer();
@@ -134,9 +138,9 @@ public class Raymarch extends Application {
     @Override
     public void init() {
         layout = VertexLayout.builder()
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT)
-                .thenUse(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
-                .thenUse(BGFX_ATTRIB.TEXCOORD0, BGFX_ATTRIB_TYPE.FLOAT)
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
+                .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
+                .thenUse(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
                 .build();
 
         uniformMtx = Uniform.createSingle("u_mtx", BGFX_UNIFORM_TYPE.VEC4);
@@ -201,7 +205,7 @@ public class Raymarch extends Application {
                 .get(mtxBuf));
 
         renderScreenSpaceQuad(encoder, view1, program, 0.0f, 0.0f, 1280.0f, 720.0f);
-        bgfx_encoder_end(encoder.id());
+        encoder.end();
     }
 
     @Override

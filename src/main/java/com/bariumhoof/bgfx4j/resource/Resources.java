@@ -68,6 +68,21 @@ public final class Resources {
     }
 
     @NotNull
+    private static BGFXMemory loadStringIntoMemory(@NotNull String string) throws IOException {
+        final var buffer = loadString(string);
+        final BGFXMemory bgfxMemory = bgfx_make_ref_release(buffer, RELEASE_MEMORY_CALLBACK, NULL);
+        Assertions.requireNonNull(bgfxMemory);
+        return bgfxMemory;
+    }
+
+    @NotNull
+    private static BGFXMemory loadByteBufferIntoMemory(@NotNull ByteBuffer buffer) throws IOException {
+        final BGFXMemory bgfxMemory = bgfx_make_ref_release(buffer, RELEASE_MEMORY_CALLBACK, NULL);
+        Assertions.requireNonNull(bgfxMemory);
+        return bgfxMemory;
+    }
+
+    @NotNull
     private static ByteBuffer loadResource(@NotNull URL url) throws IOException {
         final int size = url.openConnection().getContentLength();
         final var res = memAlloc(size);
@@ -82,4 +97,26 @@ public final class Resources {
         res.flip();
         return res;
     }
+
+    @NotNull
+    private static ByteBuffer loadString(@NotNull String string) throws IOException {
+        final byte[] bytes = string.getBytes();
+        final int size = bytes.length;
+        final var res = memAlloc(size);
+
+        for (byte b : bytes) {
+            res.put(b);
+        }
+
+//        try (final var bis = new BufferedInputStream(url.openStream())) {
+//            int b;
+//            while ((b = bis.read()) != -1) {
+//                res.put((byte)b);
+//            }
+//        }
+
+        res.flip();
+        return res;
+    }
+
 }

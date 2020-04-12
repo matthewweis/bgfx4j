@@ -1,12 +1,16 @@
 package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.*;
+import com.bariumhoof.bgfx4j.wip.Encoder;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
@@ -51,7 +55,6 @@ public class CubesMultithreaded extends Application {
             6, 3, 7
     };
 
-    private VertexLayout layout;
     private VertexBuffer vertices;
     private IndexBuffer indices;
     private Program program;
@@ -70,9 +73,9 @@ public class CubesMultithreaded extends Application {
     @Override
     public void init() {
 
-        layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
-                .thenUse(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
+        final VertexLayout layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
+                .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
         vertices = VertexBuffer.create(layout, cubeVertices);

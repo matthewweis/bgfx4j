@@ -2,11 +2,11 @@ package com.bariumhoof.bgfx4j.examples._02_metaballs;
 
 
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.wip.Shader;
-import com.bariumhoof.bgfx4j.wip.VertexLayout;
+import com.bariumhoof.bgfx4j.shaders.VertexShader;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Math;
 import org.joml.Matrix4f;
@@ -161,9 +161,9 @@ public class Metaballs extends Application {
     @Override
     public void init() {
         layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
-                .thenUse(BGFX_ATTRIB.NORMAL, BGFX_ATTRIB_TYPE.FLOAT, false, false)
-                .thenUse(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8, true, false)
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
+                .thenUse(BGFX_ATTRIB.NORMAL, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
+                .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build()
                 .get();
  
@@ -172,8 +172,8 @@ public class Metaballs extends Application {
         try {
 //            vs = BGFXDemoUtil.loadShader(vs_metaballs_glsl, vs_metaballs_dx9, vs_metaballs_dx11, vs_metaballs_mtl);
 //            fs = BGFXDemoUtil.loadShader(fs_metaballs_glsl, fs_metaballs_dx9, fs_metaballs_dx11, fs_metaballs_mtl);
-            vs = Shader.load(Application.locateVertexShaderByName("metaballs")).handle();
-            fs = Shader.load(Application.locateFragmentShaderByName("metaballs")).handle();
+            vs = VertexShader.load(Application.locateVertexShaderByName("metaballs")).handle();
+            fs = VertexShader.load(Application.locateFragmentShaderByName("metaballs")).handle();
         } catch (IOException e) {
             log.error("unable to load shader");
             e.printStackTrace();

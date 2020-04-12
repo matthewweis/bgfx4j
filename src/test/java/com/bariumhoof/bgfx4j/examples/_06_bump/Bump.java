@@ -2,9 +2,15 @@ package com.bariumhoof.bgfx4j.examples._06_bump;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.*;
+import com.bariumhoof.bgfx4j.wip.Encoder;
+import com.bariumhoof.bgfx4j.wip.Texture;
+import com.bariumhoof.bgfx4j.wip.Uniform;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXInstanceDataBuffer;
@@ -53,11 +59,11 @@ public class Bump extends Application {
     public void init() {
         view = View.create("My view");
 
-        layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT, false, false)
-                .thenUseNormalizedAsInt(BGFX_ATTRIB.NORMAL, BGFX_ATTRIB_TYPE.UINT8)
-                .thenUseNormalizedAsInt(BGFX_ATTRIB.TANGENT, BGFX_ATTRIB_TYPE.UINT8)
-                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, BGFX_ATTRIB_TYPE.INT16)
+        layout = VertexLayout.builder()
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
+                .thenUseNormalizedAsInt(BGFX_ATTRIB.NORMAL, 4, BGFX_ATTRIB_TYPE.UINT8)
+                .thenUseNormalizedAsInt(BGFX_ATTRIB.TANGENT, 4, BGFX_ATTRIB_TYPE.UINT8)
+                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.INT16)
                 .build();
 
         instancingSupported = Capabilities.isSupported(BGFX_CAPS.INSTANCING);

@@ -1,4 +1,4 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.shaders;
 
 import com.bariumhoof.bgfx4j.Disposable;
 import com.bariumhoof.bgfx4j.Handle;
@@ -17,9 +17,13 @@ public class Program implements Disposable, Handle {
 
     @Getter
     @NotNull
-    private final Shader vs, fs;
+    private final VertexShader vs;
 
-    private Program(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
+    @Getter
+    @NotNull
+    private final FragmentShader fs;
+
+    private Program(@NotNull VertexShader vs, @NotNull FragmentShader fs, boolean destroyShaders) {
         this.vs = vs;
         this.fs = fs;
         this.p_handle = bgfx_create_program(vs.handle, fs.handle, destroyShaders);
@@ -55,21 +59,21 @@ public class Program implements Disposable, Handle {
 
     /**
      * Creates a program from a pair of corresponding vertex and fragment shaders. The vs and fs shaders'
-     * {@link Shader#dispose()} methods will NOT be called automatically in case the user wants to reuse them later.
+     * {@link VertexShader#dispose()} methods will NOT be called automatically in case the user wants to reuse them later.
      *
      * @param vs The vertex shader that corresponds to the passed fragment shader.
      * @param fs The fragment shader that corresponds to the passed vertex shader.
      * @return A program created from the two shaders.
      */
     @NotNull
-    public static Program create(@NotNull Shader vs, @NotNull Shader fs) {
+    public static Program create(@NotNull VertexShader vs, @NotNull FragmentShader fs) {
         return create(vs, fs, false);
     }
 
     /**
      * Creates a program from a pair of corresponding vertex and fragment shaders.
      *
-     * The vs and fs shaders' {@link Shader#dispose()} methods will be called if the destroyShaders is set to true.
+     * The vs and fs shaders' {@link VertexShader#dispose()} methods will be called if the destroyShaders is set to true.
      * Note that once destroyed, the shaders will no longer be valid.
      *
      * @param vs The vertex shader that corresponds to the passed fragment shader.
@@ -78,7 +82,7 @@ public class Program implements Disposable, Handle {
      * @return A program created from the vs and fs shaders.
      */
     @NotNull
-    public static Program create(@NotNull Shader vs, @NotNull Shader fs, boolean destroyShaders) {
+    public static Program create(@NotNull VertexShader vs, @NotNull FragmentShader fs, boolean destroyShaders) {
         return new Program(vs, fs, destroyShaders);
     }
 
@@ -93,7 +97,7 @@ public class Program implements Disposable, Handle {
      */
     @NotNull
     public static Program load(@NotNull URL vs, @NotNull URL fs) throws IOException {
-        return create(Shader.load(vs), Shader.load(fs), true);
+        return create(VertexShader.load(vs), FragmentShader.load(fs), true);
     }
 
     /**
@@ -107,7 +111,7 @@ public class Program implements Disposable, Handle {
     @Nullable
     public static Program loadOrNull(@NotNull URL vs, @NotNull URL fs) {
         try {
-            return create(Shader.load(vs), Shader.load(fs), true);
+            return create(VertexShader.load(vs), FragmentShader.load(fs), true);
         } catch (IOException e) {
             return null;
         }

@@ -48,6 +48,7 @@ public final class View {
     private final int id;
     private @Nullable ClearStrategy clearStrategy;
     private @Nullable BGFX_VIEW_MODE viewMode;
+    private @Nullable String name;
 
     // todo should be values like BGFX_CLEAR.COLOR.VALUE;?
     private final static int DEFAULT_CLEAR_RGBA = 0xFFFFFF;
@@ -58,37 +59,67 @@ public final class View {
     private float clearDepth;
     private int clearStencil;
 
+    // transform
+    // scissor
+    // clear
+    // clear_mrt
+    // framebuffer
+    // mode
+    // order
+    // name
+    // rect
+    // rect_ratio
+
     // todo combine view with matrix operations like lookAt, etc.
     // todo allocate ONE off-heap matrix behind the scenes per view
     // todo and implement all operations using "nbgfx" instead to reduce overhead
     // todo finally, make class disposable
+    public static View create() {
+        final int id = NEXT_ID.getAndIncrement();
+        return new View(id, null, null, null);
+    }
+
     public static View create(@NotNull String name) {
         final int id = NEXT_ID.getAndIncrement();
-        // transform
-        // scissor
-        // clear
-        // clear_mrt
-        // framebuffer
-        // mode
-        // order
-        // name
-        // rect
-        // rect_ratio
         return new View(id, name, null, null);
     }
 
-//    public static View create(@NotNull String name,
-//                              @Nullable ClearStrategy clearStrategy,
-//                              @Nullable BGFX_VIEW_MODE viewMode) {
-//        final int id = (short) NEXT_ID.getAndIncrement();
-////        nbgfx_set_view_mode(id, BGFX_VIEW_MODE.COUNT);
-//        return new View(id, name, clearStrategy, viewMode);
-//    }
+    public static View create(@NotNull ClearStrategy clearStrategy) {
+        final int id = NEXT_ID.getAndIncrement();
+        return new View(id, null, clearStrategy, null);
+    }
+
+    public static View create(@NotNull BGFX_VIEW_MODE viewMode) {
+        final int id = NEXT_ID.getAndIncrement();
+        return new View(id, null, null, viewMode);
+    }
 
     public static View create(@NotNull String name,
+                              @NotNull ClearStrategy clearStrategy) {
+        final int id = NEXT_ID.getAndIncrement();
+        return new View(id, name, clearStrategy, null);
+    }
+
+    public static View create(@NotNull String name,
+                              @NotNull BGFX_VIEW_MODE viewMode) {
+        final int id = NEXT_ID.getAndIncrement();
+        return new View(id, name, null, viewMode);
+    }
+
+    public static View create(@NotNull ClearStrategy clearStrategy,
+                              @NotNull BGFX_VIEW_MODE viewMode) {
+        final int id = NEXT_ID.getAndIncrement();
+        return new View(id, null, clearStrategy, viewMode);
+    }
+
+    public static View create(@Nullable String name,
                               @Nullable ClearStrategy clearStrategy,
                               @Nullable BGFX_VIEW_MODE viewMode) {
         final int id = NEXT_ID.getAndIncrement();
+
+        if (name != null) {
+            bgfx_set_view_name(id, name);
+        }
 
         if (viewMode != null) {
             bgfx_set_view_mode(id, viewMode.VALUE);
@@ -101,16 +132,16 @@ public final class View {
     }
 
     private View(int id,
-                 @NotNull String name,
+                 @Nullable String name,
                  @Nullable ClearStrategy clearStrategy,
                  @Nullable BGFX_VIEW_MODE viewMode) {
         this.id = id;
         this.clearStrategy = clearStrategy;
         this.viewMode = viewMode;
+        this.name = name;
         this.clearRgba = DEFAULT_CLEAR_RGBA;
         this.clearDepth = DEFAULT_CLEAR_DEPTH;
         this.clearStencil = DEFAULT_CLEAR_STENCIL;
-//        bgfx_set_view_name(id, name);
     }
 
     public void setClearStrategy(@NonNull ClearStrategy clearStrategy) {
@@ -182,6 +213,7 @@ public final class View {
             view.get(reusableViewOutput);
             proj.get(reusableProjOutput);
             bgfx_set_view_transform(id, reusableViewOutput, reusableProjOutput);
+
             return;
         }
 

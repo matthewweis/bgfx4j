@@ -1,4 +1,4 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.buffer;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.Disposable;
@@ -6,27 +6,42 @@ import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.enums.BGFX_BUFFER;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXMemory;
+import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 
 import java.nio.ByteBuffer;
+import java.util.Set;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
 public final class IndexBuffer implements Disposable, Handle {
 
-    private final @NotNull ByteBuffer indicesBuf;
+    // exists to prevent GC of indicesBuf becuase bgfx_wrap is used... todo needed?
     private final short handle;
-    private final int size;
+    private final int numIndices; // in number of indices
 
-    private IndexBuffer(@NotNull ByteBuffer indicesBuf, short handle, int size) {
-        this.indicesBuf = indicesBuf;
+    private IndexBuffer(short handle, int numIndices) {
         this.handle = handle;
-        this.size = size;
+        this.numIndices = numIndices;
     }
 
+    public static IndexBuffer create(@NotNull BGFXMemory mem, @NotNull Set<BGFX_BUFFER> flags) {
+        final int size = mem.data().capacity() / Short.BYTES;
+        final short handle = bgfx_create_index_buffer(mem, (int) BGFX_BUFFER.flags(flags));
+        // todo double check size works
+        return new IndexBuffer(handle, size);
+    }
+
+    /**
+     * remove due to constraint on indices?
+     * @param indices must not be cleared for at least two frames (see createIndexBuffer(indices))
+     * @param count
+     * @return
+     */
     public static IndexBuffer create(@NotNull ByteBuffer indices, int count) {
+        Assertions.requirePositive(count);
         final short handle = createIndexBuffer(indices);
-        return new IndexBuffer(indices, handle, count);
+        return new IndexBuffer(handle, count);
     }
 
     public static IndexBuffer create(@NotNull int[] indices) {
@@ -35,7 +50,16 @@ public final class IndexBuffer implements Disposable, Handle {
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(ibuf, handle, indices.length);
+        return new IndexBuffer(handle, indices.length);
+    }
+
+    public static IndexBuffer createStack(@NotNull MemoryStack stack, @NotNull int[] indices) {
+        Assertions.requirePositive(indices.length);
+
+        final ByteBuffer ibuf = stack.calloc(getByteCount(indices));
+        final short handle = createIndexBuffer(ibuf, indices);
+
+        return new IndexBuffer(handle, indices.length);
     }
 
     public static IndexBuffer create(@NotNull short[] indices) {
@@ -44,7 +68,7 @@ public final class IndexBuffer implements Disposable, Handle {
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(ibuf, handle, indices.length);
+        return new IndexBuffer(handle, indices.length);
     }
 
     private static int getByteCount(@NotNull int[] indices) {
@@ -96,7 +120,8 @@ public final class IndexBuffer implements Disposable, Handle {
     }
 
     private static short createIndexBuffer(ByteBuffer indices) {
-        BGFXMemory ibhMem = bgfx_make_ref(indices);
+        // todo MUST be alive for at least two frame calls
+        final BGFXMemory ibhMem = bgfx_make_ref(indices); // todo does this need be disposed using bgfx_make_ref_release
         Assertions.requireNonNull(ibhMem);
         return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER.NONE.VALUE);
     }
@@ -112,7 +137,7 @@ public final class IndexBuffer implements Disposable, Handle {
     }
 
     public int size() {
-        return size;
+        return numIndices;
     }
 
 

@@ -2,12 +2,17 @@ package com.bariumhoof.bgfx4j.examples._05_instancing;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
+import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.InstanceBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
-import com.bariumhoof.bgfx4j.wip.*;
+import com.bariumhoof.bgfx4j.wip.Encoder;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -72,8 +77,8 @@ public class Instancing extends Application {
     public void init() {
 
         layout = VertexLayout.builder()
-                .beginWith(BGFX_ATTRIB.POSITION, BGFX_ATTRIB_TYPE.FLOAT)
-                .thenUseNormalized(BGFX_ATTRIB.COLOR0, BGFX_ATTRIB_TYPE.UINT8)
+                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
+                .thenUseNormalized(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8)
                 .build();
 
         vertices = VertexBuffer.create(layout, cubeVertices);

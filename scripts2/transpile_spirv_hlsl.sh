@@ -5,13 +5,17 @@ mkdir -p "../src/main/resources/shaders/hlsl/"
 
 ### cleanup
 for file in ../src/main/resources/shaders/hlsl/*.vert.hlsl; do
-  echo "removing ${file}"
-  rm ${file}
+  if [ -f ${file} ]; then
+    echo "removing ${file}"
+    rm ${file}
+  fi
 done
 
 for file in ../src/main/resources/shaders/hlsl/*.frag.hlsl; do
-  echo "removing ${file}"
-  rm ${file}
+  if [ -f ${file} ]; then
+    echo "removing ${file}"
+    rm ${file}
+  fi
 done
 
 ### shader gen

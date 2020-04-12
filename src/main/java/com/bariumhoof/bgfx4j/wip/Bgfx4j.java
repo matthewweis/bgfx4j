@@ -1,5 +1,6 @@
 package com.bariumhoof.bgfx4j.wip;
 
+import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import org.jetbrains.annotations.NotNull;
 

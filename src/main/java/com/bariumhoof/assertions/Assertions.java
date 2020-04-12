@@ -194,6 +194,26 @@ public final class Assertions {
         DELEGATE.requirePositive(n, message);
     }
 
+    public static void require_uint8(byte n) {
+        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+    }
+
+    public static void require_uint8(short n) {
+        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+    }
+
+    public static void require_uint8(int n) {
+        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+    }
+
+    public static void require_uint8(long n) {
+        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+    }
+
     public static void requireLessThan(byte n, byte upperBoundExclusive) { DELEGATE.requireLessThan(n, upperBoundExclusive); }
     public static void requireLessThan(short n, short upperBoundExclusive) { DELEGATE.requireLessThan(n, upperBoundExclusive); }
     public static void requireLessThan(int n, int upperBoundExclusive) { DELEGATE.requireLessThan(n, upperBoundExclusive); }

@@ -1,13 +1,11 @@
-$input v_color0
+#version 450 core
 
-/*
- * Copyright 2011-2019 Branimir Karadzic. All rights reserved.
- * License: https://github.com/bkaradzic/bgfx#license-bsd-2-clause
- */
+//layout(location=0) in vec4 v_color;
+//layout(location=0) out vec4 color;
 
-#include "../common/common.sh"
+in vec4 v_color;
+out vec4 color;
 
-void main()
-{
-	gl_FragColor = v_color0;
+void main(void) {
+	color = v_color;
 }

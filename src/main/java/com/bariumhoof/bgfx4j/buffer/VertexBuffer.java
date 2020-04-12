@@ -1,4 +1,4 @@
-package com.bariumhoof.bgfx4j.wip;
+package com.bariumhoof.bgfx4j.buffer;
 
 import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.Disposable;
@@ -14,34 +14,44 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 public final class VertexBuffer implements Disposable, Handle {
 
-    private final @NotNull ByteBuffer verticesBuf;
+//    private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
+
+    private final short layoutHandle;
+
+    public short layoutHandle() {
+        return handle;
+    }
 
     private final int size; // size only of 1st array since second doesn't matter to bgfx
 
-    private VertexBuffer(@NotNull ByteBuffer verticesBuf, short handle, int size) {
-        this.verticesBuf = verticesBuf;
+    private VertexBuffer(short handle, short layoutHandle, int size) {
+//        this.verticesBuf = verticesBuf;
         this.handle = handle;
+        this.layoutHandle = layoutHandle;
         this.size = size;
     }
 
     @NotNull
-    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull ByteBuffer vertices, int count) {
-        final short handle = createVertexBuffer(vertices, decl.get());
-        return new VertexBuffer(vertices, handle, count);
+    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull ByteBuffer vertices, int count) {
+        final short handle = createVertexBuffer(vertices, vertexLayout.get());
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        return new VertexBuffer(handle, layoutHandle, count);
     }
 
     @NotNull
-    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull int[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull int[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
+        final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
 
         final int size = vertices.length;
 
-        return new VertexBuffer(vbuf, handle, size);
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+
+        return new VertexBuffer(handle, layoutHandle, size);
     }
 
     private static int getByteCount(@NotNull int[][] vertices) {
@@ -62,7 +72,7 @@ public final class VertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, int[][] vertices) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout vertexLayout, int[][] vertices) {
         for (int[] vtx : vertices) {
             for (int attr : vtx) {
                 buffer.putInt(attr);
@@ -73,7 +83,7 @@ public final class VertexBuffer implements Disposable, Handle {
             throw new RuntimeException("ByteBuffer size and number of arguments do not match");
         }
         buffer.flip();
-        return createVertexBuffer(buffer, decl);
+        return createVertexBuffer(buffer, vertexLayout);
     }
 
     /*
@@ -107,16 +117,17 @@ public final class VertexBuffer implements Disposable, Handle {
         return strideSum;
     }
 
-    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull float[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull float[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
+        final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
 
         final int size = vertices.length;
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
 
-        return new VertexBuffer(vbuf, handle, size);
+        return new VertexBuffer(handle, layoutHandle, size);
     }
 
     private static int getByteCount(@NotNull float[][] vertices) {
@@ -137,7 +148,7 @@ public final class VertexBuffer implements Disposable, Handle {
     /*
      * From lwjgl bgfx tutorial - Cubes
      */
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, float[][] vertices) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout vertexLayout, float[][] vertices) {
         for (float[] vtx : vertices) {
             for (float attr : vtx) {
                 buffer.putFloat(attr);
@@ -148,7 +159,7 @@ public final class VertexBuffer implements Disposable, Handle {
             throw new RuntimeException("ByteBuffer size and number of arguments do not match");
         }
         buffer.flip();
-        return createVertexBuffer(buffer, decl);
+        return createVertexBuffer(buffer, vertexLayout);
     }
 
     // todo keep one strategy
@@ -174,16 +185,17 @@ public final class VertexBuffer implements Disposable, Handle {
     }
 
     // todo replace Number[][] with a version per primitive!
-    public static VertexBuffer create(@NotNull VertexLayout decl, @NotNull Number[][] vertices) {
+    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createVertexBuffer(vbuf, decl.get(), vertices);
+        final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
 
         final int size = vertices.length;
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
 
-        return new VertexBuffer(vbuf, handle, size);
+        return new VertexBuffer(handle, layoutHandle, size);
     }
 
     // todo replace Number[][] with a version per primitive!
@@ -206,7 +218,7 @@ public final class VertexBuffer implements Disposable, Handle {
      * From lwjgl bgfx tutorial - Cubes
      */
     // todo replace Number[][] with a verion per primitive!!! *unless can be either?*
-    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout decl, Number[][] vertices) {
+    private static short createVertexBuffer(ByteBuffer buffer, BGFXVertexLayout vertexLayout, Number[][] vertices) {
         for (Object[] vtx : vertices) {
             for (Object attr : vtx) {
                 if (attr instanceof Float) {
@@ -223,7 +235,7 @@ public final class VertexBuffer implements Disposable, Handle {
             throw new RuntimeException("ByteBuffer size and number of arguments do not match");
         }
         buffer.flip();
-        return createVertexBuffer(buffer, decl);
+        return createVertexBuffer(buffer, vertexLayout);
     }
 
 //    /*
