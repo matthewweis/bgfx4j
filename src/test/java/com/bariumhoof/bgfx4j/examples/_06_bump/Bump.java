@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples._06_bump;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.shaders.Program;
@@ -34,8 +34,8 @@ public class Bump extends Application {
 
     private VertexLayout layout;
     private ByteBuffer vertices;
-    private VertexBuffer vb;
-    private IndexBuffer ib;
+    private StaticVertexBuffer vb;
+    private StaticIndexBuffer ib;
     private Uniform uniformTexColor;
     private Uniform uniformTexNormal;
     private int numLights;
@@ -70,8 +70,8 @@ public class Bump extends Application {
 
         vertices = calcTangents(cubeVertices, cubeVertices.length, layout.get(), cubeIndices, cubeIndices.length);
 
-        vb = VertexBuffer.create(layout, vertices, cubeVertices.length);
-        ib = IndexBuffer.create(cubeIndices);
+        vb = StaticVertexBuffer.create(layout, vertices, cubeVertices.length);
+        ib = StaticIndexBuffer.create(cubeIndices);
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
         uniformTexNormal = Uniform.createSingle("s_texNormal", BGFX_UNIFORM_TYPE.VEC4);
