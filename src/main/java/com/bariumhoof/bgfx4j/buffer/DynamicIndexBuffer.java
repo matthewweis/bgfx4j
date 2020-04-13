@@ -69,8 +69,8 @@ public class DynamicIndexBuffer implements Disposable, Handle {
         update(0, memory);
     }
 
-    public void update(int startVertex, @NotNull BGFXMemory memory) {
-        bgfx_update_dynamic_index_buffer(handle, startVertex, memory);
+    public void update(int startIndex, @NotNull BGFXMemory memory) {
+        bgfx_update_dynamic_index_buffer(handle, startIndex, memory);
     }
 
     private static int getByteCount(@NotNull int[] indices) {
@@ -94,7 +94,7 @@ public class DynamicIndexBuffer implements Disposable, Handle {
 
         final BGFXMemory ibhMem = bgfx_make_ref(buffer);
 
-        return bgfx_create_index_buffer(ibhMem, BGFX_BUFFER.NONE.VALUE);
+        return bgfx_create_dynamic_index_buffer_mem(ibhMem, BGFX_BUFFER.NONE.VALUE);
     }
 
     @Override

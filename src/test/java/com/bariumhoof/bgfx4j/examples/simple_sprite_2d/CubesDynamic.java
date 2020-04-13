@@ -1,8 +1,8 @@
-package com.bariumhoof.bgfx4j.examples._01_cubes;
+package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.DynamicIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.DynamicVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -24,7 +24,7 @@ import static org.lwjgl.bgfx.BGFX.bgfx_set_view_rect;
  * Port of:
  * https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/Cubes.java
  */
-public class Cubes extends Application {
+public class CubesDynamic extends Application {
 
     private static final Number[][] cubeVertices = {
             {-1.0f, 1.0f, 1.0f, 0xff000000},
@@ -52,8 +52,8 @@ public class Cubes extends Application {
             6, 3, 7
     };
 
-    private StaticVertexBuffer vertices;
-    private StaticIndexBuffer indices;
+    private DynamicVertexBuffer vertices;
+    private DynamicIndexBuffer indices;
     private Program program;
 
     private Matrix4f view = new Matrix4f();
@@ -72,8 +72,8 @@ public class Cubes extends Application {
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
-        vertices = StaticVertexBuffer.create(layout, cubeVertices);
-        indices = StaticIndexBuffer.create(cubeIndices);
+        vertices = DynamicVertexBuffer.create(layout, cubeVertices);
+        indices = DynamicIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
                 Application.locateVertexShaderByName("cubes"), // vertex shader
@@ -104,8 +104,8 @@ public class Cubes extends Application {
                 encoder.setTransform(model.translation(-15.0f + xx * 3.0f, -15.0f + yy * 3.0f, 0.0f)
                         .rotateAffineXYZ(time + xx * 0.21f, time + yy * 0.37f, 0.0f)
                         .get(modelBuf));
-                encoder.setVertexBuffer(vertices);
-                encoder.setIndexBuffer(indices);
+                encoder.setDynamicVertexBuffer(vertices);
+                encoder.setDynamicIndexBuffer(indices);
                 encoder.setState(BGFX_STATE.DEFAULT);
                 encoder.submit(bgfxView, program);
             }
@@ -125,7 +125,7 @@ public class Cubes extends Application {
     }
 
     public static void main(String[] args) throws IOException {
-        new Cubes().start();
+        new CubesDynamic().start();
     }
 
 }

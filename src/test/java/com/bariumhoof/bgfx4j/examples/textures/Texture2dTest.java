@@ -1,8 +1,8 @@
 package com.bariumhoof.bgfx4j.examples.textures;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.examples._00_hello_world.Logo;
@@ -58,8 +58,8 @@ public class Texture2dTest extends Application {
 
     private View view;
     private VertexLayout layout;
-    private VertexBuffer vb;
-    private IndexBuffer ib;
+    private StaticVertexBuffer vb;
+    private StaticIndexBuffer ib;
     private Uniform uniformTexColor;
     private Program program;
     private TextureFlags textureFlags;
@@ -172,8 +172,8 @@ public class Texture2dTest extends Application {
 
         textureColor = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = VertexBuffer.create(layout, verts);
-        ib = IndexBuffer.create(indices);
+        vb = StaticVertexBuffer.create(layout, verts);
+        ib = StaticIndexBuffer.create(indices);
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
         program = Program.loadOrNull(

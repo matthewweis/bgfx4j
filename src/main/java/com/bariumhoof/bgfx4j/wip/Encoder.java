@@ -163,34 +163,42 @@ public class Encoder {
     /**
      * // todo make boolean class for "isAliasing" in buffer, since this type requires special handle to be passed
      * // todo look into "stream"
-     * @param vertexBuffer non-aliasing buffer?
+     * @param staticVertexBuffer non-aliasing buffer?
      */
 
     // TODO FIX BGFX_INVALID_HANDLE usage!
-    public void setVertexBuffer(@NotNull VertexBuffer vertexBuffer) {
-        bgfx_encoder_set_vertex_buffer(id, 0, vertexBuffer.handle(), 0, vertexBuffer.size(), BGFX_INVALID_HANDLE);
+    public void setVertexBuffer(@NotNull StaticVertexBuffer staticVertexBuffer) {
+        bgfx_encoder_set_vertex_buffer(id, 0, staticVertexBuffer.handle(), 0, staticVertexBuffer.size(), BGFX_INVALID_HANDLE);
     }
 
-    public void setVertexBuffer(@NotNull VertexBuffer vertexBuffer, int startVertex, int size) {
-        bgfx_encoder_set_vertex_buffer(id, 0, vertexBuffer.handle(), startVertex, size, BGFX_INVALID_HANDLE);
+    public void setVertexBuffer(@NotNull StaticVertexBuffer staticVertexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_vertex_buffer(id, 0, staticVertexBuffer.handle(), startVertex, size, BGFX_INVALID_HANDLE);
     }
 
-    public void setIndexBuffer(@NotNull IndexBuffer indexBuffer) {
-        bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), 0, indexBuffer.size());
+    public void setIndexBuffer(@NotNull StaticIndexBuffer staticIndexBuffer) {
+        bgfx_encoder_set_index_buffer(id, staticIndexBuffer.handle(), 0, staticIndexBuffer.size());
     }
 
-    public void setIndexBuffer(@NotNull IndexBuffer indexBuffer, int startVertex, int size) {
-        bgfx_encoder_set_index_buffer(id, indexBuffer.handle(), startVertex, size);
+    public void setIndexBuffer(@NotNull StaticIndexBuffer staticIndexBuffer, int startVertex, int size) {
+        bgfx_encoder_set_index_buffer(id, staticIndexBuffer.handle(), startVertex, size);
     }
+
+    /*
+     * Dynamic works iff indexBuffer uses non-dynamic setting, but vertex does not
+     */
 
     public void setDynamicVertexBuffer(@NotNull DynamicVertexBuffer dynamicVertexBuffer) {
         // todo want this or INVALID_HANDLE??
-        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), 0, dynamicVertexBuffer.getNumVertices(), dynamicVertexBuffer.layoutHandle());
+        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), 0, dynamicVertexBuffer.getNumVertices(), BGFX_INVALID_HANDLE);
+//        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), 0, dynamicVertexBuffer.getNumVertices(), dynamicVertexBuffer.layoutHandle());
     }
 
-    public void setDynamicVertexBuffer(@NotNull DynamicVertexBuffer dynamicVertexBuffer, int startVertex, int size) {
+    public void setDynamicVertexBuffer(@NotNull DynamicVertexBuffer dynamicVertexBuffer, int startVertex, int numVertices) {
         // todo want this or INVALID_HANDLE??
-        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), startVertex, size, dynamicVertexBuffer.layoutHandle());
+        // todo remove layoutHandle() calls?
+//        bgfx_create_vertex_layout()
+        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), startVertex, numVertices, BGFX_INVALID_HANDLE);
+//        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), startVertex, numVertices, dynamicVertexBuffer.layoutHandle());
     }
 
     public void setDynamicIndexBuffer(@NotNull DynamicIndexBuffer dynamicIndexBuffer) {

@@ -4,22 +4,27 @@ import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.DynamicIndexBuffer;
 import com.bariumhoof.bgfx4j.buffer.DynamicVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
-import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
+import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
+import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.enums.BGFX_UNIFORM_TYPE;
 import com.bariumhoof.bgfx4j.examples._06_bump.Bump;
 import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.Encoder;
-import com.bariumhoof.bgfx4j.wip.Memory;
 import com.bariumhoof.bgfx4j.wip.Texture;
 import com.bariumhoof.bgfx4j.wip.Uniform;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.bgfx.BGFX;
+import org.lwjgl.bgfx.BGFXMemory;
 import org.lwjgl.system.MemoryStack;
 
 import java.io.IOException;
-import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.util.EnumSet;
 import java.util.Random;
+import java.util.function.Supplier;
+
+import static com.bariumhoof.bgfx4j.enums.BGFX_BUFFER.NONE;
 
 /**
  * Same as {@link MovingSimpleSprite2d} except uses heal allocated Transient buffers.
@@ -42,14 +47,19 @@ public class MovingSimpleSprite2dDynamic extends Application {
 
 
 
-    final FloatBuffer verticesBuffer = FloatBuffer.wrap(vertices);
+//    final FloatBuffer verticesBuffer = FloatBuffer.wrap(vertices);
 
-    final int[] indices = new int[] {
+    final short[] indices = new short[] {
             0, 2, 3,
             1, 0, 3,
     };
 
-    final IntBuffer indicesBuffer = IntBuffer.wrap(indices);
+//    final IntBuffer indicesBuffer = IntBuffer.wrap(indices);
+
+    //        final Supplier<BGFXMemory> vSupplier = () -> Memory.alloc(vertices.length * Float.BYTES).getBgfxMemory();
+    final Supplier<BGFXMemory> vSupplier = () -> BGFXMemory.calloc();
+    //        final Supplier<BGFXMemory> iSupplier = () -> Memory.alloc(indices.length * Short.BYTES).getBgfxMemory();
+    final Supplier<BGFXMemory> iSupplier = () -> BGFXMemory.calloc();
 
 
     private View view;
@@ -59,6 +69,10 @@ public class MovingSimpleSprite2dDynamic extends Application {
     private DynamicVertexBuffer vb;
     private DynamicIndexBuffer ib;
 
+    BGFXMemory v_mem;
+    BGFXMemory i_mem;
+
+
 
     private Texture tex;
 
@@ -66,7 +80,7 @@ public class MovingSimpleSprite2dDynamic extends Application {
         super(defaultInitBuilder().build());
     }
 
-    int x = 0;
+    int frame = 0;
 
     @Override
     public void render(float dt, float time) {
@@ -76,50 +90,18 @@ public class MovingSimpleSprite2dDynamic extends Application {
         view.setViewRect(0, 0, getWidth(), getHeight());
         encoder.touch(view);
 
-
         encoder.setTexture(0, uniformTexColor, tex);
 
-//        for (float[] vert : vertices) {
-//            vert[0] = vert[0].floatValue() + smallRandom();
-//            vert[1] = vert[1].floatValue() + smallRandom();
-//        }
+        vb.update(v_mem);
+        ib.update(i_mem);
 
-        if (x % 20 != 0) {
-            final Memory v_mem = Memory.copy(vertices);
-            vb.update(v_mem.getBgfxMemory());
+        encoder.setState(EnumSet.of(BGFX_STATE.WRITE_RGB, BGFX_STATE.WRITE_A));
 
-            final Memory i_mem = Memory.copy(indices);
-            ib.update(i_mem.getBgfxMemory());
+        encoder.setDynamicVertexBuffer(vb, 0, 4);
+        encoder.setDynamicIndexBuffer(ib, 0, 6);
 
-            encoder.setState(EnumSet.of(BGFX_STATE.WRITE_RGB, BGFX_STATE.WRITE_A));
-
-            encoder.setDynamicVertexBuffer(vb, 0, 4);
-
-            encoder.setDynamicIndexBuffer(ib, 0, 6);
-
-            // Submit primitive for rendering to view 0.
-            encoder.submit(view, program);
-        } else {
-            x++;
-        }
-
-
-//        vb.alloc(layout, vertices.length); // make valid for frame
-//        ib.alloc(indices.length);
-//
-//        ByteBuffer vertex = vb.data();
-//        for (Number[] vert : vertices) {
-//            for (Number number : vert) {
-//                vertex.putFloat(number.floatValue());
-//            }
-//        }
-//
-//        final ByteBuffer indicesBuf = ib.data(); // EACH CALL TO ib.data starts at 0 position!
-//        for (int index : indices) {
-//            indicesBuf.putShort((short)index);
-//        }
-
-
+        // Submit primitive for rendering to view 0.
+        encoder.submit(view, program);
 
         encoder.end();
     }
@@ -140,13 +122,21 @@ public class MovingSimpleSprite2dDynamic extends Application {
 
         tex = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = DynamicVertexBuffer.create(layout, numVerts, EnumSet.of(BGFX_BUFFER.NONE));
-        ib = DynamicIndexBuffer.create(indices.length, EnumSet.of(BGFX_BUFFER.NONE));
+        vb = DynamicVertexBuffer.create(layout, numVerts, EnumSet.of(NONE));
+        ib = DynamicIndexBuffer.create(indices.length, EnumSet.of(NONE));
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
         program = Program.loadOrNull(
                 Application.locateVertexShaderByName("simple-texture"), // vertex shader
                 Application.locateFragmentShaderByName("simple-texture")); // fragment shader
+
+        v_mem = BGFX.bgfx_alloc(vertices.length * Float.BYTES);
+        i_mem = BGFX.bgfx_alloc(indices.length * Short.BYTES);
+//        v_mem = vSupplier.get();
+//        i_mem = iSupplier.get();
+
+//        v_mem =  new BGFXMemory[] { vSupplier.get(), vSupplier.get(), vSupplier.get() };
+//        i_mem = new BGFXMemory[] { iSupplier.get(), iSupplier.get(), iSupplier.get() };
     }
 
     @Override

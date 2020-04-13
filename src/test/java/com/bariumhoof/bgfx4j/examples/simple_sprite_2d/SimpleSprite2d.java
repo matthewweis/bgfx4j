@@ -1,8 +1,8 @@
 package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.examples._06_bump.Bump;
@@ -32,8 +32,8 @@ public class SimpleSprite2d extends Application {
     };
 
     private View view;
-    private VertexBuffer vb;
-    private IndexBuffer ib;
+    private StaticVertexBuffer vb;
+    private StaticIndexBuffer ib;
     private Uniform uniformTexColor;
     private Program program;
 
@@ -75,8 +75,8 @@ public class SimpleSprite2d extends Application {
 
         tex = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = VertexBuffer.create(layout, vertices);
-        ib = IndexBuffer.create(indices);
+        vb = StaticVertexBuffer.create(layout, vertices);
+        ib = StaticIndexBuffer.create(indices);
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
         program = Program.loadOrNull(

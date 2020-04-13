@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-public final class VertexBuffer implements Disposable, Handle {
+public final class StaticVertexBuffer implements Disposable, Handle {
 
 //    private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
@@ -23,24 +23,24 @@ public final class VertexBuffer implements Disposable, Handle {
         return handle;
     }
 
-    private final int size; // size only of 1st array since second doesn't matter to bgfx
+    private final int numVertices; // size only of 1st array since second doesn't matter to bgfx
 
-    private VertexBuffer(short handle, short layoutHandle, int size) {
+    private StaticVertexBuffer(short handle, short layoutHandle, int numVertices) {
 //        this.verticesBuf = verticesBuf;
         this.handle = handle;
         this.layoutHandle = layoutHandle;
-        this.size = size;
+        this.numVertices = numVertices;
     }
 
     @NotNull
-    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull ByteBuffer vertices, int count) {
+    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull ByteBuffer vertices, int count) {
         final short handle = createVertexBuffer(vertices, vertexLayout.get());
         final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
-        return new VertexBuffer(handle, layoutHandle, count);
+        return new StaticVertexBuffer(handle, layoutHandle, count);
     }
 
     @NotNull
-    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull int[][] vertices) {
+    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull int[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -51,7 +51,7 @@ public final class VertexBuffer implements Disposable, Handle {
 
         final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
 
-        return new VertexBuffer(handle, layoutHandle, size);
+        return new StaticVertexBuffer(handle, layoutHandle, size);
     }
 
     private static int getByteCount(@NotNull int[][] vertices) {
@@ -117,7 +117,7 @@ public final class VertexBuffer implements Disposable, Handle {
         return strideSum;
     }
 
-    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull float[][] vertices) {
+    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull float[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -127,7 +127,7 @@ public final class VertexBuffer implements Disposable, Handle {
         final int size = vertices.length;
         final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
 
-        return new VertexBuffer(handle, layoutHandle, size);
+        return new StaticVertexBuffer(handle, layoutHandle, size);
     }
 
     private static int getByteCount(@NotNull float[][] vertices) {
@@ -185,7 +185,7 @@ public final class VertexBuffer implements Disposable, Handle {
     }
 
     // todo replace Number[][] with a version per primitive!
-    public static VertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull Number[][] vertices) {
+    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
@@ -195,7 +195,7 @@ public final class VertexBuffer implements Disposable, Handle {
         final int size = vertices.length;
         final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
 
-        return new VertexBuffer(handle, layoutHandle, size);
+        return new StaticVertexBuffer(handle, layoutHandle, size);
     }
 
     // todo replace Number[][] with a version per primitive!
@@ -307,6 +307,6 @@ public final class VertexBuffer implements Disposable, Handle {
         return handle;
     }
 
-    public int size() { return size; }
+    public int size() { return numVertices; }
 
 }

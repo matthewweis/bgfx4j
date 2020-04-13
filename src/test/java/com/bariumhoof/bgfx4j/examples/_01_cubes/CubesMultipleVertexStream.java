@@ -1,8 +1,8 @@
 package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -70,9 +70,9 @@ public class CubesMultipleVertexStream extends Application {
             6, 3, 7
     };
 
-    private VertexBuffer vb_position;
-    private VertexBuffer vb_color;
-    private IndexBuffer indices;
+    private StaticVertexBuffer vb_position;
+    private StaticVertexBuffer vb_color;
+    private StaticIndexBuffer indices;
     private Program program;
 
     private Matrix4f view = new Matrix4f();
@@ -90,13 +90,15 @@ public class CubesMultipleVertexStream extends Application {
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .build();
 
+        layout_position.dispose();
+
         final VertexLayout layout_color = VertexLayout.builder()
                 .beginWith(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
-        vb_position = VertexBuffer.create(layout_position, cubePosVertices);
-        vb_color = VertexBuffer.create(layout_color, cubeColorVertices);
-        indices = IndexBuffer.create(cubeIndices);
+        vb_position = StaticVertexBuffer.create(layout_position, cubePosVertices);
+        vb_color = StaticVertexBuffer.create(layout_color, cubeColorVertices);
+        indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
                 Application.locateVertexShaderByName("cubes"), // vertex shader

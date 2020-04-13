@@ -1,7 +1,7 @@
 package com.bariumhoof.bgfx4j;
 
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -149,8 +149,8 @@ public class TestLauncher {
         };
 
         // these make up the model matrix:
-        final VertexBuffer vertexBuffer = VertexBuffer.create(decl, cubeVertices);
-        final IndexBuffer indexBuffer = IndexBuffer.create(cubeIndices);
+        final StaticVertexBuffer staticVertexBuffer = StaticVertexBuffer.create(decl, cubeVertices);
+        final StaticIndexBuffer staticIndexBuffer = StaticIndexBuffer.create(cubeIndices);
 
         final Program program = Program.load(
                 TestLauncher.class.getResource("/shaders/metal/vs_cubes.bin"), // vertex shader
@@ -223,8 +223,8 @@ public class TestLauncher {
                     model.get(modelBuf);
 
                     bgfx_encoder_set_transform(encoder, modelBuf);
-                    bgfx_encoder_set_vertex_buffer(encoder, 0, vertexBuffer.handle(), 0, 8, BGFX_INVALID_HANDLE);
-                    bgfx_encoder_set_index_buffer(encoder, indexBuffer.handle(), 0, 36);
+                    bgfx_encoder_set_vertex_buffer(encoder, 0, staticVertexBuffer.handle(), 0, 8, BGFX_INVALID_HANDLE);
+                    bgfx_encoder_set_index_buffer(encoder, staticIndexBuffer.handle(), 0, 36);
                     bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
                     bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
                 }

@@ -108,29 +108,29 @@ public final class Memory implements Disposable {
         return new Memory(bgfx_copy(data));
     }
 
-    public void put(@NotNull byte[] data) {
-        bgfxMemory.data().put(data);
-    }
-
-    public void put(@NotNull short[] data) {
-        bgfxMemory.data().asShortBuffer().put(data);
-    }
-
-    public void put(@NotNull int[] data) {
-        bgfxMemory.data().asIntBuffer().put(data);
-    }
-
-    public void put(@NotNull long[] data) {
-        bgfxMemory.data().asLongBuffer().put(data);
-    }
-
-    public void put(@NotNull float[] data) {
-        bgfxMemory.data().asFloatBuffer().put(data);
-    }
-
-    public void put(@NotNull double[] data) {
-        bgfxMemory.data().asDoubleBuffer().put(data);
-    }
+//    public void put(@NotNull byte[] data) {
+//        bgfxMemory.data().put(data);
+//    }
+//
+//    public void put(@NotNull short[] data) {
+//        bgfxMemory.data().asShortBuffer().put(data);
+//    }
+//
+//    public void put(@NotNull int[] data) {
+//        bgfxMemory.data().asIntBuffer().put(data);
+//    }
+//
+//    public void put(@NotNull long[] data) {
+//        bgfxMemory.data().asLongBuffer().put(data);
+//    }
+//
+//    public void put(@NotNull float[] data) {
+//        bgfxMemory.data().asFloatBuffer().put(data);
+//    }
+//
+//    public void put(@NotNull double[] data) {
+//        bgfxMemory.data().asDoubleBuffer().put(data);
+//    }
 
     // todo
 //    @NotNull

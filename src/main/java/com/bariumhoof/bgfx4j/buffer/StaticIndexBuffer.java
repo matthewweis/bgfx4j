@@ -14,22 +14,22 @@ import java.util.Set;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-public final class IndexBuffer implements Disposable, Handle {
+public final class StaticIndexBuffer implements Disposable, Handle {
 
     // exists to prevent GC of indicesBuf becuase bgfx_wrap is used... todo needed?
     private final short handle;
     private final int numIndices; // in number of indices
 
-    private IndexBuffer(short handle, int numIndices) {
+    private StaticIndexBuffer(short handle, int numIndices) {
         this.handle = handle;
         this.numIndices = numIndices;
     }
 
-    public static IndexBuffer create(@NotNull BGFXMemory mem, @NotNull Set<BGFX_BUFFER> flags) {
+    public static StaticIndexBuffer create(@NotNull BGFXMemory mem, @NotNull Set<BGFX_BUFFER> flags) {
         final int size = mem.data().capacity() / Short.BYTES;
         final short handle = bgfx_create_index_buffer(mem, (int) BGFX_BUFFER.flags(flags));
         // todo double check size works
-        return new IndexBuffer(handle, size);
+        return new StaticIndexBuffer(handle, size);
     }
 
     /**
@@ -38,37 +38,37 @@ public final class IndexBuffer implements Disposable, Handle {
      * @param count
      * @return
      */
-    public static IndexBuffer create(@NotNull ByteBuffer indices, int count) {
+    public static StaticIndexBuffer create(@NotNull ByteBuffer indices, int count) {
         Assertions.requirePositive(count);
         final short handle = createIndexBuffer(indices);
-        return new IndexBuffer(handle, count);
+        return new StaticIndexBuffer(handle, count);
     }
 
-    public static IndexBuffer create(@NotNull int[] indices) {
+    public static StaticIndexBuffer create(@NotNull int[] indices) {
         Assertions.requirePositive(indices.length);
 
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(handle, indices.length);
+        return new StaticIndexBuffer(handle, indices.length);
     }
 
-    public static IndexBuffer createStack(@NotNull MemoryStack stack, @NotNull int[] indices) {
+    public static StaticIndexBuffer createStack(@NotNull MemoryStack stack, @NotNull int[] indices) {
         Assertions.requirePositive(indices.length);
 
         final ByteBuffer ibuf = stack.calloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(handle, indices.length);
+        return new StaticIndexBuffer(handle, indices.length);
     }
 
-    public static IndexBuffer create(@NotNull short[] indices) {
+    public static StaticIndexBuffer create(@NotNull short[] indices) {
         Assertions.requirePositive(indices.length);
 
         final ByteBuffer ibuf = MemoryUtil.memAlloc(getByteCount(indices));
         final short handle = createIndexBuffer(ibuf, indices);
 
-        return new IndexBuffer(handle, indices.length);
+        return new StaticIndexBuffer(handle, indices.length);
     }
 
     private static int getByteCount(@NotNull int[] indices) {

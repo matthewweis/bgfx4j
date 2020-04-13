@@ -2,9 +2,9 @@ package com.bariumhoof.bgfx4j.examples._05_instancing;
 
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
 import com.bariumhoof.bgfx4j.buffer.InstanceBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -60,8 +60,8 @@ public class Instancing extends Application {
     };
 
     private VertexLayout layout;
-    private VertexBuffer vertices;
-    private IndexBuffer indices;
+    private StaticVertexBuffer vertices;
+    private StaticIndexBuffer indices;
     private Program program;
 
     private View appView;
@@ -81,8 +81,8 @@ public class Instancing extends Application {
                 .thenUseNormalized(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8)
                 .build();
 
-        vertices = VertexBuffer.create(layout, cubeVertices);
-        indices = IndexBuffer.create(cubeIndices);
+        vertices = StaticVertexBuffer.create(layout, cubeVertices);
+        indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
                 Application.locateVertexShaderByName("instancing"), // vertex shader

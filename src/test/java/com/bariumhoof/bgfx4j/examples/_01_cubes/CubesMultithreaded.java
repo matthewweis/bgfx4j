@@ -1,8 +1,8 @@
 package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.IndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.buffer.VertexLayout;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -55,8 +55,8 @@ public class CubesMultithreaded extends Application {
             6, 3, 7
     };
 
-    private VertexBuffer vertices;
-    private IndexBuffer indices;
+    private StaticVertexBuffer vertices;
+    private StaticIndexBuffer indices;
     private Program program;
 
     private Matrix4f view = new Matrix4f();
@@ -78,8 +78,8 @@ public class CubesMultithreaded extends Application {
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
-        vertices = VertexBuffer.create(layout, cubeVertices);
-        indices = IndexBuffer.create(cubeIndices);
+        vertices = StaticVertexBuffer.create(layout, cubeVertices);
+        indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
                 Application.locateVertexShaderByName("cubes"), // vertex shader
