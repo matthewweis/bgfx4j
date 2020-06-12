@@ -42,13 +42,111 @@ public final class Assertions {
 
     public static void requireIfCapsDisabled(boolean b, @NotNull BGFX_CAPS ... caps) { DELEGATE.requireIfCapsDisabled(b, caps); }
 
-    public static void requireEmpty(Collection<?> c) {
-        DELEGATE.requireEmpty(c);
-    }
+    public static void requireEmpty(Collection<?> c) { DELEGATE.requireEmpty(c); }
+    public static void requireEmpty(Object[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(byte[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(short[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(int[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(long[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(float[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(double[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(boolean[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireEmpty(char[] arr) { DELEGATE.requireEmpty(arr); }
 
-    public static void requireNonEmpty(Collection<?> c) {
-        DELEGATE.requireNonEmpty(c);
-    }
+    public static void requireNonEmpty(Collection<?> c) { DELEGATE.requireNonEmpty(c); }
+    public static void requireNonEmpty(Object[] arr) { DELEGATE.requireNonEmpty(arr); }
+    public static void requireNonEmpty(byte[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(short[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(int[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(long[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(float[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(double[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(boolean[] arr) { DELEGATE.requireEmpty(arr); }
+    public static void requireNonEmpty(char[] arr) { DELEGATE.requireEmpty(arr); }
+
+    // todo make library that lets primitive args be annotated with @AllPrims
+    public static void requireEqualLength(Collection<?> c1, Collection<?> c2) { DELEGATE.requireEqualLength(c1, c2); }
+    public static void requireEqualLength(Object[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(Object[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(byte[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(short[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(int[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(long[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(float[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(double[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(boolean[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, Object[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, byte[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, short[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, int[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, long[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, float[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, double[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, boolean[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
+    public static void requireEqualLength(char[] arr1, char[] arr2) { DELEGATE.requireEqualLength(arr1, arr2); }
 
     public static void requireNonNegative(byte n) {
         DELEGATE.requireNonNegative(n);

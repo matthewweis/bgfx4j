@@ -4,6 +4,7 @@ import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.buffer.*;
 import com.bariumhoof.bgfx4j.enums.BGFX_SAMPLER;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.layout.TypedDynamicVertexBuffer;
 import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
 import lombok.extern.slf4j.Slf4j;
@@ -86,13 +87,10 @@ public class Encoder {
         return topFourBits | bottomFourBits;
     }
 
-
     // todo make make bgfx4j quality (typesafe, no bytebuffer, overloaded signatures, etc.)
     public void debugTextImage(int x, int y, int width, int height, ByteBuffer data, int pitch) {
         bgfx_dbg_text_image(x, y, width, height, data, pitch);
     }
-
-    // todo bgfx_dbg_text_vprintf
 
 
     // bgfx api
@@ -127,6 +125,30 @@ public class Encoder {
 
     public void touch(@NotNull View view) {
         bgfx_encoder_touch(id, view.id());
+    }
+
+    public void blit(@NotNull View view,
+                     @NotNull Texture dst, int dstMip, int dstX, int dstY, int dstZ,
+                     @NotNull Texture src, int srcMip, int srcX, int srcY, int srcZ,
+                     int width, int height) {
+        bgfx_encoder_blit(id, view.id(), dst.handle, dstMip, dstX, dstY, dstZ,
+                src.handle, srcMip, srcX, srcY, srcZ, width, height, 0);
+    }
+
+    public void blit(@NotNull View view,
+                     @NotNull TextureCube dst, int dstMip, int dstX, int dstY, int dstZ,
+                     @NotNull TextureCube src, int srcMip, int srcX, int srcY, int srcZ,
+                     int width, int height, int depth) {
+        bgfx_encoder_blit(id, view.id(), dst.handle, dstMip, dstX, dstY, dstZ,
+                src.handle, srcMip, srcX, srcY, srcZ, width, height, depth);
+    }
+
+    public void blit(@NotNull View view,
+                     @NotNull Texture3D dst, int dstMip, int dstX, int dstY, int dstZ,
+                     @NotNull Texture3D src, int srcMip, int srcX, int srcY, int srcZ,
+                     int width, int height, int depth) {
+        bgfx_encoder_blit(id, view.id(), dst.handle, dstMip, dstX, dstY, dstZ,
+                src.handle, srcMip, srcX, srcY, srcZ, width, height, depth);
     }
 
     /**
@@ -194,6 +216,20 @@ public class Encoder {
     }
 
     public void setDynamicVertexBuffer(@NotNull DynamicVertexBuffer dynamicVertexBuffer, int startVertex, int numVertices) {
+        // todo want this or INVALID_HANDLE??
+        // todo remove layoutHandle() calls?
+//        bgfx_create_vertex_layout()
+        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), startVertex, numVertices, BGFX_INVALID_HANDLE);
+//        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), startVertex, numVertices, dynamicVertexBuffer.layoutHandle());
+    }
+
+    public void setDynamicVertexBuffer(@NotNull TypedDynamicVertexBuffer dynamicVertexBuffer) {
+        // todo want this or INVALID_HANDLE??
+        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), 0, dynamicVertexBuffer.getNumVertices(), BGFX_INVALID_HANDLE);
+//        bgfx_encoder_set_dynamic_vertex_buffer(id, 0, dynamicVertexBuffer.handle(), 0, dynamicVertexBuffer.getNumVertices(), dynamicVertexBuffer.layoutHandle());
+    }
+
+    public void setDynamicVertexBuffer(@NotNull TypedDynamicVertexBuffer dynamicVertexBuffer, int startVertex, int numVertices) {
         // todo want this or INVALID_HANDLE??
         // todo remove layoutHandle() calls?
 //        bgfx_create_vertex_layout()

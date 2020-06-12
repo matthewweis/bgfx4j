@@ -67,7 +67,507 @@ final class ReleaseAssertionFunctions implements AssertionFunctions {
     }
 
     @Override
+    public void requireEmpty(Object[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(byte[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(short[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(int[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(long[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(float[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(double[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(boolean[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEmpty(char[] arr) {
+        // NO OP.
+    }
+
+    @Override
     public void requireNonEmpty(Collection<?> c) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(Object[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(byte[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(short[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(int[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(long[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(float[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(double[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(boolean[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireNonEmpty(char[] arr) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Collection<?> c1, Collection<?> c2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(Object[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(byte[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(short[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(int[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(long[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(float[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(double[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(boolean[] arr1, char[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, Object[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, byte[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, short[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, int[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, long[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, float[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, double[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, boolean[] arr2) {
+        // NO OP.
+    }
+
+    @Override
+    public void requireEqualLength(char[] arr1, char[] arr2) {
         // NO OP.
     }
 

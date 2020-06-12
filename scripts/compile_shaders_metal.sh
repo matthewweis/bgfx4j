@@ -108,12 +108,14 @@ vext=".vertsc"
 echo "generating shaders..."
 for file in ${INDIR}/*.fragsc; do
     baseName=$(basename ${file} ${fext})
+    echo "generating $file"
 
     ${SC} -f ${file} -o ${OUTDIR}${TARGET}/fs_${baseName}.bin --platform ${PLATFORM} -p ${PROFILE} --type f --varyingdef ${OUTDIR}${baseName}${dext} -i ${COMMON} -i ${SRC} -O 3
 done
 
 for file in ${INDIR}/*.vertsc; do
     baseName=$(basename ${file} ${vext})
+    echo "generating $file"
 
     ${SC} -f ${file} -o ${OUTDIR}${TARGET}/vs_${baseName}.bin --platform ${PLATFORM} -p ${PROFILE} --type v --varyingdef ${OUTDIR}${baseName}${dext} -i ${COMMON} -i ${SRC} -O 3
 done

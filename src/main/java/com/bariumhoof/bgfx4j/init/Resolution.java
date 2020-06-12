@@ -12,13 +12,13 @@ import org.jilt.Opt;
 @Value
 @Builder(style = BuilderStyle.TYPE_SAFE)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
-public final class Resolution {
-    final int width; // required
-    final int height; // required
-    @Opt final BGFX_RESET reset;
-    @Opt final BGFX_TEXTURE_FORMAT format;
-    @Opt final byte maxFrameLatency;
-    @Opt final byte numBackBuffers;
+public class Resolution {
+    int width; // required
+    int height; // required
+    @Opt BGFX_RESET reset;
+    @Opt BGFX_TEXTURE_FORMAT format;
+    @Opt byte maxFrameLatency;
+    @Opt byte numBackBuffers;
 
     public static ResolutionBuilders.Height width(int width) {
         return ResolutionBuilder.resolution()

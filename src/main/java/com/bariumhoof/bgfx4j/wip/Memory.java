@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFX;
 import org.lwjgl.bgfx.BGFXMemory;
+import org.lwjgl.system.NativeType;
 
 import java.nio.*;
 
@@ -35,7 +36,7 @@ public final class Memory implements Disposable {
     // todo makeRefRelease for function with callback
 
     // todo add warning that makeRef's backing buffer MUST be available for at least two frame calls
-
+    
     public static Memory makeRef(int numBytes) {
         return new Memory(bgfx_alloc(numBytes));
     }
@@ -142,6 +143,47 @@ public final class Memory implements Disposable {
 //    }
 
 
+    public int sizeof() {
+        return bgfxMemory.sizeof();
+    }
+
+    @NativeType("uint8_t *")
+    public ByteBuffer data() {
+        return bgfxMemory.data();
+    }
+
+    @NativeType("uint32_t")
+    public int size() {
+        return bgfxMemory.size();
+    }
+
+    public BGFXMemory data(ByteBuffer value) {
+        return bgfxMemory.data(value);
+    }
+
+    public BGFXMemory set(BGFXMemory src) {
+        return bgfxMemory.set(src);
+    }
+
+    public void clear() {
+        bgfxMemory.clear();
+    }
+
+    public void free() {
+        bgfxMemory.free();
+    }
+
+    public boolean isNull(int memberOffset) {
+        return bgfxMemory.isNull(memberOffset);
+    }
+
+    public long address() {
+        return bgfxMemory.address();
+    }
+
+    public void close() {
+        bgfxMemory.close();
+    }
 
     @Override
     public void dispose() {

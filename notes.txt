@@ -257,3 +257,59 @@ attachment_init                                      = apiGetFunctionAddress(BGF
             dispatch_indirect                                    = apiGetFunctionAddress(BGFX, "bgfx_dispatch_indirect"),
             discard                                              = apiGetFunctionAddress(BGFX, "bgfx_discard"),
             blit                                                 = apiGetFunctionAddress(BGFX, "bgfx_blit");
+
+
+
+Num.ONE, BgfxAttribType.UINT8, UINT8_Vec1
+Num.TWO, BgfxAttribType.UINT8, UINT8_Vec2
+Num.THREE, BgfxAttribType.UINT8, UINT8_Vec3
+Num.FOUR, BgfxAttribType.UINT8, UINT8_Vec4
+Num.ONE, BgfxAttribType.UINT10, UINT10_Vec1
+Num.TWO, BgfxAttribType.UINT10, UINT10_Vec2
+Num.THREE, BgfxAttribType.UINT10, UINT10_Vec3
+Num.FOUR, BgfxAttribType.UINT10, UINT10_Vec4
+Num.ONE, BgfxAttribType.INT16, INT16_Vec1
+Num.TWO, BgfxAttribType.INT16, INT16_Vec2
+Num.THREE, BgfxAttribType.INT16, INT16_Vec3
+Num.FOUR, BgfxAttribType.INT16, INT16_Vec4
+Num.ONE, BgfxAttribType.HALF, HALF_Vec1
+Num.TWO, BgfxAttribType.HALF, HALF_Vec2
+Num.THREE, BgfxAttribType.HALF, HALF_Vec3
+Num.FOUR, BgfxAttribType.HALF, HALF_Vec4
+Num.ONE, BgfxAttribType.FLOAT, FLOAT_Vec1
+Num.TWO, BgfxAttribType.FLOAT, FLOAT_Vec2
+Num.THREE, BgfxAttribType.FLOAT, FLOAT_Vec3
+Num.FOUR, BgfxAttribType.FLOAT, FLOAT_Vec4
+
+
+
+
+Num.ONE, BgfxAttribType.UINT8, UINT8_Vec1
+Num.TWO, BgfxAttribType.UINT8, UINT8_Vec2
+Num.THREE, BgfxAttribType.UINT8, UINT8_Vec3
+Num.FOUR, BgfxAttribType.UINT8, UINT8_Vec4
+Num.ONE, BgfxAttribType.UINT10, UINT10_Vec1
+Num.TWO, BgfxAttribType.UINT10, UINT10_Vec2
+Num.THREE, BgfxAttribType.UINT10, UINT10_Vec3
+Num.FOUR, BgfxAttribType.UINT10, UINT10_Vec4
+Num.ONE, BgfxAttribType.INT16, INT16_Vec1
+Num.TWO, BgfxAttribType.INT16, INT16_Vec2
+Num.THREE, BgfxAttribType.INT16, INT16_Vec3
+Num.FOUR, BgfxAttribType.INT16, INT16_Vec4
+Num.ONE, BgfxAttribType.HALF, HALF_Vec1
+Num.TWO, BgfxAttribType.HALF, HALF_Vec2
+Num.THREE, BgfxAttribType.HALF, HALF_Vec3
+Num.FOUR, BgfxAttribType.HALF, HALF_Vec4
+Num.ONE, BgfxAttribType.FLOAT, FLOAT_Vec1
+Num.TWO, BgfxAttribType.FLOAT, FLOAT_Vec2
+Num.THREE, BgfxAttribType.FLOAT, FLOAT_Vec3
+Num.FOUR, BgfxAttribType.FLOAT, FLOAT_Vec4
+
+"public static <E* extends BgfxAttrib> TypedDynamicVertexBuffer$<E*, Num.One, BgfxAttribType.UINT8, UINT_Vec1> create(\n" +
+"        @NotNull VertexLayoutStruct$<E*, Num.One, BgfxAttribType.UINT8, UINT_Vec1> vertexLayout,\n" +
+"        int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags) {\n" +
+"    Assertions.requirePositive(numVertices);\n" +
+"    final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, vertexLayout.get(), (int) BGFX_BUFFER.flags(flags));\n" +
+"    final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());\n" +
+"    return new TypedDynamicVertexBuffer$<>(handle, layoutHandle, numVertices);\n" +
+"}\n" +

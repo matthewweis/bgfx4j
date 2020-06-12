@@ -12,8 +12,6 @@ import java.util.*;
 
 import static org.lwjgl.bgfx.BGFX.bgfx_get_caps;
 
-// todo check whole project, make sure I didnt use EnumSet somewhere where COUNT is a valid part of the enum!
-// todo COUNT IN ENUM SHOULD INSTEAD BE PUBLIC STATIC VARIABLE OR USE JAVA BUILT IN!!!
 // see https://github.com/LWJGL/lwjgl3/blob/master/modules/lwjgl/bgfx/src/generated/java/org/lwjgl/bgfx/BGFXCaps.java
 //@UtilityClass
 public class Capabilities {
