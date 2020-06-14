@@ -17,7 +17,7 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 // todo autogen for 1 to 18
 // todo look into efficiencies of mem system, copy vs ref, and putting things on the stack
-public abstract class TypedDynamicVertexBuffer<V extends Vertex> implements Disposable, Handle {
+public class TypedDynamicVertexBuffer<V extends Vertex> implements Disposable, Handle {
 
     private final short handle;
     private final short layoutHandle;
@@ -90,38 +90,6 @@ public abstract class TypedDynamicVertexBuffer<V extends Vertex> implements Disp
         }
     }
 
-//    static <T extends Vertex> void vertexPack(short handle, int startVertex, T[] vertices) {
-//        final int numVecsPerTuple = vertices[0].size(); // equal to cardinality of type
-//        final int vertexCount = vertices.length;
-//
-//
-//        // get size of one tuple, we know from contract that T is a tuple holding Vecs
-//        final var sample = vertices[0];
-//        int requiredBytes = 0;
-//        for (int i=0; i < numVecsPerTuple; i++) {
-//            for (Object o : sample.array()) {
-//                final Vec<?, ?> vec = (Vec<?, ?>) o; // we know from public API that T is a tuple holding Vecs
-//                requiredBytes += computeBytes(vec.type().representedType(), vec.number(), vertexCount);
-//            }
-//        }
-//
-//        try (final MemoryStack stack = MemoryStack.stackPush()) {
-//            // todo, some might be too big to store on stack!
-//            final ByteBuffer bytes = stack.malloc(requiredBytes);
-//            final int vertexStrideBytes = computeStrideBytes(vertices);
-//
-//            for (T tuple : vertices) {
-//                for (Object o : tuple.array()) {
-//                    final Vec<?, ?> vec = (Vec<?, ?>) o; // guaranteed by public api
-//                    vec.put(bytes);
-//                }
-//            }
-//
-//            final BGFXMemory memory = bgfx_copy(bytes);
-//            bgfx_update_dynamic_vertex_buffer(handle, startVertex, memory);
-//        }
-//    }
-
     static <T extends Vertex> void vertexPack(short handle, int startVertex, Iterable<T> vertices, int vertexCount) {
         Assertions.requirePositive(vertexCount);
         final T sample = vertices.iterator().next();
@@ -139,7 +107,7 @@ public abstract class TypedDynamicVertexBuffer<V extends Vertex> implements Disp
         try (final MemoryStack stack = MemoryStack.stackPush()) {
             // todo, some might be too big to store on stack!
             final ByteBuffer bytes = stack.malloc(requiredBytes);
-            final int vertexStrideBytes = computeStrideBytes(vertices);
+//            final int vertexStrideBytes = computeStrideBytes(vertices);
 
             for (T tuple : vertices) {
                 for (Object o : tuple.array()) {
@@ -148,38 +116,10 @@ public abstract class TypedDynamicVertexBuffer<V extends Vertex> implements Disp
                 }
             }
 
-            final BGFXMemory memory = bgfx_copy(bytes);
+            final BGFXMemory memory = bgfx_copy(bytes); // todo is this necessary?? currently does (extra?) copy...
             bgfx_update_dynamic_vertex_buffer(handle, startVertex, memory);
         }
     }
-
-//    static <T extends Vertex> int computeStrideBytes(T[] tuples) {
-//        int total = 0;
-//        final T sample = tuples[0];
-//        for (Object o : sample.array()) {
-//            final Vec<?, ?> vec = (Vec<?, ?>) o; // known to be vector by public api
-//            final BGFX_ATTRIB_TYPE type = vec.type().representedType();
-//            final Num num = vec.number();
-//            switch (type) {
-//                case UINT8:
-//                    total += num.value();
-//                    break;
-//                case UINT10:
-//                    total += 4;
-//                    break;
-//                case HALF:
-//                case INT16:
-//                    total += num.value() * 2; // two bytes (floating point or a short)
-//                    break;
-//                case FLOAT:
-//                    total += num.value() * 4; // four bytes (float)
-//                    break;
-//                default:
-//                    throw new IllegalStateException("Pattern matching must be exhaustive");
-//            }
-//        }
-//        return total;
-//    }
 
     static <T extends Vertex> int computeStrideBytes(Iterable<T> tuples) {
         int total = 0;

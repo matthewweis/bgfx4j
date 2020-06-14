@@ -254,14 +254,14 @@ public interface TypedVertexLayout {
             return new VertexLayoutStructBuilder1<>(attrib, vec, normalized, asInt);
         }
 
-        public final VertexLayoutStruct1<V> build() {
+        public final VertexLayoutStruct<Vertex.Vertex1<V>>build() {
             return build(Capabilities.getRendererType());
         }
 
-        public final VertexLayoutStruct1<V> build(@NotNull BGFX_RENDERER_TYPE rendererType) {
+        public final VertexLayoutStruct<Vertex.Vertex1<V>>build(@NotNull BGFX_RENDERER_TYPE rendererType) {
             final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(1, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
-            return new VertexLayoutStruct1<>(layout);
+            return new VertexLayoutStruct<>(layout);
         }
 
         public final TypedVertexLayoutBuilder2<E,V>.InitialStage then() {

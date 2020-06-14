@@ -259,15 +259,15 @@ public class TypedVertexLayoutBuilder9<E1 extends BgfxAttrib, V1 extends Vec<?,?
             return new VertexLayoutStructBuilder9<>(last, attrib, vec, normalized, asInt);
         }
 
-        public final VertexLayoutStruct9<V1,V2,V3,V4,V5,V6,V7,V8,V> build() {
+        public final VertexLayoutStruct<Vertex.Vertex9<V1,V2,V3,V4,V5,V6,V7,V8,V>>build() {
             return build(Capabilities.getRendererType());
         }
 
-        public final VertexLayoutStruct9<V1,V2,V3,V4,V5,V6,V7,V8,V> build(
+        public final VertexLayoutStruct<Vertex.Vertex9<V1,V2,V3,V4,V5,V6,V7,V8,V>>build(
                 @NotNull BGFX_RENDERER_TYPE rendererType) {
             final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(9, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
-            return new VertexLayoutStruct9<>(layout);
+            return new VertexLayoutStruct<>(layout);
         }
 
         public final TypedVertexLayoutBuilder10<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E, V>.InitialStage then() {
