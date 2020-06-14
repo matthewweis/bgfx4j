@@ -10,22 +10,21 @@ import java.util.EnumSet;
 import static org.lwjgl.bgfx.BGFX.bgfx_create_dynamic_vertex_buffer;
 import static org.lwjgl.bgfx.BGFX.bgfx_create_vertex_layout;
 
-public class VertexLayoutStruct17<E1 extends BgfxAttrib, N1 extends Num, T1 extends BgfxAttribType, V1 extends Vec<N1, T1>,
-        E2 extends BgfxAttrib, N2 extends Num, T2 extends BgfxAttribType, V2 extends Vec<N2, T2>, E3 extends BgfxAttrib, N3 extends Num, T3 extends BgfxAttribType, V3 extends Vec<N3, T3>,
-        E4 extends BgfxAttrib, N4 extends Num, T4 extends BgfxAttribType, V4 extends Vec<N4, T4>, E5 extends BgfxAttrib, N5 extends Num, T5 extends BgfxAttribType, V5 extends Vec<N5, T5>,
-        E6 extends BgfxAttrib, N6 extends Num, T6 extends BgfxAttribType, V6 extends Vec<N6, T6>, E7 extends BgfxAttrib, N7 extends Num, T7 extends BgfxAttribType, V7 extends Vec<N7, T7>,
-        E8 extends BgfxAttrib, N8 extends Num, T8 extends BgfxAttribType, V8 extends Vec<N8, T8>, E9 extends BgfxAttrib, N9 extends Num, T9 extends BgfxAttribType, V9 extends Vec<N9, T9>,
-        E10 extends BgfxAttrib, N10 extends Num, T10 extends BgfxAttribType, V10 extends Vec<N10, T10>, E11 extends BgfxAttrib, N11 extends Num, T11 extends BgfxAttribType, V11 extends Vec<N11, T11>,
-        E12 extends BgfxAttrib, N12 extends Num, T12 extends BgfxAttribType, V12 extends Vec<N12, T12>, E13 extends BgfxAttrib, N13 extends Num, T13 extends BgfxAttribType, V13 extends Vec<N13, T13>,
-        E14 extends BgfxAttrib, N14 extends Num, T14 extends BgfxAttribType, V14 extends Vec<N14, T14>, E15 extends BgfxAttrib, N15 extends Num, T15 extends BgfxAttribType, V15 extends Vec<N15, T15>,
-        E16 extends BgfxAttrib, N16 extends Num, T16 extends BgfxAttribType, V16 extends Vec<N16, T16>, E17 extends BgfxAttrib, N17 extends Num, T17 extends BgfxAttribType, V17 extends Vec<N17, T17>> extends VertexLayoutStruct {
+public class VertexLayoutStruct17<V1 extends Vec<?,?>,
+        V2 extends Vec<?,?>, V3 extends Vec<?,?>,
+        V4 extends Vec<?,?>, V5 extends Vec<?,?>,
+        V6 extends Vec<?,?>, V7 extends Vec<?,?>,
+        V8 extends Vec<?,?>, V9 extends Vec<?,?>,
+        V10 extends Vec<?,?>, V11 extends Vec<?,?>,
+        V12 extends Vec<?,?>, V13 extends Vec<?,?>,
+        V14 extends Vec<?,?>, V15 extends Vec<?,?>,
+        V16 extends Vec<?,?>, V17 extends Vec<?,?>> extends VertexLayoutStruct {
     protected VertexLayoutStruct17(BGFXVertexLayout layout) {
         super(layout);
     }
 
     @NotNull
-    public final TypedDynamicVertexBuffer17<T1,N1,V1,T2,N2,V2,T3,N3,V3,T4,N4,V4,T5,N5,V5,T6,N6,V6,T7,N7,V7,T8,N8,V8,T9,N9,V9,T10,N10,V10,T11,N11,V11,T12,N12,V12,T13,N13,V13,T14,N14,V14,T15,N15,V15,T16,N16,V16,T17,N17,V17> mallocDynamicBuffer(
-
+    public final TypedDynamicVertexBuffer17<V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17> mallocDynamicBuffer(
             int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags){
         Assertions.requirePositive(numVertices);
         final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, get(), (int) BGFX_BUFFER.flags(flags));

@@ -293,23 +293,63 @@ public final class Assertions {
     }
 
     public static void require_uint8(byte n) {
-        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
-        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
-    }
-
-    public static void require_uint8(short n) {
-        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
-        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(Byte.toUnsignedInt(n), 0x0);
+            DELEGATE.requireLessThanOrEqualTo(Byte.toUnsignedInt(n), 0xFF);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
     }
 
     public static void require_uint8(int n) {
-        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
-        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+            DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
     }
 
-    public static void require_uint8(long n) {
-        DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
-        DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+    public static void require_uint10(short n) {
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+            DELEGATE.requireLessThanOrEqualTo(n, 0x3FF);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
+    }
+
+    public static void require_uint10(int n) {
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+            DELEGATE.requireLessThanOrEqualTo(n, 0x3FF);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
+    }
+
+    public static void require_int16(short n) {
+        // true by definition
+    }
+
+    public static void require_int16(int n) {
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(n, (int) Short.MIN_VALUE);
+            DELEGATE.requireLessThanOrEqualTo(n, (int) Short.MAX_VALUE);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
+    }
+
+    public static void require_half(float n) {
+        try {
+            // todo confirm?
+            // https://software.intel.com/content/www/us/en/develop/articles/performance-benefits-of-half-precision-floats.html
+            DELEGATE.requireGreaterThanOrEqualTo(n, -65504.0f);
+            DELEGATE.requireLessThanOrEqualTo(n, 65504.0f);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
     }
 
     public static void requireLessThan(byte n, byte upperBoundExclusive) { DELEGATE.requireLessThan(n, upperBoundExclusive); }

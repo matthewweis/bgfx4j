@@ -3,20 +3,15 @@ package com.bariumhoof.bgfx4j.layout;
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import com.bariumhoof.bgfx4j.layout.BgfxAttrib.*;
-import com.bariumhoof.bgfx4j.layout.BgfxAttribType.*;
-import com.bariumhoof.bgfx4j.layout.Num.FOUR;
-import com.bariumhoof.bgfx4j.layout.Num.ONE;
-import com.bariumhoof.bgfx4j.layout.Num.THREE;
-import com.bariumhoof.bgfx4j.layout.Num.TWO;
 import com.bariumhoof.bgfx4j.layout.Vec.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 
-public class TypedVertexLayoutBuilder15<E1 extends BgfxAttrib, N1 extends Num, T1 extends BgfxAttribType, V1 extends Vec<N1, T1>, E2 extends BgfxAttrib, N2 extends Num, T2 extends BgfxAttribType, V2 extends Vec<N2, T2>, E3 extends BgfxAttrib, N3 extends Num, T3 extends BgfxAttribType, V3 extends Vec<N3, T3>, E4 extends BgfxAttrib, N4 extends Num, T4 extends BgfxAttribType, V4 extends Vec<N4, T4>, E5 extends BgfxAttrib, N5 extends Num, T5 extends BgfxAttribType, V5 extends Vec<N5, T5>, E6 extends BgfxAttrib, N6 extends Num, T6 extends BgfxAttribType, V6 extends Vec<N6, T6>, E7 extends BgfxAttrib, N7 extends Num, T7 extends BgfxAttribType, V7 extends Vec<N7, T7>, E8 extends BgfxAttrib, N8 extends Num, T8 extends BgfxAttribType, V8 extends Vec<N8, T8>, E9 extends BgfxAttrib, N9 extends Num, T9 extends BgfxAttribType, V9 extends Vec<N9, T9>, E10 extends BgfxAttrib, N10 extends Num, T10 extends BgfxAttribType, V10 extends Vec<N10, T10>, E11 extends BgfxAttrib, N11 extends Num, T11 extends BgfxAttribType, V11 extends Vec<N11, T11>, E12 extends BgfxAttrib, N12 extends Num, T12 extends BgfxAttribType, V12 extends Vec<N12, T12>, E13 extends BgfxAttrib, N13 extends Num, T13 extends BgfxAttribType, V13 extends Vec<N13, T13>, E14 extends BgfxAttrib, N14 extends Num, T14 extends BgfxAttribType, V14 extends Vec<N14, T14>> {
-    private final VertexLayoutStructBuilder14<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14> last;
+public class TypedVertexLayoutBuilder15<E1 extends BgfxAttrib, V1 extends Vec<?,?>, E2 extends BgfxAttrib, V2 extends Vec<?,?>, E3 extends BgfxAttrib, V3 extends Vec<?,?>, E4 extends BgfxAttrib, V4 extends Vec<?,?>, E5 extends BgfxAttrib, V5 extends Vec<?,?>, E6 extends BgfxAttrib, V6 extends Vec<?,?>, E7 extends BgfxAttrib, V7 extends Vec<?,?>, E8 extends BgfxAttrib, V8 extends Vec<?,?>, E9 extends BgfxAttrib, V9 extends Vec<?,?>, E10 extends BgfxAttrib, V10 extends Vec<?,?>, E11 extends BgfxAttrib, V11 extends Vec<?,?>, E12 extends BgfxAttrib, V12 extends Vec<?,?>, E13 extends BgfxAttrib, V13 extends Vec<?,?>, E14 extends BgfxAttrib, V14 extends Vec<?,?>> {
+    private final VertexLayoutStructBuilder14<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14> last;
 
     TypedVertexLayoutBuilder15(
-            VertexLayoutStructBuilder14<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14> last) {
+            VertexLayoutStructBuilder14<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14> last) {
         this.last = last;
     }
 
@@ -127,163 +122,156 @@ public class TypedVertexLayoutBuilder15<E1 extends BgfxAttrib, N1 extends Num, T
         }
 
         // vec 1
-        public AttribTypeStageFixedPointOptQs<E, ONE, UINT8, UINT8_Vec1> uint8_vec1() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, ONE.ONE, UINT8.UINT8);
+        public AttribTypeStageFixedPointOptQs<E,UINT8_Vec1> uint8_vec1() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_uint8_vec1);
         }
 
-        public AttribTypeStageFixedPointOptQs<E, ONE, INT16, INT16_Vec1> int16_vec1() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, ONE.ONE, INT16.INT16);
+        public AttribTypeStageFixedPointOptQs<E,INT16_Vec1> int16_vec1() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_int16_vec1);
         }
 
-        public AttribTypeStageDefaultOpts<E, ONE, HALF, HALF_Vec1> half_vec1() {
-            return new AttribTypeStageDefaultOpts<>(attrib, ONE.ONE, HALF.HALF);
+        public AttribTypeStageDefaultOpts<E,HALF_Vec1> half_vec1() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_half_vec1);
         }
 
-        public AttribTypeStageDefaultOpts<E, ONE, FLOAT, FLOAT_Vec1> float32_vec1() {
-            return new AttribTypeStageDefaultOpts<>(attrib, ONE.ONE, FLOAT.FLOAT);
+        public AttribTypeStageDefaultOpts<E,FLOAT_Vec1> float_vec1() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_float_vec1);
         }
 
         // vec 2
-        public AttribTypeStageFixedPointOptQs<E, TWO, UINT8, UINT8_Vec2> uint8_vec2() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, TWO.TWO, UINT8.UINT8);
+        public AttribTypeStageFixedPointOptQs<E,UINT8_Vec2> uint8_vec2() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_uint8_vec2);
         }
 
-        public AttribTypeStageFixedPointOptQs<E, TWO, INT16, INT16_Vec2> int16_vec2() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, TWO.TWO, INT16.INT16);
+        public AttribTypeStageFixedPointOptQs<E,INT16_Vec2> int16_vec2() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_int16_vec2);
         }
 
-        public AttribTypeStageDefaultOpts<E, TWO, HALF, HALF_Vec2> half_vec2() {
-            return new AttribTypeStageDefaultOpts<>(attrib, TWO.TWO, HALF.HALF);
+        public AttribTypeStageDefaultOpts<E,HALF_Vec2> half_vec2() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_half_vec2);
         }
 
-        public AttribTypeStageDefaultOpts<E, TWO, FLOAT, FLOAT_Vec2> float32_vec2() {
-            return new AttribTypeStageDefaultOpts<>(attrib, TWO.TWO, FLOAT.FLOAT);
+        public AttribTypeStageDefaultOpts<E,FLOAT_Vec2> float_vec2() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_float_vec2);
         }
 
         // vec 3
-        public AttribTypeStageFixedPointOptQs<E, THREE, UINT8, UINT8_Vec3> uint8_vec3() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, THREE.THREE, UINT8.UINT8);
+        public AttribTypeStageFixedPointOptQs<E,UINT8_Vec3> uint8_vec3() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_uint8_vec3);
         }
 
-        public AttribTypeStageFixedPointOptQs<E, THREE, UINT10, UINT10_Vec3> uint10_vec3() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, THREE.THREE, UINT10.UINT10);
+        public AttribTypeStageFixedPointOptQs<E,UINT10_Vec3> uint10_vec3() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_uint10_vec3);
         }
 
-        public AttribTypeStageFixedPointOptQs<E, THREE, INT16, INT16_Vec3> int16_vec3() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, THREE.THREE, INT16.INT16);
+        public AttribTypeStageFixedPointOptQs<E,INT16_Vec3> int16_vec3() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_int16_vec3);
         }
 
-        public AttribTypeStageDefaultOpts<E, THREE, HALF, HALF_Vec3> half_vec3() {
-            return new AttribTypeStageDefaultOpts<>(attrib, THREE.THREE, HALF.HALF);
+        public AttribTypeStageDefaultOpts<E,HALF_Vec3> half_vec3() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_half_vec3);
         }
 
-        public AttribTypeStageDefaultOpts<E, THREE, FLOAT, FLOAT_Vec3> float32_vec3() {
-            return new AttribTypeStageDefaultOpts<>(attrib, THREE.THREE, FLOAT.FLOAT);
+        public AttribTypeStageDefaultOpts<E,FLOAT_Vec3> float_vec3() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_float_vec3);
         }
 
         // vec 4
-        public AttribTypeStageFixedPointOptQs<E, FOUR, UINT8, UINT8_Vec4> uint8_vec4() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, FOUR.FOUR, UINT8.UINT8);
+        public AttribTypeStageFixedPointOptQs<E,UINT8_Vec4> uint8_vec4() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_uint8_vec4);
         }
 
-        public AttribTypeStageFixedPointOptQs<E, FOUR, UINT10, UINT10_Vec4> uint10_vec4() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, FOUR.FOUR, UINT10.UINT10);
+        public AttribTypeStageFixedPointOptQs<E,UINT10_Vec4> uint10_vec4() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_uint10_vec4);
         }
 
-        public AttribTypeStageFixedPointOptQs<E, FOUR, INT16, INT16_Vec4> int16_vec4() {
-            return new AttribTypeStageFixedPointOptQs<>(attrib, FOUR.FOUR, INT16.INT16);
+        public AttribTypeStageFixedPointOptQs<E,INT16_Vec4> int16_vec4() {
+            return new AttribTypeStageFixedPointOptQs<>(attrib, Vec.default_int16_vec4);
         }
 
-        public AttribTypeStageDefaultOpts<E, FOUR, HALF, HALF_Vec4> half_vec4() {
-            return new AttribTypeStageDefaultOpts<>(attrib, FOUR.FOUR, HALF.HALF);
+        public AttribTypeStageDefaultOpts<E,HALF_Vec4> half_vec4() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_half_vec4);
         }
 
-        public AttribTypeStageDefaultOpts<E, FOUR, FLOAT, FLOAT_Vec4> float32_vec4() {
-            return new AttribTypeStageDefaultOpts<>(attrib, FOUR.FOUR, FLOAT.FLOAT);
+        public AttribTypeStageDefaultOpts<E,FLOAT_Vec4> float_vec4() {
+            return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_float_vec4);
         }
 
     }
 
     // asks BOTH optional questions at once, or allows both to be skipped (defaulting to false)
-    public class AttribTypeStageFixedPointOptQs<E extends BgfxAttrib, N extends Num, T extends BgfxAttribType, V extends Vec<N, T>> extends AttribTypeStageDefaultOpts<E, N, T, V> {
+    public class AttribTypeStageFixedPointOptQs<E extends BgfxAttrib, V extends Vec<?,?>> extends AttribTypeStageDefaultOpts<E, V> {
 
-        protected AttribTypeStageFixedPointOptQs(E attrib, N num, T type) {
-            super(attrib, num, type);
+        protected AttribTypeStageFixedPointOptQs(E attrib, V vec) {
+            super(attrib, vec);
         }
 
-        public AttribTypeStageFixedPointOptQ1T<E, N, T, V> normalized() {
-            return new AttribTypeStageFixedPointOptQ1T<>(attrib, num, type);
+        public AttribTypeStageFixedPointOptQ1T<E, V> normalized() {
+            return new AttribTypeStageFixedPointOptQ1T<>(attrib, vec);
         }
 
-        public AttribTypeStageFixedPointOptQ2T<E, N, T, V> asInt() {
-            return new AttribTypeStageFixedPointOptQ2T<>(attrib, num, type);
+        public AttribTypeStageFixedPointOptQ2T<E, V> asInt() {
+            return new AttribTypeStageFixedPointOptQ2T<>(attrib, vec);
         }
 
     }
 
-    public class AttribTypeStageFixedPointOptQ1T<E extends BgfxAttrib, N extends Num, T extends BgfxAttribType, V extends Vec<N, T>> extends AttribTypeStageDefaultOpts<E, N, T, V> {
-        protected AttribTypeStageFixedPointOptQ1T(E attrib, N num, T type) {
-            super(attrib, num, type, true, false);
+    public class AttribTypeStageFixedPointOptQ1T<E extends BgfxAttrib, V extends Vec<?,?>> extends AttribTypeStageDefaultOpts<E, V> {
+        protected AttribTypeStageFixedPointOptQ1T(E attrib, V vec) {
+            super(attrib, vec, true, false);
         }
 
-        public AttribTypeStageDefaultOpts<E, N, T, V> asInt() {
-            return new AttribTypeStageDefaultOpts<>(attrib, num, type, true, true);
-        }
-    }
-
-    public class AttribTypeStageFixedPointOptQ2T<E extends BgfxAttrib, N extends Num, T extends BgfxAttribType, V extends Vec<N, T>> extends AttribTypeStageDefaultOpts<E, N, T, V> {
-        protected AttribTypeStageFixedPointOptQ2T(E attrib, N num, T type) {
-            super(attrib, num, type, false, true);
-        }
-
-        public AttribTypeStageDefaultOpts<E, N, T, V> normalized() {
-            return new AttribTypeStageDefaultOpts<>(attrib, num, type, true, true);
+        public AttribTypeStageDefaultOpts<E, V> asInt() {
+            return new AttribTypeStageDefaultOpts<>(attrib, vec, true, true);
         }
     }
 
-    public class AttribTypeStageDefaultOpts<E extends BgfxAttrib, N extends Num, T extends BgfxAttribType, V extends Vec<N, T>> {
+    public class AttribTypeStageFixedPointOptQ2T<E extends BgfxAttrib, V extends Vec<?,?>> extends AttribTypeStageDefaultOpts<E, V> {
+        protected AttribTypeStageFixedPointOptQ2T(E attrib, V vec) {
+            super(attrib, vec, false, true);
+        }
+
+        public AttribTypeStageDefaultOpts<E, V> normalized() {
+            return new AttribTypeStageDefaultOpts<>(attrib, vec, true, true);
+        }
+    }
+
+    public class AttribTypeStageDefaultOpts<E extends BgfxAttrib, V extends Vec<?,?>> {
         final E attrib;
-
-        final N num;
-
-        final T type;
+        final V vec;
 
         final boolean normalized;
 
         final boolean asInt;
 
-        AttribTypeStageDefaultOpts(E attrib, N num, T type) {
-            this(attrib, num, type, false, false);
+        AttribTypeStageDefaultOpts(E attrib, V vec) {
+            this(attrib, vec, false, false);
         }
 
-        AttribTypeStageDefaultOpts(E attrib, N num, T type, boolean normalized, boolean asInt) {
+        AttribTypeStageDefaultOpts(E attrib, V vec, boolean normalized, boolean asInt) {
             this.attrib = attrib;
-            this.num = num;
-            this.type = type;
+            this.vec = vec;
             this.normalized = normalized;
             this.asInt = asInt;
         }
 
-        final VertexLayoutStructBuilder15<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14, E, N, T, V> newLast(
-        ) {
-            return new VertexLayoutStructBuilder15<>(last, attrib, num, type, normalized, asInt);
+        final VertexLayoutStructBuilder15<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14, E, V> newLast() {
+            return new VertexLayoutStructBuilder15<>(last, attrib, vec, normalized, asInt);
         }
 
-        public final VertexLayoutStruct15<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14, E, N, T, V> build(
-        ) {
+        public final VertexLayoutStruct15<V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V> build() {
             return build(Capabilities.getRendererType());
         }
 
-        public final VertexLayoutStruct15<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14, E, N, T, V> build(
+        public final VertexLayoutStruct15<V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V> build(
                 @NotNull BGFX_RENDERER_TYPE rendererType) {
-            final VertexLayoutStructBuilder<?, ?, ?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(15, newLast());
+            final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(15, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
             return new VertexLayoutStruct15<>(layout);
         }
 
-        public final TypedVertexLayoutBuilder16<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14, E, N, T, V>.InitialStage then(
-        ) {
-            final TypedVertexLayoutBuilder16<E1, N1, T1, V1, E2, N2, T2, V2, E3, N3, T3, V3, E4, N4, T4, V4, E5, N5, T5, V5, E6, N6, T6, V6, E7, N7, T7, V7, E8, N8, T8, V8, E9, N9, T9, V9, E10, N10, T10, V10, E11, N11, T11, V11, E12, N12, T12, V12, E13, N13, T13, V13, E14, N14, T14, V14, E, N, T, V> builder = new TypedVertexLayoutBuilder16<>(newLast());
+        public final TypedVertexLayoutBuilder16<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14, E, V>.InitialStage then() {
+            final TypedVertexLayoutBuilder16<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14, E, V> builder = new TypedVertexLayoutBuilder16<>(newLast());
             return builder.initialStage();
         }
     }

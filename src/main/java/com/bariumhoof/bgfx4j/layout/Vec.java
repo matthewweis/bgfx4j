@@ -1,11 +1,51 @@
 package com.bariumhoof.bgfx4j.layout;
 
+import com.bariumhoof.assertions.Assertions;
 import lombok.Value;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
 
 public interface Vec<N extends Num, T extends BgfxAttribType> {
+
+//    UINT8_Vec1 UINT8_VEC1 = uint8_vec1(b(0));
+//    UINT8_Vec2 UINT8_VEC2 = uint8_vec2(b(0), b(0));
+//    UINT8_Vec3 UINT8_VEC3 = uint8_vec3(b(0), b(0), b(0));
+//    UINT8_Vec4 UINT8_VEC4 = uint8_vec4(b(0), b(0), b(0), b(0));
+//    UINT10_Vec3 UINT10_VEC3 = uint10_vec3(0, 0, 0);
+//    UINT10_Vec4 UINT10_VEC4 = uint10_vec4(0, 0, 0, 0);
+//    INT16_Vec1 INT16_VEC1 = int16_vec1(s(0));
+//    INT16_Vec2 INT16_VEC2 = int16_vec2(s(0), s(0));
+//    INT16_Vec3 INT16_VEC3 = int16_vec3(s(0), s(0), s(0));
+//    INT16_Vec4 INT16_VEC4 = int16_vec4(s(0), s(0), s(0), s(0));
+//    HALF_Vec1 HALF_VEC1 = half_vec1(0.0f);
+//    HALF_Vec2 HALF_VEC2 = half_vec2(0.0f, 0.0f);
+//    HALF_Vec3 HALF_VEC3 = half_vec3(0.0f, 0.0f, 0.0f);
+//    HALF_Vec4 HALF_VEC4 = half_vec4(0.0f, 0.0f, 0.0f, 0.0f);
+//    FLOAT_Vec1 FLOAT_VEC1 = float_vec1(0.0f);
+//    FLOAT_Vec2 FLOAT_VEC2 = float_vec2(0.0f, 0.0f);
+//    FLOAT_Vec3 FLOAT_VEC3 = float_vec3(0.0f, 0.0f, 0.0f);
+//    FLOAT_Vec4 FLOAT_VEC4 = float_vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
+    UINT8_Vec1 default_uint8_vec1 = uint8_vec1(b(0));
+    UINT8_Vec2 default_uint8_vec2 = uint8_vec2(b(0), b(0));
+    UINT8_Vec3 default_uint8_vec3 = uint8_vec3(b(0), b(0), b(0));
+    UINT8_Vec4 default_uint8_vec4 = uint8_vec4(b(0), b(0), b(0), b(0));
+    UINT10_Vec3 default_uint10_vec3 = uint10_vec3(0, 0, 0);
+    UINT10_Vec4 default_uint10_vec4 = uint10_vec4(0, 0, 0, 0);
+    INT16_Vec1 default_int16_vec1 = int16_vec1(s(0));
+    INT16_Vec2 default_int16_vec2 = int16_vec2(s(0), s(0));
+    INT16_Vec3 default_int16_vec3 = int16_vec3(s(0), s(0), s(0));
+    INT16_Vec4 default_int16_vec4 = int16_vec4(s(0), s(0), s(0), s(0));
+    HALF_Vec1 default_half_vec1 = half_vec1(0.0f);
+    HALF_Vec2 default_half_vec2 = half_vec2(0.0f, 0.0f);
+    HALF_Vec3 default_half_vec3 = half_vec3(0.0f, 0.0f, 0.0f);
+    HALF_Vec4 default_half_vec4 = half_vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    FLOAT_Vec1 default_float_vec1 = float_vec1(0.0f);
+    FLOAT_Vec2 default_float_vec2 = float_vec2(0.0f, 0.0f);
+    FLOAT_Vec3 default_float_vec3 = float_vec3(0.0f, 0.0f, 0.0f);
+    FLOAT_Vec4 default_float_vec4 = float_vec4(0.0f, 0.0f, 0.0f, 0.0f);
+
 
     Num number();
     BgfxAttribType type();
@@ -36,10 +76,16 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     // TODO
     //   ALL OF THESE NEED SANITIZED INPUT OR ELSE THEY WILL OVERLAP IF USER MAKES MISTAKE
     //    ESPECIALLY LOOK INTO SIGNED INTS?
-//float32_vec1
+//float_vec1
     @NotNull
     static UINT8_Vec1 uint8_vec1(byte first) {
         return new UINT8_Vec1(first);
+    }
+
+    @NotNull
+    static UINT8_Vec1 uint8_vec1(int first) {
+        Assertions.require_uint8(first);
+        return uint8_vec1((byte) first); // confirm this is safe
     }
 
     @NotNull
@@ -49,9 +95,24 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     }
 
     @NotNull
+    static UINT8_Vec2 uint8_vec2(int first, int second) {
+        Assertions.require_uint8(first);
+        Assertions.require_uint8(second);
+        return uint8_vec2((byte) first, (byte) second); // confirm this is safe
+    }
+
+    @NotNull
     static UINT8_Vec3 uint8_vec3(byte first, byte second, byte third) {
         final short xy = (short) ((((short)first) << 8) | ((short)second));
         return new UINT8_Vec3(xy, third);
+    }
+
+    @NotNull
+    static UINT8_Vec3 uint8_vec3(int first, int second, int third) {
+        Assertions.require_uint8(first);
+        Assertions.require_uint8(second);
+        Assertions.require_uint8(third);
+        return uint8_vec3((byte) first, (byte) second, (byte) third); // confirm this is safe
     }
 
     @NotNull
@@ -61,7 +122,19 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     }
 
     @NotNull
+    static UINT8_Vec4 uint8_vec4(int first, int second, int third, int fourth) {
+        Assertions.require_uint8(first);
+        Assertions.require_uint8(second);
+        Assertions.require_uint8(third);
+        Assertions.require_uint8(fourth);
+        return uint8_vec4((byte) first, (byte) second, (byte) third, (byte) fourth); // confirm this is safe
+    }
+
+    @NotNull
     static UINT10_Vec3 uint10_vec3(int x, int y, int z) {
+        Assertions.require_uint10(x);
+        Assertions.require_uint10(y);
+        Assertions.require_uint10(z);
         final int xyz = (x << 22) | (y << 12) | (z << 2);
         return new UINT10_Vec3(xyz);
     }
@@ -69,6 +142,10 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     // unsigned wants bigger than a byte anyways (for pos) so just let them use int to avoid casting!
     @NotNull
     static UINT10_Vec4 uint10_vec4(int x, int y, int z, int w) {
+        Assertions.require_uint10(x);
+        Assertions.require_uint10(y);
+        Assertions.require_uint10(z);
+        Assertions.require_uint10(w);
         // max 10, 10, 10, 2 bits
         // 32 - 22 = 10
         // 32 - 12 = 20
@@ -98,6 +175,36 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     static INT16_Vec4 int16_vec4(short first, short second, short third, short fourth) {
         final long xyzw = (((long)first) << 48) | (((long)second) << 32) | (((long)third) << 16) | ((long) fourth);
         return new INT16_Vec4(xyzw);
+    }
+
+    @NotNull
+    static INT16_Vec1 int16_vec1(int first) {
+        Assertions.require_int16(first);
+        return int16_vec1((short) first);
+    }
+
+    @NotNull
+    static INT16_Vec2 int16_vec2(int first, int second) {
+        Assertions.require_int16(first);
+        Assertions.require_int16(second);
+        return int16_vec2((short) first, (short) second);
+    }
+
+    @NotNull
+    static INT16_Vec3 int16_vec3(int first, int second, int third) {
+        Assertions.require_int16(first);
+        Assertions.require_int16(second);
+        Assertions.require_int16(third);
+        return int16_vec3((short) first, (short) second, (short) third);
+    }
+
+    @NotNull
+    static INT16_Vec4 int16_vec4(int first, int second, int third, int fourth) {
+        Assertions.require_int16(first);
+        Assertions.require_int16(second);
+        Assertions.require_int16(third);
+        Assertions.require_int16(fourth);
+        return int16_vec4((short) first, (short) second, (short) third, (short) fourth);
     }
 
     @NotNull
@@ -285,6 +392,14 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     private static short halfFloatToShort(float f) {
         // todo look into this floats have bits in reverse order than ints
         return (short) (Integer.reverse(Float.floatToRawIntBits(f)));
+    }
+
+    private static byte b(int n) {
+        return (byte) n;
+    }
+
+    private static short s(int n) {
+        return (short) n;
     }
 
 }

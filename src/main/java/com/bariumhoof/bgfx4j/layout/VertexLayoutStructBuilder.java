@@ -12,48 +12,44 @@ import java.util.Set;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, N extends Num, T extends BgfxAttribType, V extends Vec<N, T>> {
+abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, V extends Vec<?,?>> {
 
     @Nullable
-    abstract VertexLayoutStructBuilder<?, ?, ?, ?> previousBuilder();
+    abstract VertexLayoutStructBuilder<?, ?> previousBuilder();
     final E attrib;
-    final N num;
-    final T type;
+    final V vec;
     final boolean normalized;
     final boolean asInt;
 
-    static class VertexLayoutStructBuilderTemplate<E extends BgfxAttrib, N extends Num, T extends BgfxAttribType, V extends Vec<N, T>> {
+    static class VertexLayoutStructBuilderTemplate<E extends BgfxAttrib, V extends Vec<?,?>> {
         final E attrib;
-        final N num;
-        final T type;
+        final V vec;
         final boolean normalized;
         final boolean asInt;
-        VertexLayoutStructBuilderTemplate(E attrib, N num, T type, boolean normalized, boolean asInt) {
+        VertexLayoutStructBuilderTemplate(E attrib, V vec, boolean normalized, boolean asInt) {
             this.attrib = attrib;
-            this.num = num;
-            this.type = type;
+            this.vec = vec;
             this.normalized = normalized;
             this.asInt = asInt;
         }
     }
 
-    protected VertexLayoutStructBuilder(E attrib, N num, T type, boolean normalized, boolean asInt) {
+    protected VertexLayoutStructBuilder(E attrib, V vec, boolean normalized, boolean asInt) {
         this.attrib = attrib;
-        this.num = num;
-        this.type = type;
+            this.vec = vec;
         this.normalized = normalized;
         this.asInt = asInt;
         errorOnDuplicateAttribute();
     }
 
-    protected VertexLayoutStructBuilder(VertexLayoutStructBuilderTemplate<E,N,T,V> template) {
-        this(template.attrib, template.num, template.type, template.normalized, template.asInt);
+    protected VertexLayoutStructBuilder(VertexLayoutStructBuilderTemplate<E,V> template) {
+        this(template.attrib, template.vec, template.normalized, template.asInt);
     }
 
-    static VertexLayoutStructBuilder<?, ?, ?, ?>[] createBuildersArray(int size, VertexLayoutStructBuilder<?, ?, ?, ?> lastBuilder) {
-        VertexLayoutStructBuilder<?, ?, ?, ?>[] builders = new VertexLayoutStructBuilder<?, ?, ?, ?>[size];
+    static VertexLayoutStructBuilder<?, ?>[] createBuildersArray(int size, VertexLayoutStructBuilder<?, ?> lastBuilder) {
+        VertexLayoutStructBuilder<?, ?>[] builders = new VertexLayoutStructBuilder<?, ?>[size];
 
-        VertexLayoutStructBuilder<?, ?, ?, ?> b = lastBuilder;
+        VertexLayoutStructBuilder<?, ?> b = lastBuilder;
         for (int i=size-1; i >= 0; i--) {
             builders[i] = b;
             b = b.previousBuilder();
@@ -63,22 +59,26 @@ abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, N extends Num, T 
     }
 
     @NotNull
-    static BGFXVertexLayout createLayout(@NotNull BGFX_RENDERER_TYPE rendererType, VertexLayoutStructBuilder<?, ?, ?, ?>[] builders) {
+    static BGFXVertexLayout createLayout(@NotNull BGFX_RENDERER_TYPE rendererType, VertexLayoutStructBuilder<?, ?>[] builders) {
         final BGFXVertexLayout layout = BGFXVertexLayout.calloc();
 
         bgfx_vertex_layout_begin(layout, rendererType.VALUE);
-        VertexLayoutStructBuilder<?, ?, ?, ?> lastBuilder = null;
+        VertexLayoutStructBuilder<?, ?> lastBuilder = null;
         for (int i=0; i < builders.length; i++) {
             lastBuilder = builders[i];
-            enforceKhronosSpec(lastBuilder.num, lastBuilder.type, lastBuilder.normalized, lastBuilder.asInt);
-            bgfx_vertex_layout_add(layout, lastBuilder.attrib.representedType().VALUE, lastBuilder.num.value(), lastBuilder.type.representedType().VALUE, lastBuilder.normalized, lastBuilder.asInt);
+            enforceKhronosSpec(lastBuilder.vec, lastBuilder.normalized, lastBuilder.asInt);
+            bgfx_vertex_layout_add(layout, lastBuilder.attrib.representedType().VALUE, lastBuilder.vec.number().value(),
+                    lastBuilder.vec.type().representedType().VALUE, lastBuilder.normalized, lastBuilder.asInt);
         }
         bgfx_vertex_layout_end(layout);
         return layout;
     }
 
-    static <E extends BgfxAttrib, N extends Num, T extends BgfxAttribType> void enforceKhronosSpec(N num, T type, boolean normalized, boolean asInt) {
+    static void enforceKhronosSpec(Vec<?,?> vec, boolean normalized, boolean asInt) {
         // https://www.khronos.org/opengl/wiki/Vertex_Specification#Component_type
+
+        final BgfxAttribType type = vec.type();
+        final Num num = vec.number();
 
         switch (type.representedType()) {
             case UINT10: // 32 bits as 3 or 4. All collectively form into a 32 bit value
@@ -100,7 +100,7 @@ abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, N extends Num, T 
     void errorOnDuplicateAttribute() {
         // todo add to build() at end or check as building -- dont check all per step
         Set<BGFX_ATTRIB> attribs = EnumSet.noneOf(BGFX_ATTRIB.class);
-        VertexLayoutStructBuilder<?, ?, ?, ?> builder = this;
+        VertexLayoutStructBuilder<?, ?> builder = this;
         while (builder != null) {
             final BGFX_ATTRIB next = builder.attrib.representedType();
             if (attribs.contains(next)) {
