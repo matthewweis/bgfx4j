@@ -96,12 +96,12 @@ public class TypedDynamicVertexBuffer<V extends Vertex> implements Disposable, H
 
         // get size of one tuple, we know from contract that T is a tuple holding Vecs
         int requiredBytes = 0;
-        for (int i=0; i < numVecsPerTuple; i++) {
+//        for (int i=0; i < numVecsPerTuple; i++) {
             for (Object o : sample.array()) {
                 final Vec<?, ?> vec = (Vec<?, ?>) o; // we know from public API that T is a tuple holding Vecs
                 requiredBytes += computeBytes(vec.type().representedType(), vec.number(), vertexCount);
             }
-        }
+//        }
 
         try (final MemoryStack stack = MemoryStack.stackPush()) {
             // todo, some might be too big to store on stack!
@@ -114,6 +114,8 @@ public class TypedDynamicVertexBuffer<V extends Vertex> implements Disposable, H
                     vec.put(bytes);
                 }
             }
+
+            bytes.flip();
 
             final BGFXMemory memory = bgfx_copy(bytes); // todo is this necessary?? currently does (extra?) copy...
             bgfx_update_dynamic_vertex_buffer(handle, startVertex, memory);

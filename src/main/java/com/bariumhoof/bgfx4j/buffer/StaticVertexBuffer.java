@@ -190,6 +190,7 @@ public final class StaticVertexBuffer implements Disposable, Handle {
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
+
         final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
 
         final int size = vertices.length;
@@ -235,6 +236,8 @@ public final class StaticVertexBuffer implements Disposable, Handle {
             throw new RuntimeException("ByteBuffer size and number of arguments do not match");
         }
         buffer.flip();
+
+        // debug
         return createVertexBuffer(buffer, vertexLayout);
     }
 

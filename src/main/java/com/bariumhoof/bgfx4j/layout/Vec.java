@@ -98,7 +98,7 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
     @NotNull
     static UINT8_Vec4 uint8_vec4(byte first, byte second, byte third, byte fourth) {
         final int xyzw = (((int)first) << 24) | (((int)second) << 16) | (((int)third) << 8) | ((int) fourth);
-        return new UINT8_Vec4(xyzw);
+        return uint8_vec4(xyzw);
     }
 
     @NotNull
@@ -108,6 +108,11 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
         Assertions.require_uint8(third);
         Assertions.require_uint8(fourth);
         return uint8_vec4((byte) first, (byte) second, (byte) third, (byte) fourth); // confirm this is safe
+    }
+
+    @NotNull
+    static UINT8_Vec4 uint8_vec4(int xyzw) {
+        return new UINT8_Vec4(xyzw);
     }
 
     @NotNull
@@ -252,7 +257,7 @@ public interface Vec<N extends Num, T extends BgfxAttribType> {
 
     @Value
     class UINT8_Vec3 implements Vec3<BgfxAttribType.UINT8> {
-        short xy; byte z; // will use bottom 24 bits
+        short xy; byte z; // will use bottom 24 bits // todo remove multiple-small fields, wasteful due to 32-bit jvm alignment?
         @Override public void put(@NotNull ByteBuffer buffer) { buffer.putShort(xy).put(z); }
         @Override public BgfxAttribType.UINT8 type() { return BgfxAttribType.UINT8; }
     }

@@ -21,9 +21,15 @@ public class VertexLayoutStruct<V extends Vertex> {
     }
 
     @NotNull
+    public final TypedDynamicVertexBuffer<V> mallocDynamicBuffer(int numVertices){
+        return mallocDynamicBuffer(numVertices, EnumSet.of(BGFX_BUFFER.NONE));
+    }
+
+    @NotNull
     public final TypedDynamicVertexBuffer<V> mallocDynamicBuffer(
             int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags){
         Assertions.requirePositive(numVertices);
+
         final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, get(), (int) BGFX_BUFFER.flags(flags));
         final short layoutHandle = bgfx_create_vertex_layout(get());
         return new TypedDynamicVertexBuffer<>(handle, layoutHandle, numVertices);

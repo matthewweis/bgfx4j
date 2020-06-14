@@ -65,7 +65,8 @@ public class DynamicVertexBuffer implements Disposable, Handle {
         bgfx_update_dynamic_vertex_buffer(handle, startVertex, memory);
     }
 
-    private static int getByteCount(@NotNull Number[][] vertices) {
+    // todo make private
+    public static int getByteCount(@NotNull Number[][] vertices) {
         final int stride = vertices[0].length;
         final int count = vertices.length;
 

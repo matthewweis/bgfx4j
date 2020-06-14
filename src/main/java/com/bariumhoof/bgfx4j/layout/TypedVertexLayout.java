@@ -193,7 +193,6 @@ public interface TypedVertexLayout {
         public AttribTypeStageDefaultOpts<E,FLOAT_Vec4> float_vec4() {
             return new AttribTypeStageDefaultOpts<>(attrib, Vec.default_float_vec4);
         }
-
     }
 
     // asks BOTH optional questions at once, or allows both to be skipped (defaulting to false)
