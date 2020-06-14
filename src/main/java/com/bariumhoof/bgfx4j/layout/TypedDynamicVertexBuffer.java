@@ -15,7 +15,6 @@ import java.util.List;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-// todo autogen for 1 to 18
 // todo look into efficiencies of mem system, copy vs ref, and putting things on the stack
 public class TypedDynamicVertexBuffer<V extends Vertex> implements Disposable, Handle {
 
