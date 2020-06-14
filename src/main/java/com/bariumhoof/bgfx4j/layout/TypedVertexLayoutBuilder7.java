@@ -7,11 +7,11 @@ import com.bariumhoof.bgfx4j.layout.Vec.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 
-public class TypedVertexLayoutBuilder7<E1 extends BgfxAttrib, V1 extends Vec<?,?>, E2 extends BgfxAttrib, V2 extends Vec<?,?>, E3 extends BgfxAttrib, V3 extends Vec<?,?>, E4 extends BgfxAttrib, V4 extends Vec<?,?>, E5 extends BgfxAttrib, V5 extends Vec<?,?>, E6 extends BgfxAttrib, V6 extends Vec<?,?>> {
-    private final VertexLayoutStructBuilder6<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6> last;
+public class TypedVertexLayoutBuilder7<V1 extends Vec<?,?>, V2 extends Vec<?,?>, V3 extends Vec<?,?>, V4 extends Vec<?,?>, V5 extends Vec<?,?>, V6 extends Vec<?,?>> {
+    private final VertexLayoutStructBuilder<?> last;
 
     TypedVertexLayoutBuilder7(
-            VertexLayoutStructBuilder6<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6> last) {
+            VertexLayoutStructBuilder<?> last) {
         this.last = last;
     }
 
@@ -255,8 +255,8 @@ public class TypedVertexLayoutBuilder7<E1 extends BgfxAttrib, V1 extends Vec<?,?
             this.asInt = asInt;
         }
 
-        final VertexLayoutStructBuilder7<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E, V> newLast() {
-            return new VertexLayoutStructBuilder7<>(last, attrib, vec, normalized, asInt);
+        final VertexLayoutStructBuilder<V> newLast() {
+            return new VertexLayoutStructBuilder<>(last, attrib, vec, normalized, asInt);
         }
 
         public final VertexLayoutStruct<Vertex.Vertex7<V1,V2,V3,V4,V5,V6,V>>build() {
@@ -265,13 +265,13 @@ public class TypedVertexLayoutBuilder7<E1 extends BgfxAttrib, V1 extends Vec<?,?
 
         public final VertexLayoutStruct<Vertex.Vertex7<V1,V2,V3,V4,V5,V6,V>>build(
                 @NotNull BGFX_RENDERER_TYPE rendererType) {
-            final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(7, newLast());
+            final VertexLayoutStructBuilder<?>[] builders = VertexLayoutStructBuilder.createBuildersArray(7, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
             return new VertexLayoutStruct<>(layout);
         }
 
-        public final TypedVertexLayoutBuilder8<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E, V>.InitialStage then() {
-            final TypedVertexLayoutBuilder8<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E, V> builder = new TypedVertexLayoutBuilder8<>(newLast());
+        public final TypedVertexLayoutBuilder8<V1, V2, V3, V4, V5, V6, V>.InitialStage then() {
+            final TypedVertexLayoutBuilder8<V1, V2, V3, V4, V5, V6, V> builder = new TypedVertexLayoutBuilder8<>(newLast());
             return builder.initialStage();
         }
     }

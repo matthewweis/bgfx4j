@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public abstract class VertexLayoutStrideBuilder {
 
-    protected abstract <E extends BgfxAttrib, V extends Vec<?,?>, R extends VertexLayoutStructBuilder<E,V>>
+    protected abstract <E extends BgfxAttrib, V extends Vec<?,?>, R extends VertexLayoutStructBuilder<V>>
     R factory(E attrib, V vec, boolean normalized, boolean asInt);
 
     VertexLayoutStrideBuilder.InitialStage begin() {
@@ -230,7 +230,7 @@ public abstract class VertexLayoutStrideBuilder {
         }
 
         @Override
-        public <R extends VertexLayoutStructBuilder<E,V>> R build() {
+        public <R extends VertexLayoutStructBuilder<V>> R build() {
             // floating point types cannot be normalized nor can they be represented as ints
             // so this builder protected the user from making the mistake by setting both to false
             return factory(attrib, vec, false, asInt);
@@ -251,7 +251,7 @@ public abstract class VertexLayoutStrideBuilder {
         }
 
         @Override
-        public <R extends VertexLayoutStructBuilder<E,V>> R build() {
+        public <R extends VertexLayoutStructBuilder<V>> R build() {
             // floating point types cannot be normalized nor can they be represented as ints
             // so this builder protected the user from making the mistake by setting both to false
             return factory(attrib, vec, normalized, false);
@@ -268,7 +268,7 @@ public abstract class VertexLayoutStrideBuilder {
             this.vec = vec;
         }
 
-        public <R extends VertexLayoutStructBuilder<E,V>> R build() {
+        public <R extends VertexLayoutStructBuilder<V>> R build() {
             return factory(attrib, vec, false, false);
         }
 
@@ -283,7 +283,7 @@ public abstract class VertexLayoutStrideBuilder {
             this.vec = vec;
         }
 
-        public <R extends VertexLayoutStructBuilder<E,V>> R build() {
+        public <R extends VertexLayoutStructBuilder<V>> R build() {
             // floating point types cannot be normalized nor can they be represented as ints
             // so this builder protected the user from making the mistake by setting both to false
             return factory(attrib, vec, false, false);

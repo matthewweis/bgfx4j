@@ -4,7 +4,6 @@ import com.bariumhoof.assertions.Assertions;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 
 import java.util.EnumSet;
@@ -12,21 +11,23 @@ import java.util.Set;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, V extends Vec<?,?>> {
+public class VertexLayoutStructBuilder<V extends Vec<?,?>> {
 
-    @Nullable
-    abstract VertexLayoutStructBuilder<?, ?> previousBuilder();
-    final E attrib;
+//    @Nullable
+//    abstract VertexLayoutStructBuilder<?> previousBuilder();
+
+    final VertexLayoutStructBuilder<?> last;
+    final BgfxAttrib attrib;
     final V vec;
     final boolean normalized;
     final boolean asInt;
 
-    static class VertexLayoutStructBuilderTemplate<E extends BgfxAttrib, V extends Vec<?,?>> {
-        final E attrib;
+    static class VertexLayoutStructBuilderTemplate<V extends Vec<?,?>> {
+        final BgfxAttrib attrib;
         final V vec;
         final boolean normalized;
         final boolean asInt;
-        VertexLayoutStructBuilderTemplate(E attrib, V vec, boolean normalized, boolean asInt) {
+        VertexLayoutStructBuilderTemplate(BgfxAttrib attrib, V vec, boolean normalized, boolean asInt) {
             this.attrib = attrib;
             this.vec = vec;
             this.normalized = normalized;
@@ -34,36 +35,37 @@ abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, V extends Vec<?,?
         }
     }
 
-    protected VertexLayoutStructBuilder(E attrib, V vec, boolean normalized, boolean asInt) {
+    protected VertexLayoutStructBuilder(VertexLayoutStructBuilder<?> last, BgfxAttrib attrib, V vec, boolean normalized, boolean asInt) {
+        this.last = last;
         this.attrib = attrib;
-            this.vec = vec;
+        this.vec = vec;
         this.normalized = normalized;
         this.asInt = asInt;
         errorOnDuplicateAttribute();
     }
 
-    protected VertexLayoutStructBuilder(VertexLayoutStructBuilderTemplate<E,V> template) {
-        this(template.attrib, template.vec, template.normalized, template.asInt);
-    }
+//    protected VertexLayoutStructBuilder(VertexLayoutStructBuilderTemplate<V> template) {
+//        this(template, template.attrib, template.vec, template.normalized, template.asInt);
+//    }
 
-    static VertexLayoutStructBuilder<?, ?>[] createBuildersArray(int size, VertexLayoutStructBuilder<?, ?> lastBuilder) {
-        VertexLayoutStructBuilder<?, ?>[] builders = new VertexLayoutStructBuilder<?, ?>[size];
+    static VertexLayoutStructBuilder<?>[] createBuildersArray(int size, VertexLayoutStructBuilder<?> lastBuilder) {
+        VertexLayoutStructBuilder<?>[] builders = new VertexLayoutStructBuilder<?>[size];
 
-        VertexLayoutStructBuilder<?, ?> b = lastBuilder;
+        VertexLayoutStructBuilder<?> b = lastBuilder;
         for (int i=size-1; i >= 0; i--) {
             builders[i] = b;
-            b = b.previousBuilder();
+            b = b.last;
         }
 
         return builders;
     }
 
     @NotNull
-    static BGFXVertexLayout createLayout(@NotNull BGFX_RENDERER_TYPE rendererType, VertexLayoutStructBuilder<?, ?>[] builders) {
+    static BGFXVertexLayout createLayout(@NotNull BGFX_RENDERER_TYPE rendererType, VertexLayoutStructBuilder<?>[] builders) {
         final BGFXVertexLayout layout = BGFXVertexLayout.calloc();
 
         bgfx_vertex_layout_begin(layout, rendererType.VALUE);
-        VertexLayoutStructBuilder<?, ?> lastBuilder = null;
+        VertexLayoutStructBuilder<?> lastBuilder = null;
         for (int i=0; i < builders.length; i++) {
             lastBuilder = builders[i];
             enforceKhronosSpec(lastBuilder.vec, lastBuilder.normalized, lastBuilder.asInt);
@@ -100,14 +102,14 @@ abstract class VertexLayoutStructBuilder<E extends BgfxAttrib, V extends Vec<?,?
     void errorOnDuplicateAttribute() {
         // todo add to build() at end or check as building -- dont check all per step
         Set<BGFX_ATTRIB> attribs = EnumSet.noneOf(BGFX_ATTRIB.class);
-        VertexLayoutStructBuilder<?, ?> builder = this;
+        VertexLayoutStructBuilder<?> builder = this;
         while (builder != null) {
             final BGFX_ATTRIB next = builder.attrib.representedType();
             if (attribs.contains(next)) {
                 throw new IllegalStateException("VertexLayoutStruct cannot build: duplicate attribute " + attrib);
             }
             attribs.add(next);
-            builder = builder.previousBuilder();
+            builder = builder.last;
         }
     }
 }

@@ -7,11 +7,11 @@ import com.bariumhoof.bgfx4j.layout.Vec.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 
-public class TypedVertexLayoutBuilder18<E1 extends BgfxAttrib, V1 extends Vec<?,?>, E2 extends BgfxAttrib, V2 extends Vec<?,?>, E3 extends BgfxAttrib, V3 extends Vec<?,?>, E4 extends BgfxAttrib, V4 extends Vec<?,?>, E5 extends BgfxAttrib, V5 extends Vec<?,?>, E6 extends BgfxAttrib, V6 extends Vec<?,?>, E7 extends BgfxAttrib, V7 extends Vec<?,?>, E8 extends BgfxAttrib, V8 extends Vec<?,?>, E9 extends BgfxAttrib, V9 extends Vec<?,?>, E10 extends BgfxAttrib, V10 extends Vec<?,?>, E11 extends BgfxAttrib, V11 extends Vec<?,?>, E12 extends BgfxAttrib, V12 extends Vec<?,?>, E13 extends BgfxAttrib, V13 extends Vec<?,?>, E14 extends BgfxAttrib, V14 extends Vec<?,?>, E15 extends BgfxAttrib, V15 extends Vec<?,?>, E16 extends BgfxAttrib, V16 extends Vec<?,?>, E17 extends BgfxAttrib, V17 extends Vec<?,?>> {
-    private final VertexLayoutStructBuilder17<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14, E15, V15, E16, V16, E17, V17> last;
+public class TypedVertexLayoutBuilder18<V1 extends Vec<?,?>, V2 extends Vec<?,?>, V3 extends Vec<?,?>, V4 extends Vec<?,?>, V5 extends Vec<?,?>, V6 extends Vec<?,?>, V7 extends Vec<?,?>, V8 extends Vec<?,?>, V9 extends Vec<?,?>, V10 extends Vec<?,?>, V11 extends Vec<?,?>, V12 extends Vec<?,?>, V13 extends Vec<?,?>, V14 extends Vec<?,?>, V15 extends Vec<?,?>, V16 extends Vec<?,?>, V17 extends Vec<?,?>> {
+    private final VertexLayoutStructBuilder<?> last;
 
     TypedVertexLayoutBuilder18(
-            VertexLayoutStructBuilder17<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14, E15, V15, E16, V16, E17, V17> last) {
+            VertexLayoutStructBuilder<?> last) {
         this.last = last;
     }
 
@@ -255,8 +255,8 @@ public class TypedVertexLayoutBuilder18<E1 extends BgfxAttrib, V1 extends Vec<?,
             this.asInt = asInt;
         }
 
-        final VertexLayoutStructBuilder18<E1, V1, E2, V2, E3, V3, E4, V4, E5, V5, E6, V6, E7, V7, E8, V8, E9, V9, E10, V10, E11, V11, E12, V12, E13, V13, E14, V14, E15, V15, E16, V16, E17, V17, E, V> newLast() {
-            return new VertexLayoutStructBuilder18<>(last, attrib, vec, normalized, asInt);
+        final VertexLayoutStructBuilder<V> newLast() {
+            return new VertexLayoutStructBuilder<>(last, attrib, vec, normalized, asInt);
         }
 
         public final VertexLayoutStruct<Vertex.Vertex18<V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17,V>>build() {
@@ -265,7 +265,7 @@ public class TypedVertexLayoutBuilder18<E1 extends BgfxAttrib, V1 extends Vec<?,
 
         public final VertexLayoutStruct<Vertex.Vertex18<V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,V11,V12,V13,V14,V15,V16,V17,V>>build(
                 @NotNull BGFX_RENDERER_TYPE rendererType) {
-            final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(18, newLast());
+            final VertexLayoutStructBuilder<?>[] builders = VertexLayoutStructBuilder.createBuildersArray(18, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
             return new VertexLayoutStruct<>(layout);
         }

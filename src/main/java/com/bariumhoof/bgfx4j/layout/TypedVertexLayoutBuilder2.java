@@ -7,11 +7,11 @@ import com.bariumhoof.bgfx4j.layout.Vec.*;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 
-public class TypedVertexLayoutBuilder2<E1 extends BgfxAttrib, V1 extends Vec<?,?>> {
+public class TypedVertexLayoutBuilder2<V1 extends Vec<?,?>> {
 
-    private final VertexLayoutStructBuilder1<E1,V1> last;
+    private final VertexLayoutStructBuilder<?> last;
 
-    TypedVertexLayoutBuilder2(VertexLayoutStructBuilder1<E1, V1> last) {
+    TypedVertexLayoutBuilder2(VertexLayoutStructBuilder<?> last) {
         this.last = last;
     }
 
@@ -255,8 +255,8 @@ public class TypedVertexLayoutBuilder2<E1 extends BgfxAttrib, V1 extends Vec<?,?
             this.asInt = asInt;
         }
 
-        final VertexLayoutStructBuilder2<E1,V1,E,V> newLast() {
-            return new VertexLayoutStructBuilder2<>(last, attrib, vec, normalized, asInt);
+        final VertexLayoutStructBuilder<V> newLast() {
+            return new VertexLayoutStructBuilder<>(last, attrib, vec, normalized, asInt);
         }
 
         public final VertexLayoutStruct<Vertex.Vertex2<V1,V>>build() {
@@ -264,13 +264,13 @@ public class TypedVertexLayoutBuilder2<E1 extends BgfxAttrib, V1 extends Vec<?,?
         }
 
         public final VertexLayoutStruct<Vertex.Vertex2<V1,V>>build(@NotNull BGFX_RENDERER_TYPE rendererType) {
-            final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(2, newLast());
+            final VertexLayoutStructBuilder<?>[] builders = VertexLayoutStructBuilder.createBuildersArray(2, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
             return new VertexLayoutStruct<>(layout);
         }
 
-        public final TypedVertexLayoutBuilder3<E1,V1,E,V>.InitialStage then() {
-            final TypedVertexLayoutBuilder3<E1,V1,E,V> builder = new TypedVertexLayoutBuilder3<>(newLast());
+        public final TypedVertexLayoutBuilder3<V1,V>.InitialStage then() {
+            final TypedVertexLayoutBuilder3<V1,V> builder = new TypedVertexLayoutBuilder3<>(newLast());
             return builder.initialStage();
         }
     }

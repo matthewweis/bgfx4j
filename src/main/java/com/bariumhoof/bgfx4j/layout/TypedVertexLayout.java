@@ -250,8 +250,8 @@ public interface TypedVertexLayout {
             this.asInt = asInt;
         }
 
-        final VertexLayoutStructBuilder1<E,V> newLast() {
-            return new VertexLayoutStructBuilder1<>(attrib, vec, normalized, asInt);
+        final VertexLayoutStructBuilder<V> newLast() {
+            return new VertexLayoutStructBuilder<>(null, attrib, vec, normalized, asInt);
         }
 
         public final VertexLayoutStruct<Vertex.Vertex1<V>>build() {
@@ -259,13 +259,13 @@ public interface TypedVertexLayout {
         }
 
         public final VertexLayoutStruct<Vertex.Vertex1<V>>build(@NotNull BGFX_RENDERER_TYPE rendererType) {
-            final VertexLayoutStructBuilder<?, ?>[] builders = VertexLayoutStructBuilder.createBuildersArray(1, newLast());
+            final VertexLayoutStructBuilder<?>[] builders = VertexLayoutStructBuilder.createBuildersArray(1, newLast());
             final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
             return new VertexLayoutStruct<>(layout);
         }
 
-        public final TypedVertexLayoutBuilder2<E,V>.InitialStage then() {
-            final TypedVertexLayoutBuilder2<E, V> builder = new TypedVertexLayoutBuilder2<>(newLast());
+        public final TypedVertexLayoutBuilder2<V>.InitialStage then() {
+            final TypedVertexLayoutBuilder2<V> builder = new TypedVertexLayoutBuilder2<V>(newLast());
             return builder.initialStage();
         }
     }
