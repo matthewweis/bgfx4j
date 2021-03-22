@@ -36,7 +36,7 @@ public class ColoredTriangleDemo {
     private static boolean debug = System.getProperty("NDEBUG") == null;
 
     private static ByteBuffer[] layers = {
-//            memUTF8("VK_LAYER_LUNARG_standard_validation"),
+            memUTF8("VK_LAYER_LUNARG_standard_validation"),
     };
 
     /**

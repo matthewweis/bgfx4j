@@ -1,8 +1,9 @@
-package com.bariumhoof.bgfx4j;
+package com.bariumhoof.bgfx4j.examples._00_hello_world;
 
+import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.shaders.Program;
@@ -10,12 +11,12 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.bgfx.BGFXInit;
-import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.glfw.GLFWNativeX11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.Platform;
+import org.lwjgl.system.macosx.ObjCRuntime;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -23,10 +24,15 @@ import java.nio.FloatBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFWNativeCocoa.glfwGetCocoaWindow;
+import static org.lwjgl.system.JNI.invokePPP;
+import static org.lwjgl.system.JNI.invokePPPV;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.macosx.ObjCRuntime.objc_getClass;
+import static org.lwjgl.system.macosx.ObjCRuntime.sel_getUid;
 
-public class TestLauncher {
+public class HelloWorldSelfContained {
 
     private static final FloatBuffer viewBuf = MemoryUtil.memAllocFloat(16);
     private static final Matrix4f view = new Matrix4f();
@@ -66,23 +72,14 @@ public class TestLauncher {
             }
         });
 
-//        ImmutableInitTest
-//                .builder()
-//                .resolution();
-
-//        ImmutableInitTest.builder().resolution(ImmutableResolutionTest.builder().)
-//        ImmutableResolutionTest.
-//        ImmutableResolutionTest.builder().
-
         try (MemoryStack stack = stackPush()) {
-            BGFXInit init = BGFXInit.mallocStack(stack);
+            BGFXInit init = BGFXInit.callocStack(stack);
             bgfx_init_ctor(init);
             init
                     .resolution(it -> it
                             .width(width)
                             .height(height)
                             .reset(BGFX_RESET_VSYNC));
-//                            .reset(BGFX_RESET_NONE));
 
             switch (Platform.get()) {
                 case LINUX:
@@ -91,8 +88,18 @@ public class TestLauncher {
                             .nwh(GLFWNativeX11.glfwGetX11Window(window));
                     break;
                 case MACOSX:
+                    long objc_msgSend = ObjCRuntime.getLibrary().getFunctionAddress("objc_msgSend");
+
+                    long layer = invokePPP(objc_getClass("CAMetalLayer"), sel_getUid("alloc"), objc_msgSend);
+                    invokePPP(layer, sel_getUid("init"), objc_msgSend);
+
+                    long contentView = invokePPP(glfwGetCocoaWindow(window), sel_getUid("contentView"), objc_msgSend);
+                    invokePPPV(contentView, sel_getUid("setLayer:"), layer, objc_msgSend);
+
                     init.platformData()
-                            .nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window));
+                            .nwh(layer);
+                    // https://github.com/LWJGL/lwjgl3/issues/619
+//                            .nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window));
                     break;
                 case WINDOWS:
                     init.platformData()
@@ -100,6 +107,8 @@ public class TestLauncher {
                     break;
             }
 
+            System.out.println("init bgfx!");
+//            Application.isInitialized = true;
             if (!bgfx_init(init)) {
                 throw new RuntimeException("Error initializing bgfx renderer");
             }
@@ -117,7 +126,7 @@ public class TestLauncher {
         final ByteBuffer logo = Logo.createLogo();
 
         // MY CODE
-        final VertexLayout decl = VertexLayout.builder()
+        final VertexLayoutOld decl = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8)
                 .build();
@@ -149,12 +158,12 @@ public class TestLauncher {
         };
 
         // these make up the model matrix:
-        final StaticVertexBuffer staticVertexBuffer = StaticVertexBuffer.create(decl, cubeVertices);
+        final StaticVertexBufferOld staticVertexBufferOld = StaticVertexBufferOld.create(decl, cubeVertices);
         final StaticIndexBuffer staticIndexBuffer = StaticIndexBuffer.create(cubeIndices);
 
         final Program program = Program.load(
-                TestLauncher.class.getResource("/shaders/metal/vs_cubes.bin"), // vertex shader
-                TestLauncher.class.getResource("/shaders/metal/fs_cubes.bin")  // fragment shader
+                Application.class.getResource("/shaders/metal/vs_cubes.bin"), // vertex shader
+                Application.class.getResource("/shaders/metal/fs_cubes.bin")  // fragment shader
         );
 
 
@@ -203,32 +212,32 @@ public class TestLauncher {
             bgfx_set_view_transform(0, viewBuf, projBuf);
 
             long encoder = bgfx_encoder_begin(false);
-
-            // this is for the model's offset
-            for (int yy = 0; yy < 11; ++yy) {
-                for (int xx = 0; xx < 11; ++xx) {
-
-                    model
-                            .identity()
-                            .translate(
-                                    -15.0f + xx * 3.0f,
-                                    -15.0f + yy * 3.0f,
-                                    0.0f)
-                            .rotateAffineXYZ(
-                                    time + xx * 0.21f,
-                                    time + yy * 0.37f,
-                                    0.0f)
-                    ;
-
-                    model.get(modelBuf);
-
-                    bgfx_encoder_set_transform(encoder, modelBuf);
-                    bgfx_encoder_set_vertex_buffer(encoder, 0, staticVertexBuffer.handle(), 0, 8, BGFX_INVALID_HANDLE);
-                    bgfx_encoder_set_index_buffer(encoder, staticIndexBuffer.handle(), 0, 36);
-                    bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
-                    bgfx_encoder_submit(encoder, 0, program.handle(), 0, false);
-                }
-            }
+//
+//            // this is for the model's offset
+//            for (int yy = 0; yy < 11; ++yy) {
+//                for (int xx = 0; xx < 11; ++xx) {
+//
+//                    model
+//                            .identity()
+//                            .translate(
+//                                    -15.0f + xx * 3.0f,
+//                                    -15.0f + yy * 3.0f,
+//                                    0.0f)
+//                            .rotateAffineXYZ(
+//                                    time + xx * 0.21f,
+//                                    time + yy * 0.37f,
+//                                    0.0f)
+//                    ;
+//
+//                    model.get(modelBuf);
+//
+//                    bgfx_encoder_set_transform(encoder, modelBuf);
+//                    bgfx_encoder_set_vertex_buffer(encoder, 0, staticVertexBufferOld.handle(), 0, 8);
+//                    bgfx_encoder_set_index_buffer(encoder, staticIndexBuffer.handle(), 0, 36);
+//                    bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
+//                    bgfx_encoder_submit(encoder, 0, program.handle(), 0, BGFX_DISCARD_ALL);
+//                }
+//            }
 
 //            bgfx_encoder_set_transform(encoder, modelBuf);
 //
@@ -240,26 +249,26 @@ public class TestLauncher {
 
 
 
-//            // Use debug font to print information about this example.
-//            bgfx_dbg_text_clear(0, false);
-//            bgfx_dbg_text_image(Math.max(width / 2 / 8, 20) - 20,
-//                    Math.max(height / 2 / 16, 6) - 6,
-//                    40,
-//                    12,
-//                    logo,
-//                    160
-//            );
-//
-//            bgfx_dbg_text_printf(0, 1, 0x1f, "bgfx/examples/25-c99");
-//            bgfx_dbg_text_printf(0, 2, 0x3f, "Description: Initialization and debug text with C99 API.");
-//
-//            bgfx_dbg_text_printf(0, 3, 0x0f, "Color can be changed with ANSI \u001b[9;me\u001b[10;ms\u001b[11;mc\u001b[12;ma\u001b[13;mp\u001b[14;me\u001b[0m code too.");
-//
-//            bgfx_dbg_text_printf(80, 4, 0x0f, "\u001b[;0m    \u001b[;1m    \u001b[; 2m    \u001b[; 3m    \u001b[; 4m    \u001b[; 5m    \u001b[; 6m    \u001b[; 7m    \u001b[0m");
-//            bgfx_dbg_text_printf(80, 5, 0x0f, "\u001b[;8m    \u001b[;9m    \u001b[;10m    \u001b[;11m    \u001b[;12m    \u001b[;13m    \u001b[;14m    \u001b[;15m    \u001b[0m");
-//
-//            // Advance to next frame. Rendering thread will be kicked to
-//            // process submitted rendering primitives.
+            // Use debug font to print information about this example.
+            bgfx_dbg_text_clear(0, false);
+            bgfx_dbg_text_image(Math.max(width / 2 / 8, 20) - 20,
+                    Math.max(height / 2 / 16, 6) - 6,
+                    40,
+                    12,
+                    logo,
+                    160
+            );
+
+            bgfx_dbg_text_printf(0, 1, 0x1f, "bgfx/examples/25-c99");
+            bgfx_dbg_text_printf(0, 2, 0x3f, "Description: Initialization and debug text with C99 API.");
+
+            bgfx_dbg_text_printf(0, 3, 0x0f, "Color can be changed with ANSI \u001b[9;me\u001b[10;ms\u001b[11;mc\u001b[12;ma\u001b[13;mp\u001b[14;me\u001b[0m code too.");
+
+            bgfx_dbg_text_printf(80, 4, 0x0f, "\u001b[;0m    \u001b[;1m    \u001b[; 2m    \u001b[; 3m    \u001b[; 4m    \u001b[; 5m    \u001b[; 6m    \u001b[; 7m    \u001b[0m");
+            bgfx_dbg_text_printf(80, 5, 0x0f, "\u001b[;8m    \u001b[;9m    \u001b[;10m    \u001b[;11m    \u001b[;12m    \u001b[;13m    \u001b[;14m    \u001b[;15m    \u001b[0m");
+
+            // Advance to next frame. Rendering thread will be kicked to
+            // process submitted rendering primitives.
             bgfx_frame(false);
 
             bgfx_encoder_end(encoder);

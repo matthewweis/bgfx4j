@@ -8,10 +8,10 @@ import org.jetbrains.annotations.NotNull;
 import org.lwjgl.bgfx.BGFXVertexLayout;
 
 public class TypedVertexLayoutBuilder9<V1 extends Vec<?,?>, V2 extends Vec<?,?>, V3 extends Vec<?,?>, V4 extends Vec<?,?>, V5 extends Vec<?,?>, V6 extends Vec<?,?>, V7 extends Vec<?,?>, V8 extends Vec<?,?>> {
-    private final VertexLayoutStructBuilder<?> last;
+    private final VertexLayoutBuilder<?> last;
 
     TypedVertexLayoutBuilder9(
-            VertexLayoutStructBuilder<?> last) {
+            VertexLayoutBuilder<?> last) {
         this.last = last;
     }
 
@@ -255,19 +255,19 @@ public class TypedVertexLayoutBuilder9<V1 extends Vec<?,?>, V2 extends Vec<?,?>,
             this.asInt = asInt;
         }
 
-        final VertexLayoutStructBuilder<V> newLast() {
-            return new VertexLayoutStructBuilder<>(last, attrib, vec, normalized, asInt);
+        final VertexLayoutBuilder<V> newLast() {
+            return new VertexLayoutBuilder<>(last, attrib, vec, normalized, asInt);
         }
 
-        public final VertexLayoutStruct<Vertex.Vertex9<V1,V2,V3,V4,V5,V6,V7,V8,V>>build() {
+        public final VertexLayout<Vertex.Vertex9<V1,V2,V3,V4,V5,V6,V7,V8,V>> build() {
             return build(Capabilities.getRendererType());
         }
 
-        public final VertexLayoutStruct<Vertex.Vertex9<V1,V2,V3,V4,V5,V6,V7,V8,V>>build(
+        public final VertexLayout<Vertex.Vertex9<V1,V2,V3,V4,V5,V6,V7,V8,V>> build(
                 @NotNull BGFX_RENDERER_TYPE rendererType) {
-            final VertexLayoutStructBuilder<?>[] builders = VertexLayoutStructBuilder.createBuildersArray(9, newLast());
-            final BGFXVertexLayout layout = VertexLayoutStructBuilder.createLayout(rendererType, builders);
-            return new VertexLayoutStruct<>(layout);
+            final VertexLayoutBuilder<?>[] builders = VertexLayoutBuilder.createBuildersArray(9, newLast());
+            final BGFXVertexLayout layout = VertexLayoutBuilder.createLayout(rendererType, builders);
+            return new VertexLayout<>(layout);
         }
 
         public final TypedVertexLayoutBuilder10<V1, V2, V3, V4, V5, V6, V7, V8, V>.InitialStage then() {

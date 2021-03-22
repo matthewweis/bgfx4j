@@ -2,10 +2,9 @@ package com.bariumhoof.bgfx4j.examples._02_metaballs;
 
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
 import com.bariumhoof.bgfx4j.shaders.VertexShader;
 import lombok.extern.slf4j.Slf4j;
 import org.joml.Math;
@@ -160,7 +159,7 @@ public class Metaballs extends Application {
 
     @Override
     public void init() {
-        layout = VertexLayout.builder(BGFX_RENDERER_TYPE.METAL)
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.NORMAL, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
@@ -206,11 +205,11 @@ public class Metaballs extends Application {
             Vector3f eye = new Vector3f(0.0f, 0.0f, -50.0f);
 
             lookAt(new Vector3f(0.0f, 0.0f, 0.0f), eye, view);
-            perspective(60.0f, getWindowWidth(), getWindowHeight(), 0.1f, 100.0f, proj);
+            perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, proj);
 
             bgfx_set_view_transform(0, view.get(viewBuf), proj.get(projBuf));
 
-            bgfx_set_view_rect(0, 0, 0, getWindowWidth(), getWindowHeight());
+            bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
 
             // Stats.
             int numVertices = 0;
@@ -343,13 +342,13 @@ public class Metaballs extends Application {
             bgfx_encoder_set_transform(encoder, model.get(modelBuf));
 
             // Set vertex and index buffer.
-            bgfx_encoder_set_transient_vertex_buffer(encoder, 0, tvb, 0, numVertices, BGFX_INVALID_HANDLE);
+            bgfx_encoder_set_transient_vertex_buffer(encoder, 0, tvb, 0, numVertices);
 
             // Set render states.
             bgfx_encoder_set_state(encoder, BGFX_STATE_DEFAULT, 0);
 
             // Submit primitive for rendering to view 0.
-            bgfx_encoder_submit(encoder, 0, program, 0, false);
+            bgfx_encoder_submit(encoder, 0, program, 0, BGFX_DISCARD_ALL);
 
             bgfx_encoder_end(encoder);
 

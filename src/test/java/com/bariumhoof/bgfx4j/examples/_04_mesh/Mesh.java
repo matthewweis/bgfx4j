@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples._04_mesh;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -58,7 +58,7 @@ public class Mesh extends Application {
 //            6, 3, 7
 //    };
 
-    private StaticVertexBuffer vertices;
+    private StaticVertexBufferOld vertices;
     private StaticIndexBuffer indices;
     private Program program;
 
@@ -71,7 +71,7 @@ public class Mesh extends Application {
     private FloatBuffer modelBuf;
 
     private Uniform u_time;
-    VertexLayout layout;
+    VertexLayoutOld layout;
 
 //    AIScene mesh = null;
     Model mesh = null;
@@ -94,12 +94,12 @@ public class Mesh extends Application {
             System.exit(0);
         }
 
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
-        vertices = StaticVertexBuffer.create(layout, ByteBuffer.wrap(mesh.vertices), mesh.numVerts);
+        vertices = StaticVertexBufferOld.create(layout, ByteBuffer.wrap(mesh.vertices), mesh.numVerts);
         indices = StaticIndexBuffer.create(mesh.indices);
 
         u_time = Uniform.createSingle("u_time", BGFX_UNIFORM_TYPE.VEC4);
@@ -140,10 +140,10 @@ public class Mesh extends Application {
 
 
 
-//        bgfx_set_view_rect(0, 0, 0, width, height);
+//        bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
         bgfx_touch(0);
         bgfx_set_uniform(u_time.handle(), new float[] { time }, 1);
-        bgfxView.setViewRect(0, 0, width, height);
+        bgfxView.setViewRect(0, 0, getWidth(), getHeight());
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 
@@ -156,7 +156,7 @@ public class Mesh extends Application {
         // https://github.com/bkaradzic/bgfx/blob/79166dfe17a2493b0b772b37c86fb33581dd861a/examples/common/bgfx_utils.cpp#L600
 
 //        lookAt(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, -15.0f), view);
-//        perspective(60.0f, getWindowWidth(), getWindowHeight(), 0.1f, 100.0f, proj);
+//        perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, proj);
 //
 //        view0.setTransform(view.get(viewBuf), proj.get(projBuf));
 //        bgfx_set_transform(view.get(viewBuf));
@@ -185,7 +185,7 @@ public class Mesh extends Application {
         bgfx_set_vertex_buffer(0, vertices.handle(), 0, mesh.numVerts);
         bgfx_set_index_buffer(indices.handle(), 0, mesh.numIndices);
 
-        bgfx_submit(bgfxView.id(), program.handle(), 0, false);
+        bgfx_submit(bgfxView.id(), program.handle(), 0, BGFX_DISCARD_ALL);
 
 //        encoder.submit(bgfxView, program);
 

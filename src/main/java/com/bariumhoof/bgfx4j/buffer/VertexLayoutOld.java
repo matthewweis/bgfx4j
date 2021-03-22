@@ -16,7 +16,7 @@ import static org.lwjgl.bgfx.BGFX.*;
 
 // todo make this use builder lib
 @Slf4j
-public final class VertexLayout implements Disposable {
+public final class VertexLayoutOld implements Disposable {
 
     private final static boolean AS_INT_DEFAULT = false;
 
@@ -28,7 +28,7 @@ public final class VertexLayout implements Disposable {
     @Getter
     private final int strideBytes;
 
-    private VertexLayout(BGFXVertexLayout decl, int strideBytes) {
+    private VertexLayoutOld(BGFXVertexLayout decl, int strideBytes) {
         this.decl = decl;
         this.strideBytes = strideBytes;
     }
@@ -189,9 +189,9 @@ public final class VertexLayout implements Disposable {
             return new BuilderSurplusStage(decl, newNumBytes);
         }
 
-        public VertexLayout build() {
+        public VertexLayoutOld build() {
             bgfx_vertex_layout_end(decl);
-            return new VertexLayout(decl, numBytes);
+            return new VertexLayoutOld(decl, numBytes);
         }
     }
 

@@ -3,14 +3,18 @@ package com.bariumhoof.bgfx4j.examples._06_bump;
 import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
-import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
+import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.enums.BGFX_UNIFORM_TYPE;
+import com.bariumhoof.bgfx4j.layout.StaticVertexBuffer;
+import com.bariumhoof.bgfx4j.layout.Vec;
+import com.bariumhoof.bgfx4j.layout.VertexLayout;
 import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.Encoder;
 import com.bariumhoof.bgfx4j.wip.Texture;
 import com.bariumhoof.bgfx4j.wip.Uniform;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXInstanceDataBuffer;
@@ -21,7 +25,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.EnumSet;
+import java.util.List;
 
+import static com.bariumhoof.bgfx4j.layout.Vec.*;
+import static com.bariumhoof.bgfx4j.layout.Vertex.Vertex4;
+import static com.bariumhoof.bgfx4j.layout.Vertex.vertex;
 import static org.lwjgl.bgfx.BGFX.*;
 
 /**
@@ -32,9 +40,9 @@ public class Bump extends Application {
 
     private View view;
 
-    private VertexLayout layout;
-    private ByteBuffer vertices;
-    private StaticVertexBuffer vb;
+    ByteBuffer vbTans;
+    private VertexLayout<Vertex4<FLOAT_Vec3, UINT8_Vec4, UINT8_Vec4, INT16_Vec2>> layout;
+    private StaticVertexBuffer<Vertex4<FLOAT_Vec3, UINT8_Vec4, UINT8_Vec4, INT16_Vec2>> vb;
     private StaticIndexBuffer ib;
     private Uniform uniformTexColor;
     private Uniform uniformTexNormal;
@@ -60,18 +68,16 @@ public class Bump extends Application {
         view = View.create("My view");
 
         layout = VertexLayout.builder()
-                .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
-                .thenUseNormalizedAsInt(BGFX_ATTRIB.NORMAL, 4, BGFX_ATTRIB_TYPE.UINT8)
-                .thenUseNormalizedAsInt(BGFX_ATTRIB.TANGENT, 4, BGFX_ATTRIB_TYPE.UINT8)
-                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.INT16)
-                .build();
+                .position().float_vec3().then()
+                .normal().uint8_vec4().normalized().asInt().then()
+                .tangent().uint8_vec4().normalized().asInt().then()
+                .texcoord0().int16_vec2().normalized().asInt().build();
 
         instancingSupported = Capabilities.isSupported(BGFX_CAPS.INSTANCING);
 
-        vertices = calcTangents(cubeVertices, cubeVertices.length, layout.get(), cubeIndices, cubeIndices.length);
-
-        vb = StaticVertexBuffer.create(layout, vertices, cubeVertices.length);
+        vb = StaticVertexBuffer.create(verts, layout);
         ib = StaticIndexBuffer.create(cubeIndices);
+        vbTans = calcTangents(verts, verts.size(), layout.get(), cubeIndices, cubeIndices.length);
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
         uniformTexNormal = Uniform.createSingle("s_texNormal", BGFX_UNIFORM_TYPE.VEC4);
@@ -81,7 +87,7 @@ public class Bump extends Application {
         uniformLightRgbInnerR = Uniform.createArray("u_lightRgbInnerR", BGFX_UNIFORM_TYPE.VEC4, numLights);
 
         program = Program.loadOrNull(
-                Application.locateVertexShaderByName(instancingSupported ? "bump_instanced" : "bump"), // vertex shader
+                Application.locateVertexShaderByName(instancingSupported ? "bump-instanced" : "bump"), // vertex shader
                 Application.locateFragmentShaderByName("bump")); // fragment shader
 
         textureColor = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
@@ -106,14 +112,14 @@ public class Bump extends Application {
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Loading textures.");
         bgfx_dbg_text_printf(0, 3, 0x0f, String.format("Frame: % 7.3f[ms]", dt));
 
-        Vector3f eye = new Vector3f(0.0f, 0.0f, -7.0f);
+        final Vector3f eye = new Vector3f(0.0f, 0.0f, -7.0f);
 
         lookAt(new Vector3f(0.0f, 0.0f, 0.0f), eye, viewMat);
-        perspective(60.0f, getWindowWidth(), getWindowHeight(), 0.1f, 100.0f, projMat);
+        perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, projMat);
 
         view.setTransform(viewMat.get(viewBuf), projMat.get(projBuf));
 
-        view.setViewRect(0, 0, getWindowWidth(), getWindowHeight());
+        view.setViewRect(0, 0, getWidth(), getHeight());
 
         for (int ii = 0; ii < numLights; ++ii) {
             uniformBuf[4*ii] = ((float) (Math.sin((time * (0.1f + ii * 0.17f) + ii * Math.PI * 0.5f * 1.37f)) * 3.0f));
@@ -141,6 +147,7 @@ public class Bump extends Application {
         if (instancingSupported) {
             // Write instance data for 3x3 cubes.
             for (int yy = 0; yy < 3; ++yy) {
+                // todo use bgfx api
                 BGFXInstanceDataBuffer idb = BGFXInstanceDataBuffer.calloc();
                 bgfx_alloc_instance_data_buffer(idb, numInstances, instanceStride);
                 ByteBuffer data = idb.data();
@@ -158,6 +165,11 @@ public class Bump extends Application {
                 // Set vertex and index buffer.
                 encoder.setVertexBuffer(vb);
                 encoder.setIndexBuffer(ib);
+
+                // also works for VB (using calcTangents)
+//                final BGFXMemory bgfxMemory = bgfx_make_ref(vbTans);
+//                final short vb2 = bgfx_create_vertex_buffer(bgfxMemory, layout.get(), 0);
+//                bgfx_set_vertex_buffer(0, vb2, 0, verts.size());
 
                 // Bind textures.
                 encoder.setTexture(0, uniformTexColor, textureColor);
@@ -212,7 +224,6 @@ public class Bump extends Application {
         uniformLightPosRadius.dispose();
         uniformLightRgbInnerR.dispose();
 
-        MemoryUtil.memFree(vertices);
         MemoryUtil.memFree(viewBuf);
         MemoryUtil.memFree(projBuf);
         MemoryUtil.memFree(mtxBuf);
@@ -236,32 +247,31 @@ public class Bump extends Application {
         return packUint32(xx, yy, zz, ww);
     }
 
-    private static final Number[][] cubeVertices = {
-            { -1.0f, 1.0f, 1.0f, packF4u(0.0f, 0.0f, 1.0f), 0, 0, 0 },
-            { 1.0f, 1.0f, 1.0f, packF4u(0.0f, 0.0f, 1.0f), 0, 0x7fff, 0 },
-            { -1.0f, -1.0f, 1.0f, packF4u(0.0f, 0.0f, 1.0f), 0, 0, 0x7fff },
-            { 1.0f, -1.0f, 1.0f, packF4u(0.0f, 0.0f, 1.0f), 0, 0x7fff, 0x7fff },
-            { -1.0f, 1.0f, -1.0f, packF4u(0.0f, 0.0f, -1.0f), 0, 0, 0 },
-            { 1.0f, 1.0f, -1.0f, packF4u(0.0f, 0.0f, -1.0f), 0, 0x7fff, 0 },
-            { -1.0f, -1.0f, -1.0f, packF4u(0.0f, 0.0f, -1.0f), 0, 0, 0x7fff },
-            { 1.0f, -1.0f, -1.0f, packF4u(0.0f, 0.0f, -1.0f), 0, 0x7fff, 0x7fff },
-            { -1.0f, 1.0f, 1.0f, packF4u(0.0f, 1.0f, 0.0f), 0, 0, 0 },
-            { 1.0f, 1.0f, 1.0f, packF4u(0.0f, 1.0f, 0.0f), 0, 0x7fff, 0 },
-            { -1.0f, 1.0f, -1.0f, packF4u(0.0f, 1.0f, 0.0f), 0, 0, 0x7fff },
-            { 1.0f, 1.0f, -1.0f, packF4u(0.0f, 1.0f, 0.0f), 0, 0x7fff, 0x7fff },
-            { -1.0f, -1.0f, 1.0f, packF4u(0.0f, -1.0f, 0.0f), 0, 0, 0 },
-            { 1.0f, -1.0f, 1.0f, packF4u(0.0f, -1.0f, 0.0f), 0, 0x7fff, 0 },
-            { -1.0f, -1.0f, -1.0f, packF4u(0.0f, -1.0f, 0.0f), 0, 0, 0x7fff },
-            { 1.0f, -1.0f, -1.0f, packF4u(0.0f, -1.0f, 0.0f), 0, 0x7fff, 0x7fff },
-            { 1.0f, -1.0f, 1.0f, packF4u(1.0f, 0.0f, 0.0f), 0, 0, 0 },
-            { 1.0f, 1.0f, 1.0f, packF4u(1.0f, 0.0f, 0.0f), 0, 0x7fff, 0 },
-            { 1.0f, -1.0f, -1.0f, packF4u(1.0f, 0.0f, 0.0f), 0, 0, 0x7fff },
-            { 1.0f, 1.0f, -1.0f, packF4u(1.0f, 0.0f, 0.0f), 0, 0x7fff, 0x7fff },
-            { -1.0f, -1.0f, 1.0f, packF4u(-1.0f, 0.0f, 0.0f), 0, 0, 0 },
-            { -1.0f, 1.0f, 1.0f, packF4u(-1.0f, 0.0f, 0.0f), 0, 0x7fff, 0 },
-            { -1.0f, -1.0f, -1.0f, packF4u(-1.0f, 0.0f, 0.0f), 0, 0, 0x7fff },
-            { -1.0f, 1.0f, -1.0f, packF4u(-1.0f, 0.0f, 0.0f), 0, 0x7fff, 0x7fff }
-    };
+    private static final List<Vertex4<@NotNull FLOAT_Vec3, @NotNull UINT8_Vec4, @NotNull UINT8_Vec4, @NotNull INT16_Vec2>> verts = List.of(
+            vertex(float_vec3(-1.0f, 1.0f, 1.0f), encodeNormalRgba8(0.0f, 0.0f, 1.0f), uint8_vec4(0), int16_vec2(0, 0)),
+            vertex(float_vec3(1.0f, 1.0f, 1.0f), encodeNormalRgba8(0.0f, 0.0f, 1.0f), uint8_vec4(0), int16_vec2(0x7fff, 0)),
+            vertex(float_vec3(-1.0f, -1.0f, 1.0f), encodeNormalRgba8(0.0f, 0.0f, 1.0f), uint8_vec4(0), int16_vec2(0, 0x7fff)),
+            vertex(float_vec3(1.0f, -1.0f, 1.0f), encodeNormalRgba8(0.0f, 0.0f, 1.0f), uint8_vec4(0), int16_vec2(0x7fff, 0x7fff)),
+            vertex(float_vec3(-1.0f, 1.0f, -1.0f), encodeNormalRgba8(0.0f, 0.0f, -1.0f), uint8_vec4(0), int16_vec2(0, 0)),
+            vertex(float_vec3(1.0f, 1.0f, -1.0f), encodeNormalRgba8(0.0f, 0.0f, -1.0f), uint8_vec4(0), int16_vec2(0x7fff, 0)),
+            vertex(float_vec3(-1.0f, -1.0f, -1.0f), encodeNormalRgba8(0.0f, 0.0f, -1.0f), uint8_vec4(0), int16_vec2(0, 0x7fff)),
+            vertex(float_vec3(1.0f, -1.0f, -1.0f), encodeNormalRgba8(0.0f, 0.0f, -1.0f), uint8_vec4(0), int16_vec2(0x7fff, 0x7fff)),
+            vertex(float_vec3(-1.0f, 1.0f, 1.0f), encodeNormalRgba8(0.0f, 1.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0)),
+            vertex(float_vec3(1.0f, 1.0f, 1.0f), encodeNormalRgba8(0.0f, 1.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0)),
+            vertex(float_vec3(-1.0f, 1.0f, -1.0f), encodeNormalRgba8(0.0f, 1.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0x7fff)),
+            vertex(float_vec3(1.0f, 1.0f, -1.0f), encodeNormalRgba8(0.0f, 1.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0x7fff)),
+            vertex(float_vec3(-1.0f, -1.0f, 1.0f), encodeNormalRgba8(0.0f, -1.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0)),
+            vertex(float_vec3(1.0f, -1.0f, 1.0f), encodeNormalRgba8(0.0f, -1.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0)),
+            vertex(float_vec3(-1.0f, -1.0f, -1.0f), encodeNormalRgba8(0.0f, -1.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0x7fff)),
+            vertex(float_vec3(1.0f, -1.0f, -1.0f), encodeNormalRgba8(0.0f, -1.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0x7fff)),
+            vertex(float_vec3(1.0f, -1.0f, 1.0f), encodeNormalRgba8(1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0)),
+            vertex(float_vec3(1.0f, 1.0f, 1.0f), encodeNormalRgba8(1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0)),
+            vertex(float_vec3(1.0f, -1.0f, -1.0f), encodeNormalRgba8(1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0x7fff)),
+            vertex(float_vec3(1.0f, 1.0f, -1.0f), encodeNormalRgba8(1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0x7fff)),
+            vertex(float_vec3(-1.0f, -1.0f, 1.0f), encodeNormalRgba8(-1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0)),
+            vertex(float_vec3(-1.0f, 1.0f, 1.0f), encodeNormalRgba8(-1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0)),
+            vertex(float_vec3(-1.0f, -1.0f, -1.0f), encodeNormalRgba8(-1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0, 0x7fff)),
+            vertex(float_vec3(-1.0f, 1.0f, -1.0f), encodeNormalRgba8(-1.0f, 0.0f, 0.0f), uint8_vec4(0), int16_vec2(0x7fff, 0x7ff)));
 
     private static final int[] cubeIndices = {
             0, 2, 1,
@@ -281,29 +291,33 @@ public class Bump extends Application {
     };
 
     private static class PosTexcoord {
-        float[] m_xyz = new float[4];
-        float[] m_uv = new float[4];
+        final float[] m_xyz = new float[4];
+        final float[] m_uv = new float[4];
     }
 
-    private static ByteBuffer calcTangents(Object[][] _vertices, int _numVertices,
-                                           BGFXVertexLayout _layout, int[] _indices, int _numIndices) {
+    private static ByteBuffer calcTangents(Iterable<Vertex4<@NotNull FLOAT_Vec3, @NotNull UINT8_Vec4, @NotNull UINT8_Vec4, @NotNull INT16_Vec2>> _vertices,
+            int _numVertices, BGFXVertexLayout _layout, int[] _indices, int _numIndices) {
 
         float[] out = new float[4];
         float[] tangents = new float[6 * _numVertices];
 
-        PosTexcoord v0 = new PosTexcoord();
-        PosTexcoord v1 = new PosTexcoord();
-        PosTexcoord v2 = new PosTexcoord();
+        final PosTexcoord v0 = new PosTexcoord();
+        final PosTexcoord v1 = new PosTexcoord();
+        final PosTexcoord v2 = new PosTexcoord();
 
-        ByteBuffer vertices = MemoryUtil.memAlloc(_numVertices * 6 * 4);
-        for (Object[] vv : _vertices) {
-            vertices.putFloat((float) vv[0]);
-            vertices.putFloat((float) vv[1]);
-            vertices.putFloat((float) vv[2]);
-            vertices.putInt((int) vv[3]);
-            vertices.putInt((int) vv[4]);
-            vertices.putShort((short) (int) vv[5]);
-            vertices.putShort((short) (int) vv[6]);
+        final ByteBuffer vertices = MemoryUtil.memAlloc(_numVertices * 6 * 4);
+        for (Vertex4<FLOAT_Vec3, UINT8_Vec4, UINT8_Vec4,INT16_Vec2> vv : _vertices) {
+            for (Vec<?, ?> vec : vv.array()) {
+                vec.put(vertices);
+            }
+
+//            vertices.putFloat((float) vv[0]);
+//            vertices.putFloat((float) vv[1]);
+//            vertices.putFloat((float) vv[2]);
+//            vertices.putInt((int) vv[3]);
+//            vertices.putInt((int) vv[4]);
+//            vertices.putShort((short) (int) vv[5]);
+//            vertices.putShort((short) (int) vv[6]);
         }
 
         vertices.flip();
@@ -384,6 +398,50 @@ public class Bump extends Application {
         }
 
         return vertices;
+    }
+
+    static int toUnorm(float _value, float _scale) {
+        return (int)(round(clamp(_value, 0.0f, 1.0f) * _scale) );
+    }
+
+    static float clamp(float f, float lower, float higher) {
+        if (lower < f) {
+            return lower;
+        } else if (higher > f) {
+            return higher;
+        } else {
+            return f;
+        }
+    }
+
+    static float floor(float f) {
+        return (float)((int)f);
+    }
+
+    static float round(float f) {
+        return floor(f + 0.5f);
+    }
+
+    static byte[] packRgba8(float[] src) {
+        final byte[] dst = new byte[4];
+        dst[0] = (byte) toUnorm(src[0], 255.0f);
+        dst[1] = (byte) toUnorm(src[1], 255.0f);
+        dst[2] = (byte) toUnorm(src[2], 255.0f);
+        dst[3] = (byte) toUnorm(src[3], 255.0f);
+        return dst;
+    }
+
+    static UINT8_Vec4 encodeNormalRgba8(float x, float y, float z) {
+        final float w = 0.0f;
+        final float src[] = {
+                x * 0.5f + 0.5f,
+                y * 0.5f + 0.5f,
+                z * 0.5f + 0.5f,
+                w * 0.5f + 0.5f,
+        };
+        final byte[] dst = packRgba8(src);
+
+        return uint8_vec4(dst[0], dst[1], dst[2], dst[3]);
     }
 
     public static void main(String[] args) throws IOException {

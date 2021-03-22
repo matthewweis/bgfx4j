@@ -3,11 +3,10 @@ package com.bariumhoof.bgfx4j.examples._01_cubes;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
-import com.bariumhoof.bgfx4j.layout.TypedDynamicVertexBuffer;
-import com.bariumhoof.bgfx4j.layout.TypedVertexLayout;
+import com.bariumhoof.bgfx4j.layout.StaticVertexBuffer;
 import com.bariumhoof.bgfx4j.layout.Vertex;
 import com.bariumhoof.bgfx4j.layout.Vertex.Vertex2;
-import com.bariumhoof.bgfx4j.layout.VertexLayoutStruct;
+import com.bariumhoof.bgfx4j.layout.VertexLayout;
 import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
 import com.bariumhoof.bgfx4j.wip.Encoder;
@@ -52,6 +51,7 @@ public class CubesWellTyped extends Application {
 //            vertex(float_vec3(-1.0f, -1.0f, -1.0f), uint8_vec4(0xff, 0xff, 0xff, 0x00)),
 //            vertex(float_vec3(1.0f, -1.0f, -1.0f), uint8_vec4(0xff, 0xff, 0xff, 0xff)));
 
+    // todo make "vertexBuffer" which is a Buffer<Vertex> ?
     final List<Vertex.Vertex2<FLOAT_Vec3, UINT8_Vec4>> cubeVerts = List.of(
             vertex(float_vec3(-1.0f, 1.0f, 1.0f), uint8_vec4(0xff000000)),
             vertex(float_vec3(1.0f, 1.0f, 1.0f), uint8_vec4(0xff0000ff)),
@@ -77,7 +77,7 @@ public class CubesWellTyped extends Application {
             6, 3, 7
     };
 
-    private TypedDynamicVertexBuffer<Vertex2<FLOAT_Vec3, UINT8_Vec4>> vertices;
+    private StaticVertexBuffer<Vertex2<FLOAT_Vec3, UINT8_Vec4>> vertices;
     private StaticIndexBuffer indices;
 
     private Program program;
@@ -93,12 +93,12 @@ public class CubesWellTyped extends Application {
     @Override
     public void init() {
 
-        final VertexLayoutStruct<Vertex2<FLOAT_Vec3, UINT8_Vec4>> layout = TypedVertexLayout.builder()
+        final VertexLayout<Vertex2<FLOAT_Vec3, UINT8_Vec4>> layout = VertexLayout.builder()
                 .position().float_vec3().then()
                 .color0().uint8_vec4().normalized()
                 .build();
 
-        vertices = layout.mallocDynamicBuffer(cubeVerts.size());
+        vertices = StaticVertexBuffer.create(cubeVerts, layout);
         indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
@@ -119,7 +119,7 @@ public class CubesWellTyped extends Application {
 
     @Override
     public void render(float dt, float time) {
-        bgfx_set_view_rect(0, 0, 0, width, height);
+        bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 
@@ -128,14 +128,13 @@ public class CubesWellTyped extends Application {
 
         bgfxView.setTransform(view.get(viewBuf), proj.get(projBuf)); // todo make view work more like a camera...
 
-        vertices.update(cubeVerts);
         Encoder encoder = Encoder.begin(false);
         for (int yy = 0; yy < 11; ++yy) {
             for (int xx = 0; xx < 11; ++xx) {
                 encoder.setTransform(model.translation(-15.0f + xx * 3.0f, -15.0f + yy * 3.0f, 0.0f)
                         .rotateAffineXYZ(time + xx * 0.21f, time + yy * 0.37f, 0.0f)
                         .get(modelBuf));
-                encoder.setDynamicVertexBuffer(vertices);
+                encoder.setVertexBuffer(vertices);
                 encoder.setIndexBuffer(indices);
                 encoder.setState(BGFX_STATE.DEFAULT);
                 encoder.submit(bgfxView, program);

@@ -56,39 +56,39 @@ public class HelloWorld extends Application {
     public void dispose() { }
 
     private static final String COLORED_DESCRIPTION_STRING = Debug.buildColoredString()
-            .foreground(WHITE)
-            .text("Color can be changed with ANSI ").foreground(BRIGHT_BLUE)
-            .text("e").foreground(BRIGHT_GREEN)
-            .text("s").foreground(BRIGHT_CYAN)
-            .text("c").foreground(BRIGHT_RED)
-            .text("a").foreground(BRIGHT_MAGENTA)
-            .text("p").foreground(YELLOW)
-            .text("e").foreground(WHITE)
-            .text(" code too.").build();
+            .foreground(WHITE).text("Color can be changed with ANSI ")
+            .foreground(BRIGHT_BLUE).text("e")       // E
+            .foreground(BRIGHT_GREEN).text("s")      // S
+            .foreground(BRIGHT_CYAN).text("c")       // C
+            .foreground(BRIGHT_RED).text("a")        // A
+            .foreground(BRIGHT_MAGENTA).text("p")    // P
+            .foreground(YELLOW).text("e")            // E
+            .foreground(WHITE).text(" code too.")
+            .build();
 
     private static final String COLOR_PALETTE_ROW_1 = Debug.buildColoredString()
-            .background(BLACK)
-            .text(WS).background(BLUE)
-            .text(WS).background(GREEN)
-            .text(WS).background(CYAN)
-            .text(WS).background(RED)
-            .text(WS).background(MAGENTA)
-            .text(WS).background(BROWN)
-            .text(WS).background(GREY)
-            .text(WS).background(BLACK)
-            .text(WS).build();
+            .background(BLACK).text(WS)
+            .background(BLUE).text(WS)
+            .background(GREEN).text(WS)
+            .background(CYAN).text(WS)
+            .background(RED).text(WS)
+            .background(MAGENTA).text(WS)
+            .background(BROWN).text(WS)
+            .background(GREY).text(WS)
+            .background(BLACK).text(WS)
+            .build();
 
     private static final String COLOR_PALETTE_ROW_2 = Debug.buildColoredString()
-            .background(DARK_GREY)
-            .text(WS).background(BRIGHT_BLUE)
-            .text(WS).background(BRIGHT_GREEN)
-            .text(WS).background(BRIGHT_CYAN)
-            .text(WS).background(BRIGHT_RED)
-            .text(WS).background(BRIGHT_MAGENTA)
-            .text(WS).background(YELLOW)
-            .text(WS).background(WHITE)
-            .text(WS).background(BLACK)
-            .text(WS).build();
+            .background(DARK_GREY).text(WS)
+            .background(BRIGHT_BLUE).text(WS)
+            .background(BRIGHT_GREEN).text(WS)
+            .background(BRIGHT_CYAN).text(WS)
+            .background(BRIGHT_RED).text(WS)
+            .background(BRIGHT_MAGENTA).text(WS)
+            .background(YELLOW).text(WS)
+            .background(WHITE).text(WS)
+            .background(BLACK).text(WS)
+            .build();
 
     public static void main(String[] args) throws IOException {
         new HelloWorld().start();

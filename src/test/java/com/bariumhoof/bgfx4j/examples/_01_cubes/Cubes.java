@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -52,7 +52,7 @@ public class Cubes extends Application {
             6, 3, 7
     };
 
-    private StaticVertexBuffer vertices;
+    private StaticVertexBufferOld vertices;
     private StaticIndexBuffer indices;
     private Program program;
 
@@ -67,12 +67,12 @@ public class Cubes extends Application {
     @Override
     public void init() {
 
-        final VertexLayout layout = VertexLayout.builder()
+        final VertexLayoutOld layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
-        vertices = StaticVertexBuffer.create(layout, cubeVertices);
+        vertices = StaticVertexBufferOld.create(layout, cubeVertices);
         indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
@@ -89,7 +89,7 @@ public class Cubes extends Application {
 
     @Override
     public void render(float dt, float time) {
-        bgfx_set_view_rect(0, 0, 0, width, height);
+        bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 

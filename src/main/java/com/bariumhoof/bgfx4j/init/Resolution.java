@@ -9,13 +9,15 @@ import org.jilt.Builder;
 import org.jilt.BuilderStyle;
 import org.jilt.Opt;
 
+import java.util.Set;
+
 @Value
 @Builder(style = BuilderStyle.TYPE_SAFE)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public class Resolution {
     int width; // required
     int height; // required
-    @Opt BGFX_RESET reset;
+    @Opt Set<BGFX_RESET> reset;
     @Opt BGFX_TEXTURE_FORMAT format;
     @Opt byte maxFrameLatency;
     @Opt byte numBackBuffers;

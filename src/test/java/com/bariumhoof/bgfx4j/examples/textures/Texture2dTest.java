@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples.textures;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.examples._00_hello_world.Logo;
 import com.bariumhoof.bgfx4j.examples._06_bump.Bump;
@@ -57,8 +57,8 @@ public class Texture2dTest extends Application {
     };
 
     private View view;
-    private VertexLayout layout;
-    private StaticVertexBuffer vb;
+    private VertexLayoutOld layout;
+    private StaticVertexBufferOld vb;
     private StaticIndexBuffer ib;
     private Uniform uniformTexColor;
     private Program program;
@@ -70,10 +70,6 @@ public class Texture2dTest extends Application {
     final int dim = 64;
     final int size = dim * dim;
     final ByteBuffer backingOffHeapMemory = MemoryUtil.memAlloc(Integer.BYTES * size);
-
-    public Texture2dTest() {
-        super(defaultInitBuilder().type(BGFX_RENDERER_TYPE.OPENGL).build());
-    }
 
     int x = 0;
 
@@ -163,7 +159,7 @@ public class Texture2dTest extends Application {
 //                .thenUseNormalized(BGFX_ATTRIB.TEXCOORD0, BGFX_ATTRIB_TYPE.UINT8)
 //                .build();
 
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, true, false)
 //                .thenUseNormalizedAsInt(BGFX_ATTRIB.NORMAL, BGFX_ATTRIB_TYPE.UINT8)
 //                .thenUseNormalizedAsInt(BGFX_ATTRIB.TANGENT, BGFX_ATTRIB_TYPE.UINT8)
@@ -172,7 +168,7 @@ public class Texture2dTest extends Application {
 
         textureColor = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = StaticVertexBuffer.create(layout, verts);
+        vb = StaticVertexBufferOld.create(layout, verts);
         ib = StaticIndexBuffer.create(indices);
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);

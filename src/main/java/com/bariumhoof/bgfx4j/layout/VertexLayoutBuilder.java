@@ -11,12 +11,12 @@ import java.util.Set;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-public class VertexLayoutStructBuilder<V extends Vec<?,?>> {
+public class VertexLayoutBuilder<V extends Vec<?,?>> {
 
 //    @Nullable
 //    abstract VertexLayoutStructBuilder<?> previousBuilder();
 
-    final VertexLayoutStructBuilder<?> last;
+    final VertexLayoutBuilder<?> last;
     final BgfxAttrib attrib;
     final V vec;
     final boolean normalized;
@@ -35,7 +35,7 @@ public class VertexLayoutStructBuilder<V extends Vec<?,?>> {
         }
     }
 
-    protected VertexLayoutStructBuilder(VertexLayoutStructBuilder<?> last, BgfxAttrib attrib, V vec, boolean normalized, boolean asInt) {
+    protected VertexLayoutBuilder(VertexLayoutBuilder<?> last, BgfxAttrib attrib, V vec, boolean normalized, boolean asInt) {
         this.last = last;
         this.attrib = attrib;
         this.vec = vec;
@@ -48,10 +48,10 @@ public class VertexLayoutStructBuilder<V extends Vec<?,?>> {
 //        this(template, template.attrib, template.vec, template.normalized, template.asInt);
 //    }
 
-    static VertexLayoutStructBuilder<?>[] createBuildersArray(int size, VertexLayoutStructBuilder<?> lastBuilder) {
-        VertexLayoutStructBuilder<?>[] builders = new VertexLayoutStructBuilder<?>[size];
+    static VertexLayoutBuilder<?>[] createBuildersArray(int size, VertexLayoutBuilder<?> lastBuilder) {
+        VertexLayoutBuilder<?>[] builders = new VertexLayoutBuilder<?>[size];
 
-        VertexLayoutStructBuilder<?> b = lastBuilder;
+        VertexLayoutBuilder<?> b = lastBuilder;
         for (int i=size-1; i >= 0; i--) {
             builders[i] = b;
             b = b.last;
@@ -61,11 +61,11 @@ public class VertexLayoutStructBuilder<V extends Vec<?,?>> {
     }
 
     @NotNull
-    static BGFXVertexLayout createLayout(@NotNull BGFX_RENDERER_TYPE rendererType, VertexLayoutStructBuilder<?>[] builders) {
+    static BGFXVertexLayout createLayout(@NotNull BGFX_RENDERER_TYPE rendererType, VertexLayoutBuilder<?>[] builders) {
         final BGFXVertexLayout layout = BGFXVertexLayout.calloc();
 
         bgfx_vertex_layout_begin(layout, rendererType.VALUE);
-        VertexLayoutStructBuilder<?> lastBuilder = null;
+        VertexLayoutBuilder<?> lastBuilder = null;
         for (int i=0; i < builders.length; i++) {
             lastBuilder = builders[i];
             enforceKhronosSpec(lastBuilder.vec, lastBuilder.normalized, lastBuilder.asInt);
@@ -102,7 +102,7 @@ public class VertexLayoutStructBuilder<V extends Vec<?,?>> {
     void errorOnDuplicateAttribute() {
         // todo add to build() at end or check as building -- dont check all per step
         Set<BGFX_ATTRIB> attribs = EnumSet.noneOf(BGFX_ATTRIB.class);
-        VertexLayoutStructBuilder<?> builder = this;
+        VertexLayoutBuilder<?> builder = this;
         while (builder != null) {
             final BGFX_ATTRIB next = builder.attrib.representedType();
             if (attribs.contains(next)) {

@@ -3,7 +3,7 @@ package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
 import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -46,7 +46,7 @@ public class MovingSimpleSprite2dSlow extends Application {
     };
 
     private View view;
-    private VertexLayout layout;
+    private VertexLayoutOld layout;
     private Uniform uniformTexColor;
     private Program program;
     private TransientVertexBuffer vb;
@@ -54,10 +54,6 @@ public class MovingSimpleSprite2dSlow extends Application {
 
 
     private Texture tex;
-
-    public MovingSimpleSprite2dSlow() {
-        super(defaultInitBuilder().build());
-    }
 
     @Override
     public void render(float dt, float time) {
@@ -110,7 +106,7 @@ public class MovingSimpleSprite2dSlow extends Application {
     public void init() {
         view = View.create();
 
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, true, false)
 //                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)

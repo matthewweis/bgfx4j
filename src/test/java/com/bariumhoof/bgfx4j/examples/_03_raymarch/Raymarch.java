@@ -4,7 +4,7 @@ import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.TransientBuffers;
 import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
 import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -36,7 +36,7 @@ import static org.lwjgl.bgfx.BGFX.bgfx_dbg_text_printf;
 @Slf4j
 public class Raymarch extends Application {
 
-    private VertexLayout layout;
+    private VertexLayoutOld layout;
     private Program program;
     private Uniform uniformMtx;
     private Uniform uniformLightDirTime;
@@ -137,7 +137,7 @@ public class Raymarch extends Application {
 
     @Override
     public void init() {
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .thenUse(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
@@ -166,15 +166,15 @@ public class Raymarch extends Application {
 
     @Override
     public void render(float dt, float time) {
-        view1.setViewRect(0, 0, getWindowWidth(), getWindowHeight());
-        view0.setViewRect(0, 0, getWindowWidth(), getWindowHeight());
+        view1.setViewRect(0, 0, getWidth(), getHeight());
+        view0.setViewRect(0, 0, getWidth(), getHeight());
 
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/03-raymarch");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Updating shader uniforms.");
         bgfx_dbg_text_printf(0, 3, 0x0f, String.format("Frame: % 7.3f[ms]", dt));
 
         lookAt(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, -15.0f), view);
-        perspective(60.0f, getWindowWidth(), getWindowHeight(), 0.1f, 100.0f, proj);
+        perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, proj);
 
         view0.setTransform(view.get(viewBuf), proj.get(projBuf));
 

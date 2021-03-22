@@ -4,7 +4,7 @@ import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.TransientBuffers;
 import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
 import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -26,7 +26,7 @@ import java.util.Random;
 @Slf4j
 public class MovingSimpleSprite2d extends Application {
 
-    final Number[][] vertices = new Number[][] {
+    final float[][] vertices = new float[][] {
             { -0.5f, -0.5f, 0.0f, /* <- pos, texture coord -> */ 0.0f, 0.0f },
             {  0.5f, -0.5f, 0.0f, /* <- pos, texture coord -> */ 1.0f, 0.0f },
             { -0.5f,  0.5f, 0.0f, /* <- pos, texture coord -> */ 0.0f, 1.0f },
@@ -39,17 +39,13 @@ public class MovingSimpleSprite2d extends Application {
     };
 
     private View view;
-    private VertexLayout layout;
+    private VertexLayoutOld layout;
     private Uniform uniformTexColor;
     private Program program;
 
     private final static Random r = new Random();
 
     private Texture tex;
-
-    public MovingSimpleSprite2d() {
-        super(defaultInitBuilder().build());
-    }
 
     @Override
     public void render(float dt, float time) {
@@ -60,9 +56,9 @@ public class MovingSimpleSprite2d extends Application {
 
         encoder.setTexture(0, uniformTexColor, tex);
 
-        for (Number[] vert : vertices) {
-            vert[0] = vert[0].floatValue() + smallRandom();
-            vert[1] = vert[1].floatValue() + smallRandom();
+        for (float[] vert : vertices) {
+            vert[0] = vert[0] + smallRandom();
+            vert[1] = vert[1] + smallRandom();
         }
 
         try (final MemoryStack memoryStack = MemoryStack.stackPush()) {
@@ -75,7 +71,7 @@ public class MovingSimpleSprite2d extends Application {
                 final TransientIndexBuffer ib = transientBuffers.getTransientIndexBuffer();
 
                 ByteBuffer vertex = vb.data();
-                for (Number[] vert : vertices) {
+                for (float[] vert : vertices) {
                     for (Number number : vert) {
                         vertex.putFloat(number.floatValue());
                     }
@@ -110,7 +106,7 @@ public class MovingSimpleSprite2d extends Application {
     public void init() {
         view = View.create();
 
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, true, false)
 //                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)

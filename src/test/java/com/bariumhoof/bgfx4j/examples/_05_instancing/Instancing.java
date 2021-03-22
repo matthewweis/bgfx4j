@@ -4,8 +4,8 @@ import com.bariumhoof.Capabilities;
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.InstanceBuffer;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_CAPS;
@@ -59,8 +59,8 @@ public class Instancing extends Application {
             6, 3, 7
     };
 
-    private VertexLayout layout;
-    private StaticVertexBuffer vertices;
+    private VertexLayoutOld layout;
+    private StaticVertexBufferOld vertices;
     private StaticIndexBuffer indices;
     private Program program;
 
@@ -76,12 +76,12 @@ public class Instancing extends Application {
     @Override
     public void init() {
 
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8)
                 .build();
 
-        vertices = StaticVertexBuffer.create(layout, cubeVertices);
+        vertices = StaticVertexBufferOld.create(layout, cubeVertices);
         indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
@@ -98,7 +98,7 @@ public class Instancing extends Application {
 
     @Override
     public void render(float dt, float time) {
-        appView.setViewRect(0, 0, width, height);
+        appView.setViewRect(0, 0, getWidth(), getHeight());
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/05-instancing");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 
@@ -133,6 +133,7 @@ public class Instancing extends Application {
                         // 64 bits for position (done on line above, but manual position movement required)
                         data.position(data.position() + 64);
 
+                        // todo fix value description (not 16 bits)
                         // then 16 more bits for color (position moved automatically by put methods)
                         data.putFloat((float) (Math.sin(time + ((float)xx)/11.0f) * 0.5f + 0.5f));
                         data.putFloat((float) (Math.sin(time + ((float)yy)/11.0f) * 0.5f + 0.5f));

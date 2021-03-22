@@ -2,9 +2,12 @@ package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
-import com.bariumhoof.bgfx4j.enums.*;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
+import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
+import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
+import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
+import com.bariumhoof.bgfx4j.enums.BGFX_UNIFORM_TYPE;
 import com.bariumhoof.bgfx4j.examples._06_bump.Bump;
 import com.bariumhoof.bgfx4j.shaders.Program;
 import com.bariumhoof.bgfx4j.view.View;
@@ -32,16 +35,12 @@ public class SimpleSprite2d extends Application {
     };
 
     private View view;
-    private StaticVertexBuffer vb;
+    private StaticVertexBufferOld vb;
     private StaticIndexBuffer ib;
     private Uniform uniformTexColor;
     private Program program;
 
     private Texture tex;
-
-    public SimpleSprite2d() {
-        super(defaultInitBuilder().type(BGFX_RENDERER_TYPE.OPENGL).build());
-    }
 
     @Override
     public void render(float dt, float time) {
@@ -68,14 +67,14 @@ public class SimpleSprite2d extends Application {
     public void init() {
         view = View.create();
 
-        final VertexLayout layout = VertexLayout.builder()
+        final VertexLayoutOld layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, true, false)
                 .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
                 .build();
 
         tex = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = StaticVertexBuffer.create(layout, vertices);
+        vb = StaticVertexBufferOld.create(layout, vertices);
         ib = StaticIndexBuffer.create(indices);
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);

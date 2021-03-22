@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples._01_cubes;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.shaders.Program;
@@ -70,8 +70,8 @@ public class CubesMultipleVertexStream extends Application {
             6, 3, 7
     };
 
-    private StaticVertexBuffer vb_position;
-    private StaticVertexBuffer vb_color;
+    private StaticVertexBufferOld vb_position;
+    private StaticVertexBufferOld vb_color;
     private StaticIndexBuffer indices;
     private Program program;
 
@@ -86,18 +86,18 @@ public class CubesMultipleVertexStream extends Application {
     @Override
     public void init() {
 
-        final VertexLayout layout_position = VertexLayout.builder()
+        final VertexLayoutOld layout_position = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .build();
 
         layout_position.dispose();
 
-        final VertexLayout layout_color = VertexLayout.builder()
+        final VertexLayoutOld layout_color = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
 
-        vb_position = StaticVertexBuffer.create(layout_position, cubePosVertices);
-        vb_color = StaticVertexBuffer.create(layout_color, cubeColorVertices);
+        vb_position = StaticVertexBufferOld.create(layout_position, cubePosVertices);
+        vb_color = StaticVertexBufferOld.create(layout_color, cubeColorVertices);
         indices = StaticIndexBuffer.create(cubeIndices);
 
         program = Program.loadOrNull(
@@ -114,7 +114,7 @@ public class CubesMultipleVertexStream extends Application {
 
     @Override
     public void render(float dt, float time) {
-        bgfx_set_view_rect(0, 0, 0, width, height);
+        bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes (multiple vertex streams)");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
 
@@ -133,7 +133,7 @@ public class CubesMultipleVertexStream extends Application {
                 bgfx_set_vertex_buffer(0, vb_position.handle(), 0, vb_position.size());
                 bgfx_set_vertex_buffer(1, vb_color.handle(), 0, vb_color.size());
                 bgfx_set_index_buffer(indices.handle(), 0, indices.size());
-                bgfx_submit(0, program.handle(), 0, false);
+                bgfx_submit(0, program.handle(), 0, BGFX_DISCARD_ALL);
             }
         }
     }

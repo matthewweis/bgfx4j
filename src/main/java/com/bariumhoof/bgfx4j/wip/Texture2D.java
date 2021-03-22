@@ -128,7 +128,8 @@ public class Texture2D extends Texture {
          *      <td>{@link #BGFX_TEXTURE_RT_MSAA_X16 TEXTURE_RT_MSAA_X16}</td><td>{@link #BGFX_TEXTURE_RT_WRITE_ONLY TEXTURE_RT_WRITE_ONLY}</td></tr>
          *      <tr><td>{@link #BGFX_TEXTURE_COMPUTE_WRITE TEXTURE_COMPUTE_WRITE}</td><td>{@link #BGFX_TEXTURE_SRGB TEXTURE_SRGB}</td
          *      ><td>{@link #BGFX_TEXTURE_BLIT_DST TEXTURE_BLIT_DST}</td><td>{@link #BGFX_TEXTURE_READ_BACK TEXTURE_READ_BACK}</td></tr><tr>
-         *          <td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td><td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td>
+         *          <td>{@link #BGFX_SAMPLER_NONE SAMPLER_NONE}</td><td>{@link #BGFX_SAMPLER_U_MIRROR SAMPLER_U_MIRROR}</td>
+         *          <td>{@link #BGFX_SAMPLER_U_CLAMP SAMPLER_U_CLAMP}</td><td>{@link #BGFX_SAMPLER_U_BORDER SAMPLER_U_BORDER}</td>
          *      </tr><tr><td>{@link #BGFX_SAMPLER_V_MIRROR SAMPLER_V_MIRROR}</td><td>{@link #BGFX_SAMPLER_V_CLAMP SAMPLER_V_CLAMP}</td>
          *      <td>{@link #BGFX_SAMPLER_V_BORDER SAMPLER_V_BORDER}</td><td>{@link #BGFX_SAMPLER_W_MIRROR SAMPLER_W_MIRROR}</td></tr><tr><td>{@link #BGFX_SAMPLER_W_CLAMP SAMPLER_W_CLAMP}</td>
          *      <td>{@link #BGFX_SAMPLER_W_BORDER SAMPLER_W_BORDER}</td><td>{@link #BGFX_SAMPLER_UVW_MIRROR SAMPLER_UVW_MIRROR}</td>

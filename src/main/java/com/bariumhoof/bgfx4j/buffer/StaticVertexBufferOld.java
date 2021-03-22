@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-public final class StaticVertexBuffer implements Disposable, Handle {
+public final class StaticVertexBufferOld implements Disposable, Handle {
 
 //    private final @NotNull ByteBuffer verticesBuf;
     private final short handle;
@@ -25,7 +25,7 @@ public final class StaticVertexBuffer implements Disposable, Handle {
 
     private final int numVertices; // size only of 1st array since second doesn't matter to bgfx
 
-    private StaticVertexBuffer(short handle, short layoutHandle, int numVertices) {
+    private StaticVertexBufferOld(short handle, short layoutHandle, int numVertices) {
 //        this.verticesBuf = verticesBuf;
         this.handle = handle;
         this.layoutHandle = layoutHandle;
@@ -33,25 +33,25 @@ public final class StaticVertexBuffer implements Disposable, Handle {
     }
 
     @NotNull
-    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull ByteBuffer vertices, int count) {
-        final short handle = createVertexBuffer(vertices, vertexLayout.get());
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
-        return new StaticVertexBuffer(handle, layoutHandle, count);
+    public static StaticVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, @NotNull ByteBuffer vertices, int count) {
+        final short handle = createVertexBuffer(vertices, vertexLayoutOld.get());
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
+        return new StaticVertexBufferOld(handle, layoutHandle, count);
     }
 
     @NotNull
-    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull int[][] vertices) {
+    public static StaticVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, @NotNull int[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
+        final short handle = createVertexBuffer(vbuf, vertexLayoutOld.get(), vertices);
 
         final int size = vertices.length;
 
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
 
-        return new StaticVertexBuffer(handle, layoutHandle, size);
+        return new StaticVertexBufferOld(handle, layoutHandle, size);
     }
 
     private static int getByteCount(@NotNull int[][] vertices) {
@@ -117,17 +117,17 @@ public final class StaticVertexBuffer implements Disposable, Handle {
         return strideSum;
     }
 
-    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull float[][] vertices) {
+    public static StaticVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, @NotNull float[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
+        final short handle = createVertexBuffer(vbuf, vertexLayoutOld.get(), vertices);
 
         final int size = vertices.length;
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
 
-        return new StaticVertexBuffer(handle, layoutHandle, size);
+        return new StaticVertexBufferOld(handle, layoutHandle, size);
     }
 
     private static int getByteCount(@NotNull float[][] vertices) {
@@ -185,18 +185,18 @@ public final class StaticVertexBuffer implements Disposable, Handle {
     }
 
     // todo replace Number[][] with a version per primitive!
-    public static StaticVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull Number[][] vertices) {
+    public static StaticVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
 
-        final short handle = createVertexBuffer(vbuf, vertexLayout.get(), vertices);
+        final short handle = createVertexBuffer(vbuf, vertexLayoutOld.get(), vertices);
 
         final int size = vertices.length;
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
 
-        return new StaticVertexBuffer(handle, layoutHandle, size);
+        return new StaticVertexBufferOld(handle, layoutHandle, size);
     }
 
     // todo replace Number[][] with a version per primitive!

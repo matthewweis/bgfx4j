@@ -70,19 +70,19 @@ public class TransientVertexBuffer implements Disposable, Handle {
     }
 
     @NotNull
-    public static TransientVertexBuffer heapAlloc(int vertexCount, @NotNull VertexLayout vertexLayout) {
-        return allocImpl(vertexLayout, vertexCount, null);
+    public static TransientVertexBuffer heapAlloc(int vertexCount, @NotNull VertexLayoutOld vertexLayoutOld) {
+        return allocImpl(vertexLayoutOld, vertexCount, null);
     }
 
     @NotNull
-    public static TransientVertexBuffer alloc(@NotNull VertexLayout vertexLayout, int vertexCount, @NotNull MemoryStack stack) {
-        return allocImpl(vertexLayout, vertexCount, stack);
+    public static TransientVertexBuffer alloc(@NotNull VertexLayoutOld vertexLayoutOld, int vertexCount, @NotNull MemoryStack stack) {
+        return allocImpl(vertexLayoutOld, vertexCount, stack);
     }
 
     @NotNull
-    private static TransientVertexBuffer allocImpl(@NotNull VertexLayout vertexLayout, int vertexCount, @Nullable MemoryStack memoryStack) {
+    private static TransientVertexBuffer allocImpl(@NotNull VertexLayoutOld vertexLayoutOld, int vertexCount, @Nullable MemoryStack memoryStack) {
         final TransientVertexBuffer tvb = createImpl(memoryStack);
-        tvb.alloc(vertexLayout, vertexCount);
+        tvb.alloc(vertexLayoutOld, vertexCount);
         return tvb;
     }
 
@@ -132,8 +132,8 @@ public class TransientVertexBuffer implements Disposable, Handle {
 //        return result;
 //    }
 
-    public void alloc(@NotNull VertexLayout vertexLayout, int vertexCount) {
-        bgfx_alloc_transient_vertex_buffer(buf, vertexCount, vertexLayout.get());
+    public void alloc(@NotNull VertexLayoutOld vertexLayoutOld, int vertexCount) {
+        bgfx_alloc_transient_vertex_buffer(buf, vertexCount, vertexLayoutOld.get());
     }
 
     private static TransientVertexBuffer createImpl(@Nullable MemoryStack stack) {

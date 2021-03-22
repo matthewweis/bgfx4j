@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples._04_mesh;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.StaticIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.StaticVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.StaticVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -33,13 +33,8 @@ import static org.lwjgl.bgfx.BGFX.*;
  */
 public class TeapotsGrid extends Application {
 
-    private static final int[] colors = {
-            0xff000000, 0xff0000ff, 0xff00ff00, 0xff00ffff,
-            0xffff0000, 0xffff00ff, 0xffffff00, 0xffffffff
-    };
-
-    private StaticVertexBuffer vertices1;
-    private StaticVertexBuffer vertices2;
+    private StaticVertexBufferOld vertices1;
+    private StaticVertexBufferOld vertices2;
     private StaticIndexBuffer indices;
     private Program program;
 
@@ -54,7 +49,7 @@ public class TeapotsGrid extends Application {
     @Override
     public void init() {
 
-        final VertexLayout layout = VertexLayout.builder()
+        final VertexLayoutOld layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, false, false)
                 .thenUse(BGFX_ATTRIB.COLOR0, 4, BGFX_ATTRIB_TYPE.UINT8, true, false)
                 .build();
@@ -69,8 +64,8 @@ public class TeapotsGrid extends Application {
             throw new IllegalStateException("unable to load mesh");
         }
 
-        vertices1 = StaticVertexBuffer.create(layout, mesh1.vertices);
-        vertices2 = StaticVertexBuffer.create(layout, mesh2.vertices);
+        vertices1 = StaticVertexBufferOld.create(layout, mesh1.vertices);
+        vertices2 = StaticVertexBufferOld.create(layout, mesh2.vertices);
         indices = StaticIndexBuffer.create(mesh1.indices);
 
         program = Program.loadOrNull(
@@ -87,7 +82,7 @@ public class TeapotsGrid extends Application {
 
     @Override
     public void render(float dt, float time) {
-        bgfx_set_view_rect(0, 0, 0, width, height);
+        bgfx_set_view_rect(0, 0, 0, getWidth(), getHeight());
         bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xaa00aa00, 1.0f, 0);
         bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
         bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
@@ -95,35 +90,10 @@ public class TeapotsGrid extends Application {
         lookAt(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, -35.0f), view);
         perspective(60.0f, getWidth(), getHeight(), 0.1f, 100.0f, proj);
 
-        bgfxView.setTransform(view.get(viewBuf), proj.get(projBuf)); // todo make view work more like a camera...
+        bgfxView.setTransform(view.get(viewBuf), proj.get(projBuf));
 
-
-        Encoder encoder = Encoder.begin(false);
+        final Encoder encoder = Encoder.begin(false);
         encoder.setState(EnumSet.of(WRITE_RGB, WRITE_A, BGFX_STATE.DEFAULT, BGFX_STATE.MSAA));
-//        for (int yy = 0; yy < 11; ++yy) {
-//            for (int xx = 0; xx < 11; ++xx) {
-//                encoder.setTransform(model.translation(-15.0f + xx * 3.0f, -15.0f + yy * 3.0f, 0.0f)
-//                        .rotateAffineXYZ(time + xx * 0.21f, time + yy * 0.37f, 0.0f)
-//                        .get(modelBuf));
-//                encoder.setVertexBuffer(vertices);
-//                encoder.setIndexBuffer(indices);
-//                encoder.setState(BGFX_STATE.DEFAULT);
-//                encoder.submit(bgfxView, program);
-//            }
-//        }
-//        for (int yy = 4; yy < 11-4; ++yy) {
-//            for (int xx = 4; xx < 11-4; ++xx) {
-////                encoder.setTransform(model.translation(-15.0f + xx * 3.0f, -15.0f + yy * 3.0f, 0.0f)
-//                encoder.setTransform(model.translation(-35.0f + xx * 7.0f, -35.0f + yy * 7.0f, 0.0f)
-////                        .rotateAffineXYZ(time + xx * 0.21f, time + yy * 0.37f, 0.0f)
-//                        .rotateAffineXYZ(time + xx * 0.51f, time + yy * 0.77f, 0.0f)
-//                        .get(modelBuf));
-//                encoder.setVertexBuffer(vertices);
-//                encoder.setIndexBuffer(indices);
-//                encoder.setState(BGFX_STATE.DEFAULT);
-//                encoder.submit(bgfxView, program);
-//            }
-//        }
         encoder.setTransform(model.translation(0.0f, 0.0f, 0.0f)
                 .rotateAffineXYZ(-0.35f, time + 0.77f, 0.0f)
                 .get(modelBuf));

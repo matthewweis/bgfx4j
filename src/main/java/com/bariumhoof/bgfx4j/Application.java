@@ -1,227 +1,181 @@
 package com.bariumhoof.bgfx4j;
 
 import com.bariumhoof.Capabilities;
-import com.bariumhoof.bgfx4j.enums.BGFX_DEBUG;
-import com.bariumhoof.bgfx4j.enums.BGFX_RENDERER_TYPE;
-import com.bariumhoof.bgfx4j.enums.BGFX_RESET;
-import com.bariumhoof.bgfx4j.init.Init;
-import com.bariumhoof.bgfx4j.init.InitBuilders;
-import com.bariumhoof.bgfx4j.init.PlatformData;
-import com.bariumhoof.bgfx4j.init.Resolution;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.bgfx.BGFXInit;
-import org.lwjgl.glfw.GLFWNativeCocoa;
 import org.lwjgl.glfw.GLFWNativeWin32;
 import org.lwjgl.glfw.GLFWNativeX11;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.Platform;
+import org.lwjgl.system.macosx.ObjCRuntime;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.IntStream;
 
 import static org.lwjgl.bgfx.BGFX.*;
-import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFWNativeCocoa.glfwGetCocoaWindow;
+import static org.lwjgl.system.JNI.invokePPP;
+import static org.lwjgl.system.JNI.invokePPPV;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.system.macosx.ObjCRuntime.objc_getClass;
+import static org.lwjgl.system.macosx.ObjCRuntime.sel_getUid;
 
 @Slf4j
 public abstract class Application {
 
-    {
-//        log.warn("Debug configuration set in Application. Allocation will be slower.");
-//        Configuration.DEBUG.set(true);
-//        Configuration.DEBUG_MEMORY_ALLOCATOR.set(true);
-    }
+    @Getter
+    int width = 1280;
 
     @Getter
-    private static int renderer;
+    int height = 720;
 
-    private static AtomicReference<Application> atomicInstance = new AtomicReference<>();
+    public void start() throws IOException {
 
-    @Getter
-    private static volatile Application instance;
+        long window = initGlfwWindow();
+        initBgfx(window);
 
-    public static Application getInstance() {
-        if (instance == null) {
-            synchronized (Application.class) {
-                if (instance == null) {
-                    // instance should have been set by "registerAsSingletonInstance"
-                    instance = Objects.requireNonNull(atomicInstance.get());
-                }
-            }
-        }
-        return instance;
+        System.out.println("bgfx renderer: " + bgfx_get_renderer_name(bgfx_get_renderer_type()));
+
+        // Enable debug text.
+        bgfx_set_debug(BGFX_DEBUG_TEXT);
+        bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
+
+        init();
+
+        loop(window);
+
+        dispose();
+        bgfx_shutdown();
+
+//        glfwFreeCallbacks(window);
+        glfwDestroyWindow(window);
+        glfwTerminate();
     }
 
-    private static void registerAsSingletonInstance(@NotNull Application instance) {
-        if (atomicInstance.getAndSet(instance) != null) {
-            throw new IllegalStateException("Only one instance of Application can exist at any time!");
-        }
-    }
+    private void loop(long window) {
+        long numFrames = 1L;
+        long totalTime = 0L;
+        long lastTime;
+        long startTime = lastTime = glfwGetTimerValue();
 
-    @Getter
-    private static volatile boolean isInitialized = false;
+        while (!glfwWindowShouldClose(window)) {
+            glfwPollEvents();
 
-    public static final int INITIAL_WIDTH = 1280;
-    public static final int INITIAL_HEIGHT = 720;
+            final long now = glfwGetTimerValue();
+            final long frameTime = now - lastTime;
+            lastTime = now;
+            numFrames++;
+            totalTime += frameTime;
 
-    protected final int width = INITIAL_WIDTH;
-    protected final int height = INITIAL_HEIGHT;
-    private @NotNull BGFX_DEBUG debug = BGFX_DEBUG.TEXT;
-
-    private Init init = null;
-
-    private static long window = -1L;
-
-    @Getter
-    private static boolean zZeroToOne;
-
-    public Application(@NotNull BGFX_DEBUG debug, @NotNull Init init) {
-        this();
-        this.debug = debug;
-        this.init = init;
-    }
-
-    public Application(@NotNull Init init) {
-        this();
-        this.init = init;
-    }
-
-    public Application(@NotNull BGFX_DEBUG debug) {
-        this();
-        this.debug = debug;
-    }
-
-    public Application() {
-        registerAsSingletonInstance(this);
-    }
-
-//    private @NotNull Init createDefaultInit() {
-//        // todo: JK, use EnumSet class instead!
-//        // todo: change from taking BGFX_RESET a class representing the union of potentially many BGFX_RESET bit operations
-//        final var resolution = Resolution.of(width, height).reset(BGFX_RESET.VSYNC).build();
-//        final var platformData = createDefaultPlatformDataFromOS();
-//        return Init.platformData(platformData).resolution(resolution).build();
-//    }
-
-    @NotNull
-    protected static InitBuilders.Optionals defaultInitBuilder() {
-        final var resolution = Resolution.of(INITIAL_WIDTH, INITIAL_HEIGHT).reset(BGFX_RESET.VSYNC).build();
-        final var platformData = createDefaultPlatformDataFromOS();
-        return Init.platformData(platformData).resolution(resolution);
-    }
-
-    @NotNull
-    private static PlatformData createDefaultPlatformDataFromOS() {
-        try {
-            initPlatform(); // this will set value of window to a correct handle
-        } catch (IOException e) {
-            throw new RuntimeException("Could not init platform.");
-        }
-        switch (Platform.get()) {
-            case LINUX:
-                return PlatformData
-                        .ndt(GLFWNativeX11.glfwGetX11Display())
-                        .nwh(GLFWNativeX11.glfwGetX11Window(window))
-                        .build();
-            case MACOSX:
-                return PlatformData
-                        .nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window))
-                        .build();
-            case WINDOWS:
-                return PlatformData
-                        .nwh(GLFWNativeWin32.glfwGetWin32Window(window))
-                        .build();
-            default:
-                throw new IllegalStateException("Unable to recognize OS.");
-        }
-    }
-
-    public final void start() throws IOException {
-        try {
-            if (!isInitialized) {
-                initPlatform(); // can be early initialized by createDefaultPlatformDataFromOS
-            }
-            if (Objects.isNull(init)) {
-                init = defaultInitBuilder().build(); // set default init if user didn't create one // todo perhaps change this behavior to another class like SimpleApplication?
-            }
-            bgfxInit();
-
-            renderer = bgfx_get_renderer_type();
-
-            printAvailableRenderers();
-            System.out.println("bgfx renderer: " + bgfx_get_renderer_name(bgfx_get_renderer_type()));
-
-            // Enable debug text.
-            bgfx_set_debug(debug.VALUE);
-            bgfx_set_view_clear(0, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x303030ff, 1.0f, 0);
-
-            long numFrames = 1L;
-            long totalTime = 0L;
-            long lastTime;
-            long startTime = lastTime = glfwGetTimerValue();
-
-            init(); // user init
-            while (!glfwWindowShouldClose(window)) {
-                glfwPollEvents();
-
-                long now = glfwGetTimerValue();
-                long frameTime = now - lastTime;
-                lastTime = now;
-                numFrames++;
-                totalTime += frameTime;
-
-                if (numFrames % 500 == 0) {
-                    numFrames = 1;
-                    totalTime = 0;
-                }
-
-                double freq = glfwGetTimerFrequency();
-                float toMs = 1000.0f / (float)freq;
-
-                float time = (float)((now - startTime) / freq);
-
-//                bgfx_set_view_rect(0, 0, 0, width, height);
-
-                render(toMs, time);
-
-                // Advance to next frame. Rendering thread will be kicked to
-                // process submitted rendering primitives.
-                bgfx_frame(false);
-
-                try {
-                    Thread.sleep(50L); // save battery on debug
-                } catch (InterruptedException e) {
-
-                }
+            if (numFrames % 500 == 0) {
+                numFrames = 1;
+                totalTime = 0;
             }
 
-//            shutdown();
-        } catch (Exception e) {
-            e.printStackTrace(); // print now because exception in dispose() or shutdown() will mask this exception
-            throw e;
-        } finally {
-            dispose();
-            shutdown();
+            final double freq = glfwGetTimerFrequency();
+            final double toMs = 1000.0 / freq;
+
+            final float time = (float)((now - startTime) / freq);
+            final float dt = (float) (frameTime * toMs);
+
+            bgfx_dbg_text_printf(0, 1, 0x4f, "bgfx/examples/01-cubes");
+            bgfx_dbg_text_printf(0, 2, 0x6f, "Description: Rendering simple static mesh.");
+            bgfx_dbg_text_printf(0, 3, 0x0f, String.format("Frame: %7.3f[ms]", dt));
+
+            // Set view 0 default viewport.
+//            bgfx_set_view_rect(0, 0, 0, width, height);
+
+//            // This dummy draw call is here to make sure that view 0 is cleared
+//            // if no other draw calls are submitted to view 0.
+            bgfx_touch(0);
+
+            // MY CODE
+
+//            lookAt(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(0.0f, 0.0f, -35.0f), view);
+//            perspective(60.0f, width, height, 0.1f, 100.0f, proj);
+//
+//            view.get(viewBuf);
+//            proj.get(projBuf);
+//            bgfx_set_view_transform(0, viewBuf, projBuf);
+//
+//            long encoder = bgfx_encoder_begin(false);
+
+
+            render(dt, time);
+
+
+            // Advance to next frame. Rendering thread will be kicked to
+            // process submitted rendering primitives.
+            bgfx_frame(false);
+
+//            try {
+//                //noinspection BusyWait
+//                Thread.sleep(50); // save some battery during tests
+//            } catch (InterruptedException e) {
+//                System.err.println("Demo thread slowdown interrupted during game loop.");
+//                e.printStackTrace();
+//            }
+
+            // todo should encoder_end be after frame? if so apps should call it themselves.
+//
+//            bgfx_encoder_end(encoder);
         }
     }
 
-    private static void printAvailableRenderers() {
-        int[] r = new int[BGFX_RENDERER_TYPE.COUNT.VALUE];
-        bgfx_get_supported_renderers(r);
-        IntStream.of(r).filter(n -> n != 0).forEachOrdered(n -> System.out.println(bgfx_get_renderer_name(n)));
+    private void initBgfx(long window) {
+        try (MemoryStack stack = stackPush()) {
+            BGFXInit init = BGFXInit.callocStack(stack);
+            bgfx_init_ctor(init);
+            init
+                    .resolution(it -> it
+                            .width(width)
+                            .height(height)
+                            .reset(BGFX_RESET_VSYNC));
+//                            .reset(BGFX_RESET_NONE));
+
+            switch (Platform.get()) {
+                case LINUX:
+                    init.platformData()
+                            .ndt(GLFWNativeX11.glfwGetX11Display())
+                            .nwh(GLFWNativeX11.glfwGetX11Window(window));
+                    break;
+                case MACOSX:
+                    long objc_msgSend = ObjCRuntime.getLibrary().getFunctionAddress("objc_msgSend");
+
+                    long layer = invokePPP(objc_getClass("CAMetalLayer"), sel_getUid("alloc"), objc_msgSend);
+                    invokePPP(layer, sel_getUid("init"), objc_msgSend);
+
+                    long contentView = invokePPP(glfwGetCocoaWindow(window), sel_getUid("contentView"), objc_msgSend);
+                    invokePPPV(contentView, sel_getUid("setLayer:"), layer, objc_msgSend);
+
+                    init.platformData()
+                            .nwh(layer);
+                    // https://github.com/LWJGL/lwjgl3/issues/619
+//                            .nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window));
+                    break;
+                case WINDOWS:
+                    init.platformData()
+                            .nwh(GLFWNativeWin32.glfwGetWin32Window(window));
+                    break;
+            }
+
+            System.out.println("init bgfx!");
+//            Application.isInitialized = true;
+            if (!bgfx_init(init)) {
+                throw new RuntimeException("Error initializing bgfx renderer");
+            }
+
+            zZeroToOne = !bgfx_get_caps().homogeneousDepth();
+        }
     }
 
-    private static void initPlatform() throws IOException {
+    private long initGlfwWindow() {
         if (!glfwInit()) {
             throw new RuntimeException("Error initializing GLFW");
         }
@@ -232,8 +186,7 @@ public abstract class Application {
             glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
         }
 
-        window = glfwCreateWindow(INITIAL_WIDTH, INITIAL_HEIGHT, "TestApplication", 0, 0);
-
+        long window = glfwCreateWindow(width, height, "25-C99", 0, 0);
         if (window == NULL) {
             throw new RuntimeException("Error creating GLFW window");
         }
@@ -249,216 +202,32 @@ public abstract class Application {
                     break;
             }
         });
-
-        isInitialized = true;
+        return window;
     }
-
-    private boolean exists(byte value) {
-        return value != 0;
-    }
-
-    private boolean exists(short value) {
-        return value != 0;
-    }
-
-    private boolean exists(int value) {
-        return value != 0;
-    }
-
-    private boolean exists(long value) {
-        return value != 0L;
-    }
-
-    private boolean exists(@Nullable Object value) {
-        return Objects.nonNull(value);
-    }
-
-    private void bgfxInit() {
-        try (MemoryStack stack = stackPush()) {
-            final BGFXInit _init = BGFXInit.mallocStack(stack);
-            bgfx_init_ctor(_init);
-
-            // resolution
-            _init.resolution(it -> {
-                final var data = init.getResolution(); // known to be non-null due to if-statement above
-                it.width(data.getWidth());
-                it.height(data.getHeight());
-                if (exists(data.getReset())) {
-                    it.reset(data.getReset().VALUE);
-                }
-                if (exists(data.getFormat())) {
-                    it.format(data.getFormat().VALUE);
-                }
-                if (exists(data.getMaxFrameLatency())) {
-                    it.maxFrameLatency(data.getMaxFrameLatency());
-                }
-                if (exists(data.getNumBackBuffers())) {
-                    it.numBackBuffers(data.getNumBackBuffers());
-                }
-            });
-
-            // platform data
-//            _init.platformData(it -> {
-//                final var data = init.getPlatformData(); // non-null
-//                if (exists(data.getNdt())) {
-//                    it.ndt(data.getNdt());
-//                }
-//                if (exists(data.getNwh())) {
-//                    it.ndt(data.getNwh());
-//                }
-//                if (exists(data.getContext())) {
-//                    it.ndt(data.getContext());
-//                }
-//                if (exists(data.getBackBuffer())) {
-//                    it.ndt(data.getBackBuffer());
-//                }
-//                if (exists(data.getBackBufferDS())) {
-//                    it.ndt(data.getBackBufferDS());
-//                }
-//            });
-
-            switch (Platform.get()) {
-                case LINUX:
-                    _init.platformData()
-                            .ndt(GLFWNativeX11.glfwGetX11Display())
-                            .nwh(GLFWNativeX11.glfwGetX11Window(window));
-                    break;
-                case MACOSX:
-                    _init.platformData()
-                            .nwh(GLFWNativeCocoa.glfwGetCocoaWindow(window));
-                    break;
-                case WINDOWS:
-                    _init.platformData()
-                            .nwh(GLFWNativeWin32.glfwGetWin32Window(window));
-                    break;
-            }
-
-            // type
-            if (exists(init.getType())) {
-                _init.type(init.getType().VALUE);
-            }
-
-            // vendor id
-            if (exists(init.getVendorId())) {
-                _init.vendorId(init.getVendorId());
-            }
-
-            // device id
-            if (exists(init.getDeviceId())) {
-                _init.deviceId(init.getDeviceId());
-            }
-
-            // debug
-            if (exists(init.getDebug())) {
-                _init.debug(init.getDebug());
-            }
-
-            // profile
-            if (exists(init.getProfile())) {
-                _init.debug(init.getProfile());
-            }
-
-            // limits
-            if (exists(init.getLimits())) {
-                _init.limits(it -> {
-                    final var limits = init.getLimits();
-
-                    if (!exists(limits.maxEncoders())) {
-                        log.warn("init's getLimits's maxEncoders does not appear to exist but is being set");
-                    }
-
-                    if (!exists(limits.transientVbSize())) {
-                        log.warn("init's getLimits's transientVbSize does not appear to exist but is being set");
-                    }
-
-                    if (!exists(limits.transientIbSize())) {
-                        log.warn("init's getLimits's transientIbSize does not appear to exist but is being set");
-                    }
-
-                    it.set(limits.maxEncoders(), limits.transientVbSize(), limits.transientIbSize());
-                });
-            }
-
-//            // allocator
-//            if (exists(init.getAllocator())) {
-//                _init.allocator(init.getAllocator());
-//            }
-//
-//            // callbacks
-//            if (exists(init.getCallback())) {
-//                _init.callback(init.getCallback());
-//            }
-
-            if (!bgfx_init(_init)) {
-                throw new RuntimeException("Error initializing bgfx renderer");
-            }
-
-            zZeroToOne = !bgfx_get_caps().homogeneousDepth();
-        }
-    }
-
-
 
     public abstract void init();
     public abstract void render(float dt, float time);
     public abstract void dispose();
 
-    private final void shutdown() {
-        bgfx_shutdown();
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-        glfwTerminate();
-    }
-
-    /**
-     * Credit: BGFXDemoUtil.java, see: https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/BGFXDemoUtil.java
-     */
     public static void lookAt(Vector3f at, Vector3f eye, Matrix4f dest) {
         dest.setLookAtLH(eye.x, eye.y, eye.z, at.x, at.y, at.z, 0.0f, 1.0f, 0.0f);
     }
 
-    /**
-     * Credit: BGFXDemoUtil.java, see: https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/BGFXDemoUtil.java
-     */
+    private static boolean zZeroToOne;
+
     public static void perspective(float fov, int width, int height, float near, float far, Matrix4f dest) {
         float fovRadians = fov * (float) Math.PI / 180.0f;
         float aspect = width / (float) height;
         dest.setPerspectiveLH(fovRadians, aspect, near, far, zZeroToOne);
     }
 
-    /**
-     * Credit: BGFXDemoUtil.java, see: https://github.com/LWJGL/lwjgl3-demos/blob/master/src/org/lwjgl/demo/bgfx/BGFXDemoUtil.java
-     */
     public static void ortho(float left, float right, float bottom, float top, float zNear, float zFar, Matrix4f dest) {
         dest.setOrthoLH(left, right, bottom, top, zNear, zFar, zZeroToOne);
     }
 
-    private boolean hasDeliveredWindowWidthWarning = false;
-    public int getWindowWidth() {
-        if (!hasDeliveredWindowWidthWarning) {
-            log.warn("getWindowWidth is not yet implemented and is instead returning virtual width!");
-            hasDeliveredWindowWidthWarning = true;
-        }
-        return getWidth();
-    }
-
-    private boolean hasDeliveredWindowHeightWarning = false;
-    public int getWindowHeight() {
-        if (!hasDeliveredWindowHeightWarning) {
-            log.warn("getWindowHeight is not yet implemented and is instead returning virtual height!");
-            hasDeliveredWindowHeightWarning = true;
-        }
-        return getHeight();
-    }
-
-    public int getWidth() {
-        return width;
-//        return init.getResolution().getWidth();
-    }
-
-    public int getHeight() {
-        return height;
-//        return init.getResolution().getHeight();
+    public static boolean isInitialized() {
+        log.debug("todo better solution that static init check!!");
+        return true;
     }
 
     @NotNull
@@ -475,54 +244,10 @@ public abstract class Application {
             case OPENGLES:
                 return Application.class.getResource(String.format("/shaders/glsl/fs_%s.bin", shaderName));
             case VULKAN:
-                throw new UnsupportedOperationException("todo compile shaders for vulkan!");
-            default:
-                throw new UnsupportedOperationException(
-                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
-        }
-    }
-
-    // newer lookup using glslValidator and spirv-cross utilities
-    @NotNull
-    public static URL locateFragmentShaderByName2(@NotNull String shaderName) {
-        switch (Capabilities.getRendererType()) {
-            case DIRECT3D9:
-            case DIRECT3D11:
-            case DIRECT3D12:
-                return Application.class.getResource(String.format("/shaders/hlsl/%s.frag.hlsl", shaderName));
-            case METAL:
-                return Application.class.getResource(String.format("/shaders/metal/%s.frag.metal", shaderName));
-            case OPENGL:
-                return Application.class.getResource(String.format("/shaders/glsl/%s.frag.glsl", shaderName));
-            case OPENGLES:
-                return Application.class.getResource(String.format("/shaders/glsl-es/%s.frag.es.glsl", shaderName));
-            case VULKAN:
-                return Application.class.getResource(String.format("/shaders/spirv/%s.frag.spv", shaderName));
-            default:
-                throw new UnsupportedOperationException(
-                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
-        }
-    }
-
-    // newer lookup using glslValidator and spirv-cross utilities
-    @NotNull
-    public static URL locateVertexShaderByName2(@NotNull String shaderName) {
-        switch (Capabilities.getRendererType()) {
-            case DIRECT3D9:
-            case DIRECT3D11:
-            case DIRECT3D12:
-                return Application.class.getResource(String.format("/shaders/hlsl/%s.vert.hlsl", shaderName));
-            case METAL:
-                return Application.class.getResource(String.format("/shaders/metal/%s.vert.metal", shaderName));
-            case OPENGL:
-                return Application.class.getResource(String.format("/shaders/glsl/%s.vert.glsl", shaderName));
-            case OPENGLES:
-                return Application.class.getResource(String.format("/shaders/glsl-es/%s.vert.es.glsl", shaderName));
-            case VULKAN:
                 return Application.class.getResource(String.format("/shaders/spirv/%s.vert.spv", shaderName));
             default:
                 throw new UnsupportedOperationException(
-                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
+                        String.format("Unsupported shader lookup for renderer: %s.", Capabilities.getRendererType()));
         }
     }
 
@@ -540,10 +265,10 @@ public abstract class Application {
             case OPENGLES:
                 return Application.class.getResource(String.format("/shaders/glsl/vs_%s.bin", shaderName));
             case VULKAN:
-                throw new UnsupportedOperationException("todo compile shaders for vulkan!");
+                return Application.class.getResource(String.format("/shaders/spirv/%s.vert.spv", shaderName));
             default:
                 throw new UnsupportedOperationException(
-                        String.format("Shaders not compiled for renderer: %s.",Capabilities.getRendererType()));
+                        String.format("Unsupported shader lookup for renderer: %s.", Capabilities.getRendererType()));
         }
     }
 

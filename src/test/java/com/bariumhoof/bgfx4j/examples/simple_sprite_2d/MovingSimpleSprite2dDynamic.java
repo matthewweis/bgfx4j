@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.DynamicIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.DynamicVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.DynamicVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
 import com.bariumhoof.bgfx4j.enums.BGFX_STATE;
@@ -27,10 +27,10 @@ import java.util.function.Supplier;
 import static com.bariumhoof.bgfx4j.enums.BGFX_BUFFER.NONE;
 
 /**
- * Same as {@link MovingSimpleSprite2d} except uses heal allocated Transient buffers.
+ * Same as {@link MovingSimpleSprite2d} except uses heap allocated Transient buffers.
  *
- * Since TransientBuffers are designed to be changed every frame, one should always try to use a {@link MemoryStack}
- * instead.
+ * Since TransientBuffers are designed to be changed every frame,
+ * one should always try to use a {@link MemoryStack} to allocate them.
  */
 @Slf4j
 public class MovingSimpleSprite2dDynamic extends Application {
@@ -63,10 +63,10 @@ public class MovingSimpleSprite2dDynamic extends Application {
 
 
     private View view;
-    private VertexLayout layout;
+    private VertexLayoutOld layout;
     private Uniform uniformTexColor;
     private Program program;
-    private DynamicVertexBuffer vb;
+    private DynamicVertexBufferOld vb;
     private DynamicIndexBuffer ib;
 
     BGFXMemory v_mem;
@@ -75,10 +75,6 @@ public class MovingSimpleSprite2dDynamic extends Application {
 
 
     private Texture tex;
-
-    public MovingSimpleSprite2dDynamic() {
-        super(defaultInitBuilder().build());
-    }
 
     int frame = 0;
 
@@ -114,7 +110,7 @@ public class MovingSimpleSprite2dDynamic extends Application {
     public void init() {
         view = View.create();
 
-        layout = VertexLayout.builder()
+        layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, true, false)
 //                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
@@ -122,7 +118,7 @@ public class MovingSimpleSprite2dDynamic extends Application {
 
         tex = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = DynamicVertexBuffer.create(layout, numVerts, EnumSet.of(NONE));
+        vb = DynamicVertexBufferOld.create(layout, numVerts, EnumSet.of(NONE));
         ib = DynamicIndexBuffer.create(indices.length, EnumSet.of(NONE));
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);

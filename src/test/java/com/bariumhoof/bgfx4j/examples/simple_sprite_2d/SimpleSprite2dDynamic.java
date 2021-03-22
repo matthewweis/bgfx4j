@@ -2,8 +2,8 @@ package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
 import com.bariumhoof.bgfx4j.buffer.DynamicIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.DynamicVertexBuffer;
-import com.bariumhoof.bgfx4j.buffer.VertexLayout;
+import com.bariumhoof.bgfx4j.buffer.DynamicVertexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.*;
 import com.bariumhoof.bgfx4j.examples._06_bump.Bump;
 import com.bariumhoof.bgfx4j.shaders.Program;
@@ -42,16 +42,12 @@ public class SimpleSprite2dDynamic extends Application {
     };
 
     private View view;
-    private DynamicVertexBuffer vb;
+    private DynamicVertexBufferOld vb;
     private DynamicIndexBuffer ib;
     private Uniform uniformTexColor;
     private Program program;
 
     private Texture tex;
-
-    public SimpleSprite2dDynamic() {
-        super(defaultInitBuilder().type(BGFX_RENDERER_TYPE.OPENGL).build());
-    }
 
     boolean first = true;
 
@@ -114,7 +110,7 @@ public class SimpleSprite2dDynamic extends Application {
     public void init() {
         view = View.create();
 
-        final VertexLayout layout = VertexLayout.builder()
+        final VertexLayoutOld layout = VertexLayoutOld.builder()
                 .beginWith(BGFX_ATTRIB.POSITION, 3, BGFX_ATTRIB_TYPE.FLOAT, true, false)
 //                .thenUseNormalizedAsInt(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
                 .thenUseNormalized(BGFX_ATTRIB.TEXCOORD0, 2, BGFX_ATTRIB_TYPE.FLOAT)
@@ -122,7 +118,7 @@ public class SimpleSprite2dDynamic extends Application {
 
         tex = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = DynamicVertexBuffer.create(layout, vertices.length, EnumSet.of(BGFX_BUFFER.NONE));
+        vb = DynamicVertexBufferOld.create(layout, vertices.length, EnumSet.of(BGFX_BUFFER.NONE));
 //        ib = DynamicIndexBuffer.create(indices);
         ib = DynamicIndexBuffer.create(indices.length, EnumSet.of(BGFX_BUFFER.NONE));
 

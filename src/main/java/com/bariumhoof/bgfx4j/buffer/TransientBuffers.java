@@ -34,12 +34,12 @@ public final class TransientBuffers implements Disposable {
      * @return the alloc'd transient buffers if possible, null otherwise
      */
     @Nullable
-    public static TransientBuffers heapAlloc(@NotNull VertexLayout vertexLayout, int numVertices, int numIndices) {
-        return allocImpl(vertexLayout, numVertices, numIndices, null);
+    public static TransientBuffers heapAlloc(@NotNull VertexLayoutOld vertexLayoutOld, int numVertices, int numIndices) {
+        return allocImpl(vertexLayoutOld, numVertices, numIndices, null);
     }
 
     @Nullable
-    public static TransientBuffers alloc(@NotNull VertexLayout layout, int numVertices, int numIndices, @NotNull MemoryStack memoryStack) {
+    public static TransientBuffers alloc(@NotNull VertexLayoutOld layout, int numVertices, int numIndices, @NotNull MemoryStack memoryStack) {
         return allocImpl(layout, numVertices, numIndices, memoryStack);
     }
 
@@ -63,7 +63,7 @@ public final class TransientBuffers implements Disposable {
     }
 
     @Nullable
-    private static TransientBuffers allocImpl(@NotNull VertexLayout vertexLayout, int numVertices, int numIndices, @Nullable MemoryStack memoryStack) {
+    private static TransientBuffers allocImpl(@NotNull VertexLayoutOld vertexLayoutOld, int numVertices, int numIndices, @Nullable MemoryStack memoryStack) {
 
         final TransientBuffers buffers;
         if (memoryStack != null) {
@@ -72,7 +72,7 @@ public final class TransientBuffers implements Disposable {
             buffers = heapCreate();
         }
 
-        final boolean success = buffers.alloc(vertexLayout, numVertices, numIndices);
+        final boolean success = buffers.alloc(vertexLayoutOld, numVertices, numIndices);
 
         if (success) {
             return buffers;
@@ -81,8 +81,8 @@ public final class TransientBuffers implements Disposable {
         }
     }
 
-    public boolean alloc(@NotNull VertexLayout vertexLayout, int numVertices, int numIndices) {
-        return bgfx_alloc_transient_buffers(transientVertexBuffer.getBuf(), vertexLayout.get(), numVertices, transientIndexBuffer.getBuf(), numIndices);
+    public boolean alloc(@NotNull VertexLayoutOld vertexLayoutOld, int numVertices, int numIndices) {
+        return bgfx_alloc_transient_buffers(transientVertexBuffer.getBuf(), vertexLayoutOld.get(), numVertices, transientIndexBuffer.getBuf(), numIndices);
     }
 
     /**

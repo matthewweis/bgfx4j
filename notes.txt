@@ -40,8 +40,6 @@ This library is necessary boilerplate designed to empower upcoming projects:
 
  rxfx (with reactor-virtual + this library) to create a virtual-time event-driven reactive-stream game engine that uses bgfx (via bgfx4j) for its backend
 
- libgdx bgfx backend - an implementation of bgfx backend using bgfx. May require libgdx fork since some parts of Application/Graphics interfaces include opengl-specific methods.
-
 
 1. Render thread is thread where bgfx::init is called.
 
@@ -306,10 +304,10 @@ Num.THREE, BgfxAttribType.FLOAT, FLOAT_Vec3
 Num.FOUR, BgfxAttribType.FLOAT, FLOAT_Vec4
 
 "public static <E* extends BgfxAttrib> TypedDynamicVertexBuffer$<E*, Num.One, BgfxAttribType.UINT8, UINT_Vec1> create(\n" +
-"        @NotNull VertexLayoutStruct$<E*, Num.One, BgfxAttribType.UINT8, UINT_Vec1> vertexLayout,\n" +
+"        @NotNull VertexLayoutStruct$<E*, Num.One, BgfxAttribType.UINT8, UINT_Vec1> vertexLayoutOld,\n" +
 "        int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags) {\n" +
 "    Assertions.requirePositive(numVertices);\n" +
-"    final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, vertexLayout.get(), (int) BGFX_BUFFER.flags(flags));\n" +
-"    final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());\n" +
+"    final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, vertexLayoutOld.get(), (int) BGFX_BUFFER.flags(flags));\n" +
+"    final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());\n" +
 "    return new TypedDynamicVertexBuffer$<>(handle, layoutHandle, numVertices);\n" +
 "}\n" +

@@ -15,7 +15,7 @@ import java.util.EnumSet;
 
 import static org.lwjgl.bgfx.BGFX.*;
 
-public class DynamicVertexBuffer implements Disposable, Handle {
+public class DynamicVertexBufferOld implements Disposable, Handle {
 
     private final short handle;
     private final short layoutHandle;
@@ -27,34 +27,34 @@ public class DynamicVertexBuffer implements Disposable, Handle {
     @Getter
     private final int numVertices;
 
-    private DynamicVertexBuffer(short handle, short layoutHandle, int numVertices) {
+    private DynamicVertexBufferOld(short handle, short layoutHandle, int numVertices) {
         this.handle = handle;
         this.layoutHandle = layoutHandle;
         this.numVertices = numVertices;
     }
 
-    public static DynamicVertexBuffer create(@NotNull VertexLayout vertexLayout, int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags) {
+    public static DynamicVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, int numVertices, @NotNull EnumSet<BGFX_BUFFER> flags) {
         Assertions.requirePositive(numVertices);
-        final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, vertexLayout.get(), (int) BGFX_BUFFER.flags(flags));
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
-        return new DynamicVertexBuffer(handle, layoutHandle, numVertices);
+        final short handle = bgfx_create_dynamic_vertex_buffer(numVertices, vertexLayoutOld.get(), (int) BGFX_BUFFER.flags(flags));
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
+        return new DynamicVertexBufferOld(handle, layoutHandle, numVertices);
     }
 
-    public static DynamicVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull BGFXMemory init, @NotNull EnumSet<BGFX_BUFFER> flags) {
-        final short handle = bgfx_create_dynamic_vertex_buffer_mem(init, vertexLayout.get(), (int) BGFX_BUFFER.flags(flags));
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
-        return new DynamicVertexBuffer(handle, layoutHandle, init.size() / vertexLayout.getStrideBytes());
+    public static DynamicVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, @NotNull BGFXMemory init, @NotNull EnumSet<BGFX_BUFFER> flags) {
+        final short handle = bgfx_create_dynamic_vertex_buffer_mem(init, vertexLayoutOld.get(), (int) BGFX_BUFFER.flags(flags));
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
+        return new DynamicVertexBufferOld(handle, layoutHandle, init.size() / vertexLayoutOld.getStrideBytes());
     }
 
-    public static DynamicVertexBuffer create(@NotNull VertexLayout vertexLayout, @NotNull Number[][] vertices) {
+    public static DynamicVertexBufferOld create(@NotNull VertexLayoutOld vertexLayoutOld, @NotNull Number[][] vertices) {
         Assertions.requirePositive(vertices.length);
         Assertions.requirePositive(vertices[0].length);
 
         final ByteBuffer vbuf = MemoryUtil.memAlloc(getByteCount(vertices));
-        final short handle = createDynamicVertexBuffer(vbuf, vertexLayout.get(), vertices);
-        final short layoutHandle = bgfx_create_vertex_layout(vertexLayout.get());
+        final short handle = createDynamicVertexBuffer(vbuf, vertexLayoutOld.get(), vertices);
+        final short layoutHandle = bgfx_create_vertex_layout(vertexLayoutOld.get());
 
-        return new DynamicVertexBuffer(handle, layoutHandle, vertices.length);
+        return new DynamicVertexBufferOld(handle, layoutHandle, vertices.length);
     }
 
     public void update(@NotNull BGFXMemory memory) {
