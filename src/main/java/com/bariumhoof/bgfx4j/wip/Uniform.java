@@ -27,7 +27,7 @@ public class Uniform implements Handle, Disposable {
     @Getter
     private final BGFX_UNIFORM_TYPE type;
 
-    private final int stride;
+//    private final int stride;
 
     @Getter
     private final int count;
@@ -37,7 +37,7 @@ public class Uniform implements Handle, Disposable {
     private Uniform(String name, BGFX_UNIFORM_TYPE type, short handle, int count) {
         this.name = name;
         this.type = type;
-        this.stride = elementStride(type);
+//        this.stride = elementStride(type);
         this.handle = handle;
         this.count = count;
     }

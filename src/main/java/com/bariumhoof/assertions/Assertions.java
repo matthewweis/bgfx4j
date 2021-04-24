@@ -292,6 +292,26 @@ public final class Assertions {
         DELEGATE.requirePositive(n, message);
     }
 
+    public static void require_uint8_t(int n) {
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+            DELEGATE.requireLessThanOrEqualTo(n, 0xFF);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
+    }
+
+    public static void require_uint16_t(int n) {
+        try {
+            DELEGATE.requireGreaterThanOrEqualTo(n, 0x0);
+            DELEGATE.requireLessThanOrEqualTo(n, 0xFFFF);
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(t);
+        }
+    }
+
+    // todo is it feasible to make a require uint32_t? (would a long need to be passed?)
+
     public static void require_uint8(byte n) {
         try {
             DELEGATE.requireGreaterThanOrEqualTo(Byte.toUnsignedInt(n), 0x0);

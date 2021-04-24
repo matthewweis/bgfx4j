@@ -56,11 +56,23 @@ public abstract class Vertex {
         }
     }
 
-    @Value(staticConstructor = "of")
     public static class Vertex3<T1 extends Vec<?, ?>, T2 extends Vec<?, ?>, T3 extends Vec<?, ?>> extends Vertex {
-        @NotNull T1 t1;
-        @NotNull T2 t2;
-        @NotNull T3 t3;
+        @NotNull
+        private final T1 t1;
+        @NotNull
+        private final T2 t2;
+        @NotNull
+        private final T3 t3;
+
+        public Vertex3(@NotNull T1 t1, @NotNull T2 t2, @NotNull T3 t3) {
+            this.t1 = t1;
+            this.t2 = t2;
+            this.t3 = t3;
+        }
+
+        public static <T1 extends Vec<?, ?>, T2 extends Vec<?, ?>, T3 extends Vec<?, ?>> Vertex3<T1, T2, T3> of(@NotNull T1 t1, @NotNull T2 t2, @NotNull T3 t3) {
+            return new Vertex3<T1, T2, T3>(t1, t2, t3);
+        }
 
         @Override
         public int size() {
@@ -70,6 +82,55 @@ public abstract class Vertex {
         @Override
         public Vec<?, ?>[] array() {
             return new Vec<?, ?>[]{t1, t2, t3};
+        }
+
+        public @NotNull T1 getT1() {
+            return this.t1;
+        }
+
+        public @NotNull T2 getT2() {
+            return this.t2;
+        }
+
+        public @NotNull T3 getT3() {
+            return this.t3;
+        }
+
+        public boolean equals(final Object o) {
+            if (o == this) return true;
+            if (!(o instanceof Vertex3)) return false;
+            final Vertex3<?, ?, ?> other = (Vertex3<?, ?, ?>) o;
+            if (!other.canEqual((Object) this)) return false;
+            final Object this$t1 = this.getT1();
+            final Object other$t1 = other.getT1();
+            if (this$t1 == null ? other$t1 != null : !this$t1.equals(other$t1)) return false;
+            final Object this$t2 = this.getT2();
+            final Object other$t2 = other.getT2();
+            if (this$t2 == null ? other$t2 != null : !this$t2.equals(other$t2)) return false;
+            final Object this$t3 = this.getT3();
+            final Object other$t3 = other.getT3();
+            if (this$t3 == null ? other$t3 != null : !this$t3.equals(other$t3)) return false;
+            return true;
+        }
+
+        protected boolean canEqual(final Object other) {
+            return other instanceof Vertex3;
+        }
+
+        public int hashCode() {
+            final int PRIME = 59;
+            int result = 1;
+            final Object $t1 = this.getT1();
+            result = result * PRIME + ($t1 == null ? 43 : $t1.hashCode());
+            final Object $t2 = this.getT2();
+            result = result * PRIME + ($t2 == null ? 43 : $t2.hashCode());
+            final Object $t3 = this.getT3();
+            result = result * PRIME + ($t3 == null ? 43 : $t3.hashCode());
+            return result;
+        }
+
+        public String toString() {
+            return "Vertex.Vertex3(t1=" + this.getT1() + ", t2=" + this.getT2() + ", t3=" + this.getT3() + ")";
         }
     }
 

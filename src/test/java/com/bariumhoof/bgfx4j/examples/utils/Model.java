@@ -19,6 +19,7 @@ import java.util.List;
 
 import static org.lwjgl.assimp.Assimp.*;
 
+// todo rename mesh?
 public class Model {
 
     public AIScene scene;

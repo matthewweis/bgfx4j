@@ -29,7 +29,7 @@ import static com.bariumhoof.bgfx4j.enums.BGFX_BUFFER.NONE;
 /**
  * Same as {@link MovingSimpleSprite2d} except uses heap allocated Transient buffers.
  *
- * Since TransientBuffers are designed to be changed every frame,
+ * Since TransientBuffersOld are designed to be changed every frame,
  * one should always try to use a {@link MemoryStack} to allocate them.
  */
 @Slf4j

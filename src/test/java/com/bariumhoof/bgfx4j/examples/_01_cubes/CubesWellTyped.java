@@ -41,17 +41,7 @@ public class CubesWellTyped extends Application {
             {1.0f, -1.0f, -1.0f, 0xffffffff}
     };
 
-//    final List<Vertex.Vertex2<FLOAT_Vec3, UINT8_Vec4>> cubeVerts = List.of(
-//            vertex(float_vec3(-1.0f, 1.0f, 1.0f), uint8_vec4(0xff, 0x00, 0x00, 0x00)),
-//            vertex(float_vec3(1.0f, 1.0f, 1.0f), uint8_vec4(0xff, 0x00, 0x00, 0xff)),
-//            vertex(float_vec3(-1.0f, -1.0f, 1.0f), uint8_vec4(0xff, 0x00, 0xff, 0x00)),
-//            vertex(float_vec3(1.0f, -1.0f, 1.0f), uint8_vec4(0xff, 0x00, 0xff, 0xff)),
-//            vertex(float_vec3(-1.0f, 1.0f, -1.0f), uint8_vec4(0xff, 0xff, 0x00, 0x00)),
-//            vertex(float_vec3(1.0f, 1.0f, -1.0f), uint8_vec4(0xff, 0xff, 0x00, 0xff)),
-//            vertex(float_vec3(-1.0f, -1.0f, -1.0f), uint8_vec4(0xff, 0xff, 0xff, 0x00)),
-//            vertex(float_vec3(1.0f, -1.0f, -1.0f), uint8_vec4(0xff, 0xff, 0xff, 0xff)));
-
-    // todo make "vertexBuffer" which is a Buffer<Vertex> ?
+    // todo make "vertexBuffer" which is a Buffer<V extends Vertex> ?
     final List<Vertex.Vertex2<FLOAT_Vec3, UINT8_Vec4>> cubeVerts = List.of(
             vertex(float_vec3(-1.0f, 1.0f, 1.0f), uint8_vec4(0xff000000)),
             vertex(float_vec3(1.0f, 1.0f, 1.0f), uint8_vec4(0xff0000ff)),
@@ -114,7 +104,7 @@ public class CubesWellTyped extends Application {
     }
 
     static byte b(int n) {
-        return (byte)n;
+        return (byte) n;
     }
 
     @Override

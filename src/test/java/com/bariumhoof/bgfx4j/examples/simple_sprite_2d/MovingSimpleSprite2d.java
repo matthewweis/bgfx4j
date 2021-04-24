@@ -1,9 +1,9 @@
 package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.TransientBuffers;
-import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.TransientBuffersOld;
+import com.bariumhoof.bgfx4j.buffer.TransientIndexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.TransientVertexBufferOld;
 import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -64,11 +64,11 @@ public class MovingSimpleSprite2d extends Application {
         try (final MemoryStack memoryStack = MemoryStack.stackPush()) {
 
             // vertCount means number of vertexes in general. Not including number of components per vert (that is what layout is for)
-            final TransientBuffers transientBuffers = TransientBuffers.alloc(layout, vertices.length, indices.length, memoryStack);
+            final TransientBuffersOld transientBuffersOld = TransientBuffersOld.alloc(layout, vertices.length, indices.length, memoryStack);
 
-            if (transientBuffers != null) {
-                final TransientVertexBuffer vb = transientBuffers.getTransientVertexBuffer();
-                final TransientIndexBuffer ib = transientBuffers.getTransientIndexBuffer();
+            if (transientBuffersOld != null) {
+                final TransientVertexBufferOld vb = transientBuffersOld.getTransientVertexBufferOld();
+                final TransientIndexBufferOld ib = transientBuffersOld.getTransientIndexBufferOld();
 
                 ByteBuffer vertex = vb.data();
                 for (float[] vert : vertices) {

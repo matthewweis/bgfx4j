@@ -1,9 +1,9 @@
 package com.bariumhoof.bgfx4j.examples._03_raymarch;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.TransientBuffers;
-import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.TransientBuffersOld;
+import com.bariumhoof.bgfx4j.buffer.TransientIndexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.TransientVertexBufferOld;
 import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -65,11 +65,11 @@ public class Raymarch extends Application {
 
             // todo clean up this system find better way (perhaps make buffer access enclosed in similar try-catch idiom
             //     to allow memStack efficient stack allocation behind the scenes
-            final TransientBuffers buffers = TransientBuffers.alloc(layout, 4, 6, stack);
+            final TransientBuffersOld buffers = TransientBuffersOld.alloc(layout, 4, 6, stack);
 
             if (buffers != null) {
-                final TransientVertexBuffer tvb = buffers.getTransientVertexBuffer();
-                final TransientIndexBuffer tib = buffers.getTransientIndexBuffer();
+                final TransientVertexBufferOld tvb = buffers.getTransientVertexBufferOld();
+                final TransientIndexBufferOld tib = buffers.getTransientIndexBufferOld();
 
                 ByteBuffer vertex = tvb.data();
 

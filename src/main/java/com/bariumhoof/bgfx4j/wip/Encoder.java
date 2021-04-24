@@ -256,19 +256,19 @@ public class Encoder {
         bgfx_encoder_set_dynamic_index_buffer(id, dynamicIndexBuffer.handle(), startVertex, size);
     }
 
-    public void setTransientIndexBuffer(@NotNull TransientIndexBuffer indexBuffer) {
+    public void setTransientIndexBuffer(@NotNull TransientIndexBufferOld indexBuffer) {
         bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), 0, indexBuffer.size());
     }
 
-    public void setTransientIndexBuffer(@NotNull TransientIndexBuffer indexBuffer, int startVertex, int size) {
+    public void setTransientIndexBuffer(@NotNull TransientIndexBufferOld indexBuffer, int startVertex, int size) {
         bgfx_encoder_set_transient_index_buffer(id, indexBuffer.getBuf(), startVertex, size);
     }
 
-    public void setTransientVertexBuffer(@NotNull TransientVertexBuffer vertexBuffer) {
+    public void setTransientVertexBuffer(@NotNull TransientVertexBufferOld vertexBuffer) {
         bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), 0, vertexBuffer.size());
     }
 
-    public void setTransientVertexBuffer(@NotNull TransientVertexBuffer vertexBuffer, int startVertex, int size) {
+    public void setTransientVertexBuffer(@NotNull TransientVertexBufferOld vertexBuffer, int startVertex, int size) {
         bgfx_encoder_set_transient_vertex_buffer(id, 0, vertexBuffer.getBuf(), startVertex, size);
     }
 

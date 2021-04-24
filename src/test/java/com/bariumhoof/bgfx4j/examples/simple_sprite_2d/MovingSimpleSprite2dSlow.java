@@ -1,8 +1,8 @@
 package com.bariumhoof.bgfx4j.examples.simple_sprite_2d;
 
 import com.bariumhoof.bgfx4j.Application;
-import com.bariumhoof.bgfx4j.buffer.TransientIndexBuffer;
-import com.bariumhoof.bgfx4j.buffer.TransientVertexBuffer;
+import com.bariumhoof.bgfx4j.buffer.TransientIndexBufferOld;
+import com.bariumhoof.bgfx4j.buffer.TransientVertexBufferOld;
 import com.bariumhoof.bgfx4j.buffer.VertexLayoutOld;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB;
 import com.bariumhoof.bgfx4j.enums.BGFX_ATTRIB_TYPE;
@@ -25,7 +25,7 @@ import java.util.Random;
 /**
  * Same as {@link MovingSimpleSprite2d} except uses heal allocated Transient buffers.
  *
- * Since TransientBuffers are designed to be changed every frame, one should always try to use a {@link MemoryStack}
+ * Since TransientBuffersOld are designed to be changed every frame, one should always try to use a {@link MemoryStack}
  * instead.
  */
 @Slf4j
@@ -49,8 +49,8 @@ public class MovingSimpleSprite2dSlow extends Application {
     private VertexLayoutOld layout;
     private Uniform uniformTexColor;
     private Program program;
-    private TransientVertexBuffer vb;
-    private TransientIndexBuffer ib;
+    private TransientVertexBufferOld vb;
+    private TransientIndexBufferOld ib;
 
 
     private Texture tex;
@@ -114,8 +114,8 @@ public class MovingSimpleSprite2dSlow extends Application {
 
         tex = Texture.loadOrNull(Bump.class.getResource("/textures/fieldstone-rgba.dds"));
 
-        vb = TransientVertexBuffer.heapCreate();
-        ib = TransientIndexBuffer.heapCreate();
+        vb = TransientVertexBufferOld.heapCreate();
+        ib = TransientIndexBufferOld.heapCreate();
 
         uniformTexColor = Uniform.createSingle("s_texColor", BGFX_UNIFORM_TYPE.VEC4);
         program = Program.loadOrNull(

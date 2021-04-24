@@ -38,15 +38,6 @@ public class CubesWellTypedDynamic extends Application {
             vertex(float_vec3(-1.0f, -1.0f, -1.0f), uint8_vec4(0xffffff00)),
             vertex(float_vec3(1.0f, -1.0f, -1.0f), uint8_vec4(0xfffffff)));
 
-//    {
-//        final VertexLayout<Vertex2<FLOAT_Vec3, UINT8_Vec4>> layout = VertexLayout.builder()
-//                .position().float_vec3().then()
-//                .color0().uint8_vec4().normalized()
-//                .build();
-//        final DynamicVertexBuffer<Vertex2<FLOAT_Vec3, UINT8_Vec4>> buffer =
-//                DynamicVertexBuffer.create(cubeVerts, layout);
-//    }
-
     private static final int[] cubeIndices = {
             0, 1, 2, // 0
             1, 3, 2,

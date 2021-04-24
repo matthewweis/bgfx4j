@@ -30,8 +30,6 @@ public class FlatBuffer<V extends Vertex> {
                 vec.put(inner);
             }
         }
-
-//        inner.
     }
 
     public void update(int i, Function<? super V, ? extends V> updater) {

@@ -1,7 +1,5 @@
 package com.bariumhoof.bgfx4j.wip;
 
-import com.bariumhoof.bgfx4j.Disposable;
-import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import static org.lwjgl.bgfx.BGFX.*;
 
 // distinct from frameBuffer as frameBufferAttachment's getTexture method requires an attachmentIndex
-public class FrameBufferDefault implements Disposable, Handle {
+public class FrameBufferDefault implements FrameBuffer {
 
     private final short handle;
 
@@ -32,7 +30,7 @@ public class FrameBufferDefault implements Disposable, Handle {
 
     @NotNull
     public static FrameBufferDefault create(int width, int height, @NotNull BGFX_TEXTURE_FORMAT format, @NotNull TextureFlags textureFlags) {
-        final short handle = bgfx_create_frame_buffer(width, height, format.VALUE, 0);
+        final short handle = bgfx_create_frame_buffer(width, height, format.VALUE, textureFlags.VALUE);
         return new FrameBufferDefault(width, height, handle);
     }
 

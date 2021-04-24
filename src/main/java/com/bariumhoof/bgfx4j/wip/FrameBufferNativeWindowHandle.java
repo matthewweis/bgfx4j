@@ -1,7 +1,5 @@
 package com.bariumhoof.bgfx4j.wip;
 
-import com.bariumhoof.bgfx4j.Disposable;
-import com.bariumhoof.bgfx4j.Handle;
 import com.bariumhoof.bgfx4j.enums.BGFX_TEXTURE_FORMAT;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +8,7 @@ import static org.lwjgl.bgfx.BGFX.bgfx_create_frame_buffer_from_nwh;
 import static org.lwjgl.bgfx.BGFX.bgfx_destroy_frame_buffer;
 
 // distinct from FrameBuffer as there can be no getTexture for this frameBuffer
-public class FrameBufferNativeWindowHandle implements Disposable, Handle {
+public class FrameBufferNativeWindowHandle implements FrameBuffer {
 
     private final short handle;
 
